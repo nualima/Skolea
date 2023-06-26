@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
  import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import NavBar from './components/NavBar';
+
 import MainPage from './view/MainPage';
 import NewUserForm from './view/NewUserForm';
 import ProfileComponent from './view/ProfileComponent';
@@ -14,6 +16,7 @@ import Subject from './view/Subject';
 function App() {
   return (
     <>
+    <NavBar />
       <div>
         <Router>
 
