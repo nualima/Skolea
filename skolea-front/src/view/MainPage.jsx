@@ -3,9 +3,11 @@ import { Link, Route } from 'react-router-dom';
 
 
 import NavBar from '../components/NavBar';
+import ExempleNavbar from '../components/ExempleNavbar';
 // import Slides from '../components/banner/Slides';
 import Proposals from '../components/proposals/Proposals';
 import Carousels from '../components/carousel/Carousels';
+import IndexHeader from '../components/header/IndexHeader';
 
 import {
   Container,
@@ -19,25 +21,25 @@ import {
 
 
 
+
+
 const MainPage = () => {
+
+  
   return (
     <div className="App">
-      <NavBar />
-      voici le slide :
       {/* <Slides />  */}
+      
       <Carousels />
-
+      <ExempleNavbar />
+      {/* <IndexHeader /> */}
       <nav>
-
         {/* salut */}
         <Link to="/profilePage" > profilepage </Link> //
-        <Link to="/loginPage">loginpage</Link> // 
+        <Link to="/loginPage">loginpage</Link> //
         <Link to="/subject">Subject</Link> //
         <Link to="/NewUserForm" > New User Form </Link> //
         <Link to="/Reservation" > Reservation </Link> //
-
-
-        
       </nav>
       <Container >
         <Row>
@@ -46,6 +48,13 @@ const MainPage = () => {
               <CardBody>
 
                 <Proposals />
+                <Proposals />
+                <Proposals />
+                <Proposals />
+
+                
+
+                
               </CardBody>
             </Card>
 
