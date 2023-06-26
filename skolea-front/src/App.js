@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import logo from './logo.svg';
-import './App.css';
+ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import MainPage from './view/MainPage';
@@ -17,7 +16,9 @@ function App() {
     <>
       <div>
         <Router>
+
           <Routes>
+
             <Route path="/profilePage" element={<ProfileComponent />} />
             <Route path="/mainPage" element={<MainPage />} />
             <Route path="/loginPage" element={<LoginPage />} />
@@ -28,6 +29,7 @@ function App() {
             <Route path="*" element={<Navigate to="/mainPage" />} />
 
           </Routes>
+          
         </Router>
       </div>
     </>

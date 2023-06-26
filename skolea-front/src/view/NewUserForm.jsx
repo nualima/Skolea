@@ -1,4 +1,19 @@
 import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Button from '@mui/material/Button';
+
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  CardBody,
+  // Button,
+
+} from "reactstrap";
 
 const NewUserForm = () => {
   const [username, setUsername] = useState('');
@@ -26,12 +41,12 @@ const NewUserForm = () => {
 
   const handleCheckboxChangeTeacher = (event) => {
     setIsTeacher(event.target.checked);
-    setIsStudent(false); // Décoche l'autre option si celle-ci est cochée
+    setIsStudent(false);
   };
 
   const handleCheckboxChangeStudent = (event) => {
     setIsStudent(event.target.checked);
-    setIsTeacher(false); // Décoche l'autre option si celle-ci est cochée
+    setIsTeacher(false);
   };
 
   const handleSubmit = (event) => {
@@ -40,71 +55,76 @@ const NewUserForm = () => {
   };
 
   return (
-    <div className="form-container">
-      <h1>Formulaire</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Identifiant</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          value={username}
-          onChange={handleUsernameChange}
-        />
 
-        <label htmlFor="password">Mot de passe</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
+    <>
+      <Container>
+          <div className="form-container">
+            <h1>Formulaire</h1>
+            <form onSubmit={handleSubmit}>
+              <Box
+                component="div"
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                }}
+              >
+                <TextField
+                  required
+                  id="username"
+                  label="Identifiant"
+                  value={username}
+                  onChange={handleUsernameChange}
+                />
+                <TextField
+                  required
+                  id="password"
+                  label="Mot de passe"
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                />
+                <TextField
+                  required
+                  id="firstName"
+                  label="Prénom"
+                  value={firstName}
+                  onChange={handleFirstNameChange}
+                />
+                <TextField
+                  required
+                  id="lastName"
+                  label="Nom de famille"
+                  value={lastName}
+                  onChange={handleLastNameChange}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isTeacher}
+                      onChange={handleCheckboxChangeTeacher}
+                    />
+                  }
+                  label="Je suis un professeur"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isStudent}
+                      onChange={handleCheckboxChangeStudent}
+                    />
+                  }
+                  label="Je suis un étudiant"
+                />
+                <Button type="submit" variant="contained" color="primary">
+                  Soumettre
+                </Button>
+              </Box>
+            </form>
+          </div>
 
-        <label htmlFor="firstName">Prénom</label>
-        <input
-          type="text"
-          id="firstName"
-          name="firstName"
-          value={firstName}
-          onChange={handleFirstNameChange}
-        />
-
-        <label htmlFor="lastName">Nom de famille</label>
-        <input
-          type="text"
-          id="lastName"
-          name="lastName"
-          value={lastName}
-          onChange={handleLastNameChange}
-        />
-
-        <div>
-          <input
-            type="checkbox"
-            id="isTeacher"
-            name="isTeacher"
-            checked={isTeacher}
-            onChange={handleCheckboxChangeTeacher}
-          />
-          <label htmlFor="isTeacher">Je suis un professeur</label>
-        </div>
-        <div>
-          <input
-            type="checkbox"
-            id="isStudent"
-            name="isStudent"
-            checked={isStudent}
-            onChange={handleCheckboxChangeStudent}
-          />
-          <label htmlFor="isStudent">Je suis un étudiant</label>
-        </div>
-
-        <button type="submit" style={{ backgroundColor: 'blue', color: 'white' }}>
-          Soumettre
-        </button>
-      </form>
-    </div>
+      </Container>
+    </>
   );
 };
 
