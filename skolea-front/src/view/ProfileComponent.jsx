@@ -46,7 +46,7 @@
 
 import React from 'react';
 import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
-import { Form, FormGroup, Input, Label, Navbar } from 'reactstrap';
+import { Form, FormGroup, Input, Label, Navbar, Container } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 import NavBar from '../components/NavBar';
@@ -54,55 +54,56 @@ import NavBar from '../components/NavBar';
 // Un composant pour afficher les informations de base de l'utilisateur
 const ProfileDetails = ({ user }) => {
   return (
-
-    <Card>
-      <CardHeader
-        avatar={<Avatar src={user.avatar} />}
-        title={user.name}
-        subheader={user.email}
-      />
-      <CardContent>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Typography variant="body1" color="text.secondary">
-              Date de naissance
-            </Typography>
-            <Typography variant="body2" color="text.primary">
-              {user.birthdate}
-            </Typography>
+    <Container>
+      <Card>
+        <CardHeader
+          avatar={<Avatar src={user.avatar} />}
+          title={user.name}
+          subheader={user.email}
+        />
+        <CardContent>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Typography variant="body1" color="text.secondary">
+                Date de naissance
+              </Typography>
+              <Typography variant="body2" color="text.primary">
+                {user.birthdate}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body1" color="text.secondary">
+                Ville
+              </Typography>
+              <Typography variant="body2" color="text.primary">
+                {user.city}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body1" color="text.secondary">
+                Pays
+              </Typography>
+              <Typography variant="body2" color="text.primary">
+                {user.country}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body1" color="text.secondary">
+                Téléphone
+              </Typography>
+              <Typography variant="body2" color="text.primary">
+                {user.phone}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <Typography variant="body1" color="text.secondary">
-              Ville
-            </Typography>
-            <Typography variant="body2" color="text.primary">
-              {user.city}
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="body1" color="text.secondary">
-              Pays
-            </Typography>
-            <Typography variant="body2" color="text.primary">
-              {user.country}
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="body1" color="text.secondary">
-              Téléphone
-            </Typography>
-            <Typography variant="body2" color="text.primary">
-              {user.phone}
-            </Typography>
-          </Grid>
-        </Grid>
-      </CardContent>
-      <CardActions>
-        <Button variant="contained" color="primary">
-          Modifier le profil
-        </Button>
-      </CardActions>
-    </Card>
+        </CardContent>
+        <CardActions>
+          <Button variant="contained" color="primary">
+            Modifier le profil
+          </Button>
+        </CardActions>
+      </Card>
+    </Container>
   );
 };
 
@@ -117,6 +118,7 @@ const PasswordForm = () => {
   };
 
   return (
+    <Container >
     <Card>
       <CardContent>
         <Form onSubmit={handleSubmit}>
@@ -146,6 +148,9 @@ const PasswordForm = () => {
         </Form>
       </CardContent>
     </Card>
+    </Container >
+
+
   );
 };
 
