@@ -25,48 +25,48 @@ import {
 
 const MainPage = () => {
 
-  
+
   return (
     <div className="App">
       {/* <Slides />  */}
-      
+
       <Carousels />
-      <ExempleNavbar />
+      <ExempleNavbar   />
       {/* <IndexHeader /> */}
-      <nav>
-        {/* salut */}
+      {/* <nav>
         <Link to="/profilePage" > profilepage </Link> //
         <Link to="/loginPage">loginpage</Link> //
         <Link to="/subject">Subject</Link> //
         <Link to="/NewUserForm" > New User Form </Link> //
         <Link to="/Reservation" > Reservation </Link> //
-      </nav>
-      <Container >
-        <Row>
-          <Col>
-            <Card body className="text-center" outline color="secondary">
-              <CardBody>
+      </nav> */}
+      <div style={{
+        marginTop:"100px"
+      }}>
 
+        <Container >
+          <Row>
+            <Col>
+              <Card>
                 <Proposals />
                 <Proposals />
                 <Proposals />
                 <Proposals />
+                <Proposals />
+                <Proposals />
 
-                
+                <Proposals />
 
-                
-              </CardBody>
-            </Card>
-
-          </Col>
-        </Row>
-      </Container>
+              </Card>
 
 
 
 
+            </Col>
+          </Row>
+        </Container>
 
-
+      </div>
     </div>
   );
 };

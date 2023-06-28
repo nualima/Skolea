@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React from 'react';
 import { FaChalkboardTeacher, FaGraduationCap, FaBookOpen, FaUserFriends } from 'react-icons/fa';
 import {
@@ -18,53 +19,63 @@ import {
 function Proposals() {
   return (
     <>
-
       <Col>
-        <Card body className="text-center" outline color="secondary">
-          <CardBody>
-            <CardTitle>salut</CardTitle>
-            <Row>
-
-              <div>
-                <h2>Ce qu'on propose :</h2>
-                <div className="proposal-icons">
-                  <div className="proposal-icon">
-                    <FaChalkboardTeacher size={50} />
-                    <p>Cours en ligne</p>
-                  </div>
-                  <div className="proposal-icon">
-                    <FaUserFriends size={50} />
-                    <p>Professeurs expérimentés</p>
-                  </div>
-                  <div className="proposal-icon">
-                    <FaGraduationCap size={50} />
-                    <p>Obtention de diplôme</p>
-                  </div>
-                  <div className="proposal-icon">
-                    <FaBookOpen size={50} />
-                    <p>Accompagnement personnalisé</p>
-                  </div>
+        <Row>
+          <div>
+            <h2>Ce qu'on propose :</h2>
+            <div className="proposal-icons">
+              <div className="proposal-icon">
+                <div className="circle">
+                  <FaChalkboardTeacher size={50} />
+                  <p>Cours en ligne</p>
                 </div>
-
-                <style jsx>{`
-        .proposal-icons {
-          display: flex;
-          justify-content: space-between;
-        }
-
-        .proposal-icon {
-          text-align: center;
-        }
-      `}
-                </style>
               </div>
-            </Row>
-          </CardBody>
-        </Card>
+              <div className="proposal-icon">
+                <div className="circle">
+                  <FaUserFriends size={50} />
+                  <p>Professeurs expérimentés</p>
+                </div>
+              </div>
+              <div className="proposal-icon">
+                <div className="circle">
+                  <FaGraduationCap size={50} />
+                  <p>Obtention de diplôme</p>
+                </div>
+              </div>
+              <div className="proposal-icon">
+                <div className="circle">
+                  <FaBookOpen size={50} />
+                  <p>Accompagnement personnalisé</p>
+                </div>
+              </div>
+            </div>
 
+            <style jsx>{`
+              .proposal-icons {
+                display: flex;
+                justify-content: space-between;
+              }
+
+              .proposal-icon {
+                text-align: center;
+              }
+
+              .circle {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                background-color: white;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+              }
+            `}
+            </style>
+          </div>
+        </Row>
       </Col>
     </>
-
   );
 }
 
