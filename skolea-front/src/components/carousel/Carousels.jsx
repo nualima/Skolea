@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import banniere1 from "../../assets/img/banniere2.jpg";
+import banniere1 from "../../assets/img/skolae-bg.png";
 import NavBar from "../NavBar";
 
 const Carousels = () => {
@@ -9,7 +9,7 @@ const Carousels = () => {
     banniere1Ref.current = document.getElementById("banniere1");
     if (window.innerWidth > 991) {
       const updateScroll = () => {
-        let windowScrollTop = window.pageYOffset / 3;
+        let windowScrollTop = window.pageYOffset / 20; // Ajustez le facteur de défilement
         banniere1Ref.current.style.transform =
           "translate3d(0," + windowScrollTop + "px,0)";
       };
@@ -35,6 +35,7 @@ const Carousels = () => {
           width: "100%",
           height: "100%",
           zIndex: -1,
+          
         }}
       />
     </>
