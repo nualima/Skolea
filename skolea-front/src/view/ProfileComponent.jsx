@@ -1,51 +1,16 @@
-// import React from "react";
-// import { Container, Grid, Typography } from "@mui/material";
-// import { Card, CardBody } from "reactstrap";
-
-// function ProfilePage() {
-//   return (
-//     <Container maxWidth="md" sx={{ mt: 4 }}>
-//       <Typography variant="h4" sx={{ mb: 2 }}>
-//         Mon Profil
-//       </Typography>
-//       <Grid container spacing={2}>
-//         <Grid item xs={12} md={6}>
-//           <Card>
-//             <CardBody>
-//               <Typography variant="h6">Informations Personnelles</Typography>
-//               <Typography sx={{ mt: 2 }}>
-//                 Nom: <strong>Dupont</strong>
-//               </Typography>
-//               <Typography>
-//                 Prénom: <strong>Jean</strong>
-//               </Typography>
-//               <Typography>
-//                 Adresse e-mail: <strong>jean.dupont@mail.com</strong>
-//               </Typography>
-//             </CardBody>
-//           </Card>
-//         </Grid>
-//         <Grid item xs={12} md={6}>
-//           <Card>
-//             <CardBody>
-//               <Typography variant="h6">Historique de commande</Typography>
-//               <Typography sx={{ mt: 2 }}>
-//                 Vous n'avez aucune commande pour le moment.
-//               </Typography>
-//             </CardBody>
-//           </Card>
-//         </Grid>
-//       </Grid>
-//     </Container>
-//   );
-// }
-
-// export default ProfilePage;
-
-
-
 import React from 'react';
-import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Divider,
+  Grid,
+  Typography
+} from '@mui/material';
 import { Form, FormGroup, Input, Label, Navbar, Container } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
@@ -54,139 +19,186 @@ import NavBar from '../components/NavBar';
 // Un composant pour afficher les informations de base de l'utilisateur
 const ProfileDetails = ({ user }) => {
   return (
-    <Container>
-      <Card>
-        <CardHeader
-          avatar={<Avatar src={user.avatar} />}
-          title={user.name}
-          subheader={user.email}
-        />
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Typography variant="body1" color="text.secondary">
-                Date de naissance
-              </Typography>
-              <Typography variant="body2" color="text.primary">
-                {user.birthdate}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body1" color="text.secondary">
-                Ville
-              </Typography>
-              <Typography variant="body2" color="text.primary">
-                {user.city}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body1" color="text.secondary">
-                Pays
-              </Typography>
-              <Typography variant="body2" color="text.primary">
-                {user.country}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body1" color="text.secondary">
-                Téléphone
-              </Typography>
-              <Typography variant="body2" color="text.primary">
-                {user.phone}
-              </Typography>
-            </Grid>
-          </Grid>
-        </CardContent>
-        <CardActions>
-          <Button variant="contained" color="primary">
-            Modifier le profil
-          </Button>
-        </CardActions>
-      </Card>
-    </Container>
-  );
-};
+    <>
+      <section style={{ backgroundColor: '#eee' }}>
+        <div className="container py-5">
+          <div className="row">
+            <div className="col">
+              <nav aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
+                <ol className="breadcrumb mb-0">
+                  <li className="breadcrumb-item"><a href="#">Home</a></li>
+                  <li className="breadcrumb-item"><a href="#">User</a></li>
+                  <li className="breadcrumb-item active" aria-current="page">User Profile</li>
+                </ol>
+              </nav>
+            </div>
+          </div>
 
-// Un composant pour afficher et modifier le mot de passe de l'utilisateur
-const PasswordForm = () => {
-  const [password, setPassword] = React.useState('');
-  const [confirmPassword, setConfirmPassword] = React.useState('');
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Valider et changer le mot de passe
-  };
-
-  return (
-    <Container >
-    <Card>
-      <CardContent>
-        <Form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label for="password">Nouveau mot de passe</Label>
-            <Input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="confirmPassword">Confirmer le mot de passe</Label>
-            <Input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-              required
-            />
-          </FormGroup>
-          <Button type="submit" color="primary">
-            Changer le mot de passe
-          </Button>
-        </Form>
-      </CardContent>
-    </Card>
-    </Container >
-
-
-  );
-};
-
-// Le composant principal de la page de profil
-
-const ProfileComponent = () => {
-  // Simuler un utilisateur avec des données fictives
-  const user = {
-    name: 'Alice Dupont',
-    email: 'alice.dupont@example.com',
-    avatar: 'https://i.pravatar.cc/300',
-    birthdate: '01/01/2000',
-    city: 'Paris',
-    country: 'France',
-    phone: '+33 6 12 34 56 78',
-  };
-
-  return (
-    <>  <NavBar />
-      <Box sx={{ p: 4 }}>
-
-
-        {/* <Link to="/profilePage" >revenir au début</Link> */}
-
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
-            <ProfileDetails user={user} />
-          </Grid>
-          <Grid item xs={12} md={8}>
-            <PasswordForm />
-          </Grid>
-        </Grid>
-      </Box>
+          <div className="row">
+            <div className="col-lg-4">
+              <div className="card mb-4">
+                <div className="card-body text-center">
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                    className="rounded-circle img-fluid" style={{ width: '150px' }} />
+                  <h5 className="my-3">John Smith</h5>
+                  <p className="text-muted mb-1">Full Stack Developer</p>
+                  <p className="text-muted mb-4">Bay Area, San Francisco, CA</p>
+                  <div className="d-flex justify-content-center mb-2">
+                    <button type="button" className="btn btn-primary">Follow</button>
+                    <button type="button" className="btn btn-outline-primary ms-1">Message</button>
+                  </div>
+                </div>
+              </div>
+              <div className="card mb-4 mb-lg-0">
+                <div className="card-body p-0">
+                  <ul className="list-group list-group-flush rounded-3">
+                    <li className="list-group-item d-flex justify-content-between align-items-center p-3">
+                      <i className="fas fa-globe fa-lg text-warning" />
+                      <p className="mb-0">https://mdbootstrap.com</p>
+                    </li>
+                    <li className="list-group-item d-flex justify-content-between align-items-center p-3">
+                      <i className="fab fa-github fa-lg" style={{ color: '#333333' }} />
+                      <p className="mb-0">mdbootstrap</p>
+                    </li>
+                    <li className="list-group-item d-flex justify-content-between align-items-center p-3">
+                      <i className="fab fa-twitter fa-lg" style={{ color: '#55acee' }} />
+                      <p className="mb-0">@mdbootstrap</p>
+                    </li>
+                    <li className="list-group-item d-flex justify-content-between align-items-center p-3">
+                      <i className="fab fa-instagram fa-lg" style={{ color: '#ac2bac' }} />
+                      <p className="mb-0">mdbootstrap</p>
+                    </li>
+                    <li className="list-group-item d-flex justify-content-between align-items-center p-3">
+                      <i className="fab fa-facebook-f fa-lg" style={{ color: '#3b5998' }} />
+                      <p className="mb-0">mdbootstrap</p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-8">
+              <div className="card mb-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-sm-3">
+                      <p className="mb-0">Full Name</p>
+                    </div>
+                    <div className="col-sm-9">
+                      <p className="text-muted mb-0">Johnatan Smith</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="row">
+                    <div className="col-sm-3">
+                      <p className="mb-0">Email</p>
+                    </div>
+                    <div className="col-sm-9">
+                      <p className="text-muted mb-0">example@example.com</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="row">
+                    <div className="col-sm-3">
+                      <p className="mb-0">Phone</p>
+                    </div>
+                    <div className="col-sm-9">
+                      <p className="text-muted mb-0">(097) 234-5678</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="row">
+                    <div className="col-sm-3">
+                      <p className="mb-0">Mobile</p>
+                    </div>
+                    <div className="col-sm-9">
+                      <p className="text-muted mb-0">(098) 765-4321</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="row">
+                    <div className="col-sm-3">
+                      <p className="mb-0">Address</p>
+                    </div>
+                    <div className="col-sm-9">
+                      <p className="text-muted mb-0">Bay Area, San Francisco, CA</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="card mb-4 mb-md-0">
+                    <div className="card-body">
+                      <p className="mb-4"><span className="text-primary font-italic me-1">assigment</span> Project Status
+                      </p>
+                      <p className="mb-1" style={{ fontSize: '.77rem' }}>Web Design</p>
+                      <div className="progress rounded" style={{ height: '5px' }}>
+                        <div className="progress-bar" role="progressbar" style={{ width: '80%' }} aria-valuenow="80"
+                          aria-valuemin="0" aria-valuemax="100" />
+                      </div>
+                      <p className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Website Markup</p>
+                      <div className="progress rounded" style={{ height: '5px' }}>
+                        <div className="progress-bar" role="progressbar" style={{ width: '72%' }} aria-valuenow="72"
+                          aria-valuemin="0" aria-valuemax="100" />
+                      </div>
+                      <p className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>One Page</p>
+                      <div className="progress rounded" style={{ height: '5px' }}>
+                        <div className="progress-bar" role="progressbar" style={{ width: '89%' }} aria-valuenow="89"
+                          aria-valuemin="0" aria-valuemax="100" />
+                      </div>
+                      <p className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Mobile Template</p>
+                      <div className="progress rounded" style={{ height: '5px' }}>
+                        <div className="progress-bar" role="progressbar" style={{ width: '55%' }} aria-valuenow="55"
+                          aria-valuemin="0" aria-valuemax="100" />
+                      </div>
+                      <p className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Backend API</p>
+                      <div className="progress rounded mb-2" style={{ height: '5px' }}>
+                        <div className="progress-bar" role="progressbar" style={{ width: '66%' }} aria-valuenow="66"
+                          aria-valuemin="0" aria-valuemax="100" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="card mb-4 mb-md-0">
+                    <div className="card-body">
+                      <p className="mb-4"><span className="text-primary font-italic me-1">assigment</span> Project Status
+                      </p>
+                      <p className="mb-1" style={{ fontSize: '.77rem' }}>Web Design</p>
+                      <div className="progress rounded" style={{ height: '5px' }}>
+                        <div className="progress-bar" role="progressbar" style={{ width: '80%' }} aria-valuenow="80"
+                          aria-valuemin="0" aria-valuemax="100" />
+                      </div>
+                      <p className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Website Markup</p>
+                      <div className="progress rounded" style={{ height: '5px' }}>
+                        <div className="progress-bar" role="progressbar" style={{ width: '72%' }} aria-valuenow="72"
+                          aria-valuemin="0" aria-valuemax="100" />
+                      </div>
+                      <p className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>One Page</p>
+                      <div className="progress rounded" style={{ height: '5px' }}>
+                        <div className="progress-bar" role="progressbar" style={{ width: '89%' }} aria-valuenow="89"
+                          aria-valuemin="0" aria-valuemax="100" />
+                      </div>
+                      <p className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Mobile Template</p>
+                      <div className="progress rounded" style={{ height: '5px' }}>
+                        <div className="progress-bar" role="progressbar" style={{ width: '55%' }} aria-valuenow="55"
+                          aria-valuemin="0" aria-valuemax="100" />
+                      </div>
+                      <p className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Backend API</p>
+                      <div className="progress rounded mb-2" style={{ height: '5px' }}>
+                        <div className="progress-bar" role="progressbar" style={{ width: '66%' }} aria-valuenow="66"
+                          aria-valuemin="0" aria-valuemax="100" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
-
   );
 };
 
-export default ProfileComponent;
+export default ProfileDetails;

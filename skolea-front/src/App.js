@@ -3,33 +3,38 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import NavBar from './components/NavBar';
+import ExampleNavbar from './components/ExempleNavbar';
+import NavBarTest from "./components/NavBarTest"
 
 import MainPage from './view/MainPage';
 import NewUserForm from './view/NewUserForm';
 import ProfileComponent from './view/ProfileComponent';
-import Reservation from './view/Reservation';
+import Reservation from './view/reservation/Reservation';
 import LoginPage from './view/login/LoginPage';
 
 import Subject from './view/Subject';
+import ThemeApp from './components/theme/ThemeApp';
 
 
 function App() {
   return (
     <>
-    <NavBar />
+    <NavBarTest />
+    <ThemeApp />
+    
       <div>
         <Router>
 
           <Routes>
 
             <Route path="/profilePage" element={<ProfileComponent />} />
-            <Route path="/mainPage" element={<MainPage />} />
+            <Route path="/" element={<MainPage />} />
             <Route path="/loginPage" element={<LoginPage />} />
             <Route path="reservation" element={<Reservation />} />
             <Route path="/newUserForm" element={<NewUserForm />} />
             <Route path="/subject" element={<Subject />} />
             <Route path="/home/reservation" component={Reservation} />
-            <Route path="*" element={<Navigate to="/mainPage" />} />
+            <Route path="*" element={<Navigate to="/" />} />
 
           </Routes>
           

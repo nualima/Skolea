@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React from 'react';
 import { FaChalkboardTeacher, FaGraduationCap, FaBookOpen, FaUserFriends } from 'react-icons/fa';
 import {
@@ -18,12 +17,12 @@ import {
 
 function Proposals() {
   return (
-    <>
+    <div style={{  marginBottom: '60px', }}>
       <Col>
         <Row>
           <div>
-            <h2>Ce qu'on propose :</h2>
-            <div className="proposal-icons">
+            <h2 style={{ marginTop: '50px', marginBottom: '50px', }}>Ce qu'on propose :</h2>
+            <div className="proposal-icons" style={{ marginLeft: '70px', marginRight: '70px'}}>
               <div className="proposal-icon">
                 <div className="circle">
                   <FaChalkboardTeacher size={50} />
@@ -75,7 +74,7 @@ function Proposals() {
           </div>
         </Row>
       </Col>
-    </>
+    </div>
   );
 }
 

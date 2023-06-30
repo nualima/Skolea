@@ -58,6 +58,8 @@ const NewUserForm = () => {
   return (
 
     <>
+
+    <Card>
       <Container>
           <div className="form-container">
             <h1>Formulaire</h1>
@@ -125,6 +127,7 @@ const NewUserForm = () => {
           </div>
 
       </Container>
+      </Card>
     </>
   );
 };
