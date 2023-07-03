@@ -11,6 +11,7 @@ import NewUserForm from './view/NewUserForm';
 import ProfileComponent from './view/ProfileComponent';
 import Reservation from './view/reservation/Reservation';
 import LoginPage from './view/login/LoginPage';
+import ContactForm from './view/contact/ContactForm';
 
 import Subject from './view/Subject';
 import ThemeApp from './components/theme/ThemeApp';
@@ -27,13 +28,16 @@ function App() {
 
           <Routes>
 
+          <Route path="/" element={<MainPage />} />
             <Route path="/profilePage" element={<ProfileComponent />} />
-            <Route path="/" element={<MainPage />} />
             <Route path="/loginPage" element={<LoginPage />} />
             <Route path="reservation" element={<Reservation />} />
             <Route path="/newUserForm" element={<NewUserForm />} />
             <Route path="/subject" element={<Subject />} />
-            <Route path="/home/reservation" component={Reservation} />
+            <Route path="/contact" element={<ContactForm />} />
+
+            
+
             <Route path="*" element={<Navigate to="/" />} />
 
           </Routes>
