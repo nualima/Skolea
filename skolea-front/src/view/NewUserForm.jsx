@@ -6,14 +6,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
 
 import {
-  
   Container,
-  Row,
-  Col,
   Card,
-  CardBody,
-  // Button,
-
 } from "reactstrap";
 
 const NewUserForm = () => {
@@ -21,8 +15,12 @@ const NewUserForm = () => {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [isTeacher, setIsTeacher] = useState(false);
   const [isStudent, setIsStudent] = useState(false);
+  const [educationLevel, setEducationLevel] = useState('');
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -40,6 +38,18 @@ const NewUserForm = () => {
     setLastName(event.target.value);
   };
 
+  const handleDateOfBirthChange = (event) => {
+    setDateOfBirth(event.target.value);
+  };
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePhoneNumberChange = (event) => {
+    setPhoneNumber(event.target.value);
+  };
+
   const handleCheckboxChangeTeacher = (event) => {
     setIsTeacher(event.target.checked);
     setIsStudent(false);
@@ -50,85 +60,119 @@ const NewUserForm = () => {
     setIsTeacher(false);
   };
 
+  const handleEducationLevelChange = (event) => {
+    setEducationLevel(event.target.value);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(`Submitting form with username: ${username}, password: ${password}, firstName: ${firstName}, lastName: ${lastName}, isTeacher: ${isTeacher}`);
+    console.log(`Submitting form with username: ${username}, password: ${password}, firstName: ${firstName}, lastName: ${lastName}, dateOfBirth: ${dateOfBirth}, email: ${email}, phoneNumber: ${phoneNumber}, isTeacher: ${isTeacher}, educationLevel: ${educationLevel}`);
   };
 
   return (
-
-    <>
-
-    <Card>
+    <Card style={{ paddingTop: "50px", paddingBottom: "50px" }}>
       <Container>
-          <div className="form-container">
-            <h1>Formulaire</h1>
-            <form onSubmit={handleSubmit}>
-              <Box
-                component="div"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1rem',
+        <div className="form-container">
+          <h1>Form</h1>
+          <form onSubmit={handleSubmit}>
+            <Box
+              component="div"
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem',
+              }}
+            >
+              <TextField
+                required
+                id="username"
+                label="Username"
+                value={username}
+                onChange={handleUsernameChange}
+              />
+              <TextField
+                required
+                id="password"
+                label="Password"
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              <TextField
+                required
+                id="firstName"
+                label="First Name"
+                value={firstName}
+                onChange={handleFirstNameChange}
+              />
+              <TextField
+                required
+                id="lastName"
+                label="Last Name"
+                value={lastName}
+                onChange={handleLastNameChange}
+              />
+              <TextField
+                required
+                id="dateOfBirth"
+                label="Date of Birth"
+                type="date"
+                value={dateOfBirth}
+                onChange={handleDateOfBirthChange}
+                InputLabelProps={{
+                  shrink: true,
                 }}
-              >
+              />
+              <TextField
+                required
+                id="email"
+                label="Email"
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+              />
+              <TextField
+                required
+                id="phoneNumber"
+                label="Phone Number"
+                value={phoneNumber}
+                onChange={handlePhoneNumberChange}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isTeacher}
+                    onChange={handleCheckboxChangeTeacher}
+                  />
+                }
+                label="I am a teacher"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isStudent}
+                    onChange={handleCheckboxChangeStudent}
+                  />
+                }
+                label="I am a student"
+              />
+              {isStudent && (
                 <TextField
                   required
-                  id="username"
-                  label="Identifiant"
-                  value={username}
-                  onChange={handleUsernameChange}
+                  id="educationLevel"
+                  label="Education Level"
+                  value={educationLevel}
+                  onChange={handleEducationLevelChange}
                 />
-                <TextField
-                  required
-                  id="password"
-                  label="Mot de passe"
-                  type="password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                />
-                <TextField
-                  required
-                  id="firstName"
-                  label="Prénom"
-                  value={firstName}
-                  onChange={handleFirstNameChange}
-                />
-                <TextField
-                  required
-                  id="lastName"
-                  label="Nom de famille"
-                  value={lastName}
-                  onChange={handleLastNameChange}
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={isTeacher}
-                      onChange={handleCheckboxChangeTeacher}
-                    />
-                  }
-                  label="Je suis un professeur"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={isStudent}
-                      onChange={handleCheckboxChangeStudent}
-                    />
-                  }
-                  label="Je suis un étudiant"
-                />
-                <Button type="submit" variant="contained" color="primary">
-                  Soumettre
-                </Button>
-              </Box>
-            </form>
-          </div>
-
+              )}
+              <Button type="submit" variant="contained" color="primary">
+                Submit
+              </Button>
+            </Box>
+          </form>
+        </div>
       </Container>
-      </Card>
-    </>
+    </Card>
   );
 };
 
