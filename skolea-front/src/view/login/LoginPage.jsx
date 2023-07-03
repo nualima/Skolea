@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./loginPage.css"
 import { Card } from "@mui/material";
 
+import LoginServices from "../../services/login/LoginServices";
+
 const LoginPage = (props) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -45,7 +47,7 @@ const LoginPage = (props) => {
     return (
 
         <div className="mainContainer">
-            <Card >
+            <Card style={{padding:"25px"}}>
                 <div className="titleContainer">
                     <div>Login</div>
                 </div>

@@ -9,7 +9,7 @@ const ThemeApp = () => {
     banniere1Ref.current = document.getElementById("banniere1");
     if (window.innerWidth > 991) {
       const updateScroll = () => {
-        let windowScrollTop = window.pageYOffset / 20; // Ajustez le facteur de défilement
+        let windowScrollTop = window.pageYOffset / 10; // Ajustez le facteur de défilement
         banniere1Ref.current.style.transform =
           "translate3d(0," + windowScrollTop + "px,0)";
       };
