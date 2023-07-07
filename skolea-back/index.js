@@ -47,37 +47,7 @@ app.post('/whoAmI', async(req, res) => {
     }
 });
 
-app.post('/signup', async(req, res) => {
-    const { username, password, firstname, lastname, birthday, email, phonenumber, statue } = req.body;
 
-    try {
-        // Vérifier si l'utilisateur existe déjà dans la base de données
-        const existingUsername = await api.getUserByUsername(username);
-        if (existingUsername) {
-            return res.send({ success: false, message: 'Ce nom d\'utilisateur existe déjà' });
-        }
-
-        const existingEmail = await api.getUserByEmail(email);
-        if (existingEmail) {
-            return res.send({ success: false, message: 'Cet e-mail existe déjà' });
-        }
-
-        if (phonenumber) {
-            const existingPhoneNumber = await api.getUserByPhoneNumber(phonenumber);
-            if (existingPhoneNumber) {
-                return res.send({ success: false, message: 'Ce numéro de téléphone existe déjà' });
-            }
-        }
-
-        // Créer un nouvel utilisateur
-        await api.createUser(username, password, firstname, lastname, birthday, email, phonenumber, statue);
-
-        return res.send({ success: true, message: 'Utilisateur créé avec succès' });
-    } catch (error) {
-        console.error('Erreur lors de la création de l\'utilisateur:', error);
-        return res.status(500).send({ success: false, message: 'Une erreur est survenue lors de la création de l\'utilisateur' });
-    }
-});
 
 app.listen(8080);
 console.log('Serveur démarré sur le port 8080');
