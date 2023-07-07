@@ -71,7 +71,7 @@ const NavbarTest = () => {
                                     <a href="/profilePage">Profile</a>
                                 </li>
                                 <li>
-                                    <a href="/reservation">Reservation</a>
+                                    <a href="/subject">Reservation</a>
                                 </li>
                             </>
                         )}
