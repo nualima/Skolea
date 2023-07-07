@@ -13,6 +13,8 @@ const NavbarTest = () => {
 
     const [isScrolled, setIsScrolled] = useState(false); // New state for scroll position
 
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // New state for client authentication
+
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 0); // Check if scrolled down
@@ -22,8 +24,6 @@ const NavbarTest = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-
-
     useEffect(() => {
         const handleResize = () => {
             setSize({
@@ -32,9 +32,6 @@ const NavbarTest = () => {
             });
         };
         window.addEventListener("resize", handleResize);
-
-
-
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
@@ -44,10 +41,19 @@ const NavbarTest = () => {
         }
     }, [size.width, menuOpen]);
 
-
-
     const menuToggleHandler = () => {
         setMenuOpen((p) => !p);
+    };
+
+    useEffect(() => {
+        // Check client authentication status here
+        const clientIsAuthenticated = true; // Replace with your authentication logic
+        setIsAuthenticated(clientIsAuthenticated);
+    }, []);
+
+    const handleLogout = () => {
+        // Add logout logic here
+        setIsAuthenticated(false);
     };
 
     return (
@@ -59,21 +65,33 @@ const NavbarTest = () => {
                         <li>
                             <a href="/">Home</a>
                         </li>
-                        <li>
-                            <a href="/profilePage">Profile</a>
-                        </li>
-                        <li>
-                            <a href="/reservation">reservation</a>
-                        </li>
+                        {isAuthenticated && (
+                            <>
+                                <li>
+                                    <a href="/profilePage">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="/reservation">Reservation</a>
+                                </li>
+                            </>
+                        )}
                         <li>
                             <a href="/contact">Contact</a>
                         </li>
-                        <a href="/newUserForm">
-                            <button className="btn">inscription</button>
-                        </a>
-                        <a href="/loginPage">
-                            <button className="btn btn__login">connection</button>
-                        </a>
+                        {isAuthenticated ? (
+                            <button className="btn" onClick={handleLogout}>
+                                Se déconnecter
+                            </button>
+                        ) : (
+                            <>
+                                <a href="/newUserForm">
+                                    <button className="btn">Inscription</button>
+                                </a>
+                                <a href="/loginPage">
+                                    <button className="btn btn__login">Connexion</button>
+                                </a>
+                            </>
+                        )}
                     </ul>
                 </nav>
                 <div className="header__content__toggle">

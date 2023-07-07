@@ -1,29 +1,116 @@
-const MongoClient = require('mongodb').MongoClient
+const mysql = require('mysql');
 
-let api = {
-    db: null
+const connectionConfig = {
+    host: '127.0.0.1',
+    port: 3360,
+    user: 'root',
+    password: 'root',
+    database: 'skolea'
 };
 
-async function connect() {
-    const connectionString = "mongodb://127.0.0.1:27017";
+const pool = mysql.createPool(connectionConfig);
 
-    const client = new MongoClient(connectionString);
+const getUserByUsernameAndPassword = (username, password) => {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM users WHERE username = ? AND password = ?`;
+        const params = [username, password];
 
-    let conn;
-    try {
-        conn = await client.connect();
-    } catch (e) {
-        console.log(e);
-        throw e;
-    }
+        pool.query(query, params, (error, results) => {
+            if (error) {
+                console.error('Erreur lors de la recherche de l\'utilisateur :', error);
+                reject(error);
+            }
 
-    let db = conn.db("connexion")
+            if (results && results.length > 0) {
+                resolve(results[0]);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+};
 
-    console.log("Connexion établie")
+const createUser = (username, password, firstname, lastname, birthday, email, phonenumber, statue, educationLevel) => {
+    return new Promise((resolve, reject) => {
+        const query = `INSERT INTO users (username, password, firstname, lastname, birthday, email, phonenumber, statue) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        const params = [username, password, firstname, lastname, birthday, email, phonenumber, statue, educationLevel];
 
-    api.db = db
-}
+        pool.query(query, params, (error, results) => {
+            if (error) {
+                console.error('Erreur lors de la création de l\'utilisateur :', error);
+                reject(error);
+            } else {
+                console.log('Utilisateur créé avec succès');
+                resolve();
+            }
+        });
+    });
+};
 
-connect()
+const getUserByUsername = (username) => {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM users WHERE username = ?`;
+        const params = [username];
 
-module.exports = api
+        pool.query(query, params, (error, results) => {
+            if (error) {
+                console.error('Erreur lors de la recherche de l\'utilisateur :', error);
+                reject(error);
+            }
+
+            if (results && results.length > 0) {
+                resolve(results[0]);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+};
+
+const getUserByEmail = (email) => {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM users WHERE email = ?`;
+        const params = [email];
+
+        pool.query(query, params, (error, results) => {
+            if (error) {
+                console.error('Erreur lors de la recherche de l\'utilisateur :', error);
+                reject(error);
+            }
+
+            if (results && results.length > 0) {
+                resolve(results[0]);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+};
+
+const getUserByPhoneNumber = (phonenumber) => {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM users WHERE phonenumber = ?`;
+        const params = [phonenumber];
+
+        pool.query(query, params, (error, results) => {
+            if (error) {
+                console.error('Erreur lors de la recherche de l\'utilisateur :', error);
+                reject(error);
+            }
+
+            if (results && results.length > 0) {
+                resolve(results[0]);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+};
+
+module.exports = {
+    getUserByUsernameAndPassword,
+    createUser,
+    getUserByUsername,
+    getUserByEmail,
+    getUserByPhoneNumber
+};

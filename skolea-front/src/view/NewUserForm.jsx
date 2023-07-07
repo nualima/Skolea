@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
+import { createUser } from '../services/newUserServices';
 
 import {
   Container,
@@ -13,12 +14,12 @@ import {
 const NewUserForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [birthday, setBirthday] = useState('');
   const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [isTeacher, setIsTeacher] = useState(false);
+  const [phonenumber, setPhonenumber] = useState('');
+  const [statue, setStatue] = useState(false);
   const [isStudent, setIsStudent] = useState(false);
   const [educationLevel, setEducationLevel] = useState('');
 
@@ -30,44 +31,78 @@ const NewUserForm = () => {
     setPassword(event.target.value);
   };
 
-  const handleFirstNameChange = (event) => {
-    setFirstName(event.target.value);
+  const handlefirstnameChange = (event) => {
+    setFirstname(event.target.value);
   };
 
-  const handleLastNameChange = (event) => {
-    setLastName(event.target.value);
+  const handlelastnameChange = (event) => {
+    setLastname(event.target.value);
   };
 
-  const handleDateOfBirthChange = (event) => {
-    setDateOfBirth(event.target.value);
+  const handlebirthdayChange = (event) => {
+    setBirthday(event.target.value);
   };
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
 
-  const handlePhoneNumberChange = (event) => {
-    setPhoneNumber(event.target.value);
+  const handlephonenumberChange = (event) => {
+    setPhonenumber(event.target.value);
   };
 
   const handleCheckboxChangeTeacher = (event) => {
-    setIsTeacher(event.target.checked);
+    setStatue(event.target.checked);
     setIsStudent(false);
   };
-
+  
   const handleCheckboxChangeStudent = (event) => {
     setIsStudent(event.target.checked);
-    setIsTeacher(false);
+    setStatue(false);
   };
+  
 
   const handleEducationLevelChange = (event) => {
     setEducationLevel(event.target.value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(`Submitting form with username: ${username}, password: ${password}, firstName: ${firstName}, lastName: ${lastName}, dateOfBirth: ${dateOfBirth}, email: ${email}, phoneNumber: ${phoneNumber}, isTeacher: ${isTeacher}, educationLevel: ${educationLevel}`);
-  };
+
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      console.log(`Submitting form with username: ${username}, password: ${password}, firstname: ${firstname}, lastname: ${lastname}, birthday: ${birthday}, email: ${email}, phonenumber: ${phonenumber}, statue: ${statue}, educationLevel: ${educationLevel}`);
+      
+      try {
+        const userData ={
+          username,
+          password,
+          firstname,
+          lastname,
+          birthday,
+          email,
+          phonenumber,
+          statue: statue ? 'teacher' : 'student',
+          educationLevel: statue ? '' : educationLevel, // Set educationLevel to empty string if statue is true
+        };
+  
+        const response = await createUser(userData);
+  
+        const { success, token } = response;
+  
+        if (success) {
+          // Handle successful user creation
+          console.log('User created successfully');
+          // Do something with the token, e.g., store it in localStorage
+        } else {
+          // Handle failed user creation
+          console.log('Failed to create user:', response.message);
+        }
+      } catch (error) {
+        // Handle error
+        console.error('Error creating user:', error);
+      }
+    };
+
+  
 
   return (
     <Card style={{ paddingTop: "50px", paddingBottom: "50px" }}>
@@ -100,25 +135,25 @@ const NewUserForm = () => {
               />
               <TextField
                 required
-                id="firstName"
+                id="firstname"
                 label="First Name"
-                value={firstName}
-                onChange={handleFirstNameChange}
+                value={firstname}
+                onChange={handlefirstnameChange}
               />
               <TextField
                 required
-                id="lastName"
+                id="lastname"
                 label="Last Name"
-                value={lastName}
-                onChange={handleLastNameChange}
+                value={lastname}
+                onChange={handlelastnameChange}
               />
               <TextField
                 required
-                id="dateOfBirth"
+                id="birthday"
                 label="Date of Birth"
                 type="date"
-                value={dateOfBirth}
-                onChange={handleDateOfBirthChange}
+                value={birthday}
+                onChange={handlebirthdayChange}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -133,15 +168,15 @@ const NewUserForm = () => {
               />
               <TextField
                 required
-                id="phoneNumber"
+                id="phonenumber"
                 label="Phone Number"
-                value={phoneNumber}
-                onChange={handlePhoneNumberChange}
+                value={phonenumber}
+                onChange={handlephonenumberChange}
               />
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={isTeacher}
+                    checked={statue}
                     onChange={handleCheckboxChangeTeacher}
                   />
                 }
