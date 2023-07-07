@@ -3,8 +3,11 @@ import { useState, useEffect } from "react";
 import { BiMenuAltRight } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
 import './navbar.scss';
+import { useTranslation } from 'react-i18next';
 
 const NavbarTest = () => {
+    const { t } = useTranslation();
+
     const [menuOpen, setMenuOpen] = useState(false);
     const [size, setSize] = useState({
         width: 0,
@@ -63,7 +66,7 @@ const NavbarTest = () => {
                 <nav className="header__content__nav">
                     <ul>
                         <li>
-                            <a href="/">Home</a>
+                            <a href="/">{t('navbar.home')}</a>
                         </li>
                         {isAuthenticated && (
                             <>
