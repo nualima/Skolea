@@ -10,7 +10,12 @@ const LoginServices = {
         password,
       });
 
+
       const data = response.data;
+      localStorage.setItem('token', data.token);
+      console.log('User Data:', data.userData); //pour test
+
+
       return data;
     } catch (error) {
       console.error('Error during login:', error);

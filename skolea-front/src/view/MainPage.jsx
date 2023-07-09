@@ -1,5 +1,9 @@
 import React from 'react';
 import { Link, Route } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../context';
+
+
 
 
 import NavBar from '../components/NavBar';
@@ -28,6 +32,16 @@ import Footer from '../components/footer/Footer';
 const MainPage = () => {
 
 
+  const { userData } = useContext(UserContext); 
+  const userStatue = userData ? userData.statue : null;
+  console.log(`cadeau ${userData}`)
+  console.log(userStatue)
+
+  
+
+
+
+
   return (
     <div className="App">
       {/* <Slides />  */}
@@ -42,6 +56,8 @@ const MainPage = () => {
           <Row>
             <Col>
               <Card>
+              {/* {userData.statue && <h1>Bonjour {userData.username}</h1>} */}
+              bonjour {userStatue}
                 <Proposals />
                 <Carrousel />
                 <Footer />

@@ -11,6 +11,8 @@ const LoginPage = () => {
   const [passwordError, setPasswordError] = useState("");
 
   const navigate = useNavigate();
+  const [userData, setUserData] = useState(null);
+
 
   const onButtonClick = async () => {
     // Set initial error values to empty
@@ -40,10 +42,13 @@ const LoginPage = () => {
 
     try {
       const { success, data, errors, error } = await LoginServices.login(email, password);
+      
 
       if (success) {
+        navigate("/home");
         // Authentication successful, do something with the data (e.g., store token, navigate to another page)
-        navigate("/profilePage");
+        setUserData(data.userData); // Mettre à jour les informations de l'utilisateur
+
       } else if (errors) {
         // Handle validation errors
         setEmailError(errors.emailError);

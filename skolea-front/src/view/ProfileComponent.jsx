@@ -1,10 +1,8 @@
 import React from 'react';
 import { useState } from 'react';
 
-import { Form, FormGroup, Input, Label, Navbar, Container } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Form, FormGroup, Input, Label, } from 'reactstrap';
 
-import NavBar from '../components/NavBar';
 
 // Un composant pour afficher les informations de base de l'utilisateur
 const ProfileDetails = ({ user }) => {

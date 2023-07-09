@@ -4,8 +4,16 @@ import { BiMenuAltRight } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
 import './navbar.scss';
 import { useTranslation } from 'react-i18next';
+import { useContext } from 'react';
+import { UserContext } from "../../context";
+
+
+
+import { Link } from 'react-router-dom';
+
 
 const NavbarTest = () => {
+  const { userStatus } = useContext(UserContext);
     const { t } = useTranslation();
 
     const [menuOpen, setMenuOpen] = useState(false);
@@ -48,65 +56,83 @@ const NavbarTest = () => {
         setMenuOpen((p) => !p);
     };
 
+
     useEffect(() => {
         // Check client authentication status here
         const clientIsAuthenticated = true; // Replace with your authentication logic
+        
         setIsAuthenticated(clientIsAuthenticated);
     }, []);
 
-    const handleLogout = () => {
-        // Add logout logic here
-        setIsAuthenticated(false);
-    };
+    
 
-    return (
-        <header className={`header ${isScrolled ? "header--blue" : ""}`}>
-            <div className="header__content">
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setIsAuthenticated(false);
+      };
+
+    const renderLinks = () => {
+        let navLinks = [];
+    
+        switch (userStatus) {
+          case "admin":
+            navLinks = ["home", "profile", "users"];
+            break;
+          case "teacher":
+            navLinks = ["home", "profile", "availability"];
+            break;
+          case "student":
+            navLinks = ["home", "profile", "reservation"];
+            break;
+          default:
+            navLinks = ["home", "contact"];
+        }
+        return navLinks.map((link) => (
+            <li key={link}>
+              <Link to={`/${link}`}>{t(`navbar.${link}`)}</Link>
+            </li>
+            
+          ));
+          
+        };
+
+        return (
+            <header className={`header ${isScrolled ? "header--blue" : ""}`}>
+              <div className="header__content">
                 <span className="header__content__logo">Navbar</span>
                 <nav className="header__content__nav">
-                    <ul>
-                        <li>
-                            <a href="/">{t('navbar.home')}</a>
-                        </li>
-                        {isAuthenticated && (
-                            <>
-                                <li>
-                                    <a href="/profilePage">Profile</a>
-                                </li>
-                                <li>
-                                    <a href="/subject">Reservation</a>
-                                </li>
-                            </>
-                        )}
-                        <li>
-                            <a href="/contact">Contact</a>
-                        </li>
-                        {isAuthenticated ? (
+                  <ul>
+                    
+                    {renderLinks()}
+                  </ul>
+                  {isAuthenticated ? (
                             <button className="btn" onClick={handleLogout}>
                                 Se déconnecter
                             </button>
                         ) : (
                             <>
-                                <a href="/newUserForm">
+                                <Link to="/signUp">
                                     <button className="btn">Inscription</button>
-                                </a>
-                                <a href="/loginPage">
-                                    <button className="btn btn__login">Connexion</button>
-                                </a>
+                                </Link>
+                                <Link to="/login">
+                                    <button className="btn btn__login" >Connexion</button>
+                                    </Link>
                             </>
                         )}
-                    </ul>
                 </nav>
                 <div className="header__content__toggle">
-                    {!menuOpen ? (
-                        <BiMenuAltRight onClick={menuToggleHandler} />
-                    ) : (
-                        <AiOutlineClose onClick={menuToggleHandler} />
-                    )}
+                  {!menuOpen ? (
+                    <BiMenuAltRight onClick={menuToggleHandler} />
+                  ) : (
+                    <AiOutlineClose onClick={menuToggleHandler} />
+                  )}
                 </div>
-            </div>
-        </header>
-    );
+
+                
+              </div>
+            </header>
+          );
+        
 };
 
 export default NavbarTest;

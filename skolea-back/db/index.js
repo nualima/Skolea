@@ -47,6 +47,26 @@ const createUser = (username, password, firstname, lastname, birthday, email, ph
     });
 };
 
+const getUserById = (id) => {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM users WHERE id = ?`;
+        const params = [id];
+
+        pool.query(query, params, (error, results) => {
+            if (error) {
+                console.error('Erreur lors de la recherche de l\'utilisateur :', error);
+                reject(error);
+            }
+
+            if (results && results.length > 0) {
+                resolve(results[0]);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+};
+
 const getUserByUsername = (username) => {
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM users WHERE username = ?`;
@@ -112,5 +132,6 @@ module.exports = {
     createUser,
     getUserByUsername,
     getUserByEmail,
-    getUserByPhoneNumber
+    getUserByPhoneNumber,
+    getUserById
 };
