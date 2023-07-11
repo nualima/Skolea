@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./loginPage.css";
 import { Card } from "@mui/material";
 import LoginServices from "../../services/loginServices";
+import { UserContext } from "../../context";
+
+ 
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +14,9 @@ const LoginPage = () => {
   const [passwordError, setPasswordError] = useState("");
 
   const navigate = useNavigate();
-  const [userData, setUserData] = useState(null);
+  const { userData, setUserData } = useContext(UserContext);
+  
+  
 
 
   const onButtonClick = async () => {
@@ -25,10 +30,10 @@ const LoginPage = () => {
       return;
     }
 
-    // if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-    //   setEmailError("Please enter a valid email");
-    //   return;
-    // }
+    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+      setEmailError("Please enter a valid email");
+      return;
+    }
 
     if ("" === password) {
       setPasswordError("Please enter a password");
@@ -46,8 +51,13 @@ const LoginPage = () => {
 
       if (success) {
         navigate("/home");
+        setUserData(userData); // Mettre à jour les informations de l'utilisateur
+
+
+        
+        window.reload();
+
         // Authentication successful, do something with the data (e.g., store token, navigate to another page)
-        setUserData(data.userData); // Mettre à jour les informations de l'utilisateur
 
       } else if (errors) {
         // Handle validation errors

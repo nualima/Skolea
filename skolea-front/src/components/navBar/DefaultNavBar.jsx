@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 
 
 const NavbarTest = () => {
-  const { userStatus } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
     const { t } = useTranslation();
 
     const [menuOpen, setMenuOpen] = useState(false);
@@ -74,9 +74,9 @@ const NavbarTest = () => {
     const renderLinks = () => {
         let navLinks = [];
     
-        switch (userStatus) {
+        switch (userData.statue) {
           case "admin":
-            navLinks = ["home", "profile", "users"];
+            navLinks = ["home", "profil", "users"];
             break;
           case "teacher":
             navLinks = ["home", "profile", "availability"];

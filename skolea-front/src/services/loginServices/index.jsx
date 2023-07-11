@@ -13,7 +13,6 @@ const LoginServices = {
 
       const data = response.data;
       localStorage.setItem('token', data.token);
-      console.log('User Data:', data.userData); //pour test
 
 
       return data;

@@ -1,15 +1,19 @@
 import React from 'react';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { Link } from 'react-router-dom';
+
 
 export default function Error() {
   return (
+    <Container style={{marginTop:"200px"}}>
+    <Card>
     <Box
       sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh'
+        minHeight: '500px'
       }}
     >
       <Container maxWidth="md">
@@ -21,7 +25,9 @@ export default function Error() {
             <Typography variant="h6">
               The page you’re looking for doesn’t exist.
             </Typography>
+            <Link to="/home">
             <Button variant="contained">Back Home</Button>
+            </Link>
           </Grid>
           <Grid xs={6}>
             <img
@@ -33,5 +39,7 @@ export default function Error() {
         </Grid>
       </Container>
     </Box>
+    </Card>
+    </Container>
   );
 }

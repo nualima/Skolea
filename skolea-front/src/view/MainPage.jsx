@@ -34,20 +34,13 @@ const MainPage = () => {
 
   const { userData } = useContext(UserContext); 
   const userStatue = userData ? userData.statue : null;
-  console.log(`cadeau ${userData}`)
-  console.log(userStatue)
-
   
 
-
-
-
+  
   return (
     <div className="App">
-      {/* <Slides />  */}
 
       <ExempleNavbar   />
-      {/* <IndexHeader /> */}
       
       <div style={{
         marginTop:"100px"
@@ -56,8 +49,6 @@ const MainPage = () => {
           <Row>
             <Col>
               <Card>
-              {/* {userData.statue && <h1>Bonjour {userData.username}</h1>} */}
-              bonjour {userStatue}
                 <Proposals />
                 <Carrousel />
                 <Footer />

@@ -10,6 +10,7 @@ import {
   Container,
   Card,
 } from "reactstrap";
+import ExempleNavbar from '../components/ExempleNavbar';
 
 const NewUserForm = () => {
   const [username, setUsername] = useState('');
@@ -69,7 +70,6 @@ const NewUserForm = () => {
 
     const handleSubmit = async (event) => {
       event.preventDefault();
-      console.log(`Submitting form with username: ${username}, password: ${password}, firstname: ${firstname}, lastname: ${lastname}, birthday: ${birthday}, email: ${email}, phonenumber: ${phonenumber}, statue: ${statue}, educationLevel: ${educationLevel}`);
       
       try {
         const userData ={
@@ -90,11 +90,9 @@ const NewUserForm = () => {
   
         if (success) {
           // Handle successful user creation
-          console.log('User created successfully');
           // Do something with the token, e.g., store it in localStorage
         } else {
           // Handle failed user creation
-          console.log('Failed to create user:', response.message);
         }
       } catch (error) {
         // Handle error
@@ -105,7 +103,9 @@ const NewUserForm = () => {
   
 
   return (
-    <Card style={{ paddingTop: "50px", paddingBottom: "50px" }}>
+    <>
+    <Container>
+    <Card style={{ padding:"50px"}}>
       <Container>
         <div className="form-container">
           <h1>Form</h1>
@@ -208,6 +208,8 @@ const NewUserForm = () => {
         </div>
       </Container>
     </Card>
+    </Container>
+    </>
   );
 };
 

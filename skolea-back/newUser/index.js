@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Route POST pour créer un nouvel utilisateur
 router.post('/signup', async(req, res) => {
-    const { username, password, firstName, lastName, birthday, email, phonenumber, statue, educationLevel } = req.body;
+    const { username, password, firstname, lastname, birthday, email, phonenumber, statue, educationLevel } = req.body;
 
     try {
         // Vérifier si l'utilisateur existe déjà dans la base de données
@@ -18,7 +18,7 @@ router.post('/signup', async(req, res) => {
         }
 
         // Ajouter l'utilisateur à la base de données
-        const newUser = await api.addUser(username, password, firstName, lastName, birthday, email, phonenumber, statue, educationLevel);
+        const newUser = await api.createUser(username, password, firstname, lastname, birthday, email, phonenumber, statue, educationLevel);
 
         // Créer le token pour l'utilisateur
         const token = jwt.sign({ id: newUser.id }, 'a1azek2kke11é5é55432a2');
@@ -26,7 +26,7 @@ router.post('/signup', async(req, res) => {
         return res.send({ success: true, token });
     } catch (error) {
         console.error('Erreur lors de la création de l\'utilisateur:', error);
-        return res.status(500).send({ success: false, message: 'Une erreur est survenue lors de la création de l\'utilisateur' });
+        return res.status(500).send({ success: false, message: 'Une erreur est survenue lors de la création de l\'utilisateur', error: error.message });
     }
 });
 

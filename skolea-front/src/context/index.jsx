@@ -16,12 +16,7 @@ export const UserProvider = ({ children }) => {
         const response = await LoginServices.whoAmI(token);
         const userData = response.userData;
         setUserData(userData);
-        console.log('User Data:', userData);
-        console.log(userData)
       
-        console.log("salut")
-        console.log(`response = ${response}`)
-        console.log(response)
 
       } catch (error) {
         console.error('Error during authentication check:', error);

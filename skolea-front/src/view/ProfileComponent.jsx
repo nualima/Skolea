@@ -1,3 +1,4 @@
+import { Container } from '@mui/material';
 import React from 'react';
 import { useState } from 'react';
 
@@ -49,6 +50,7 @@ const ProfileDetails = ({ user }) => {
 
   return (
     <>
+    <Container style={{marginTop:"150px"}}>
       <section style={{ backgroundColor: '#eee' }}>
         <div className="container py-5">
           <div className="row">
@@ -158,6 +160,7 @@ const ProfileDetails = ({ user }) => {
           </div>
         </div>
       </section>
+      </Container>
     </>
   );
 };
