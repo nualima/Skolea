@@ -42,9 +42,10 @@ function App() {
             <Route path="/home" element={<MainPage />} />
             <Route path="/" element={<MainPage />} />
             <Route path="/profile" element={<ProfileComponent />} />
-            {/* {userStatue === 'student' && (
-              <Route path="/reservation" element={<Reservation />} />
-            )} */}
+            {userStatue === 'student' && (
+            <Route path="/reservation" element={<Reservation />} />
+
+            )}
             {userStatue === 'teacher' && (
               <Route path="/availability" element={<Availability />} />
             )}
@@ -56,7 +57,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/subject" element={<Subject />} />
             <Route path="*" element={<NotFound />} />
-            <Route path="/reservation" element={<Reservation />} />
+
 
           </Routes>
         </div>

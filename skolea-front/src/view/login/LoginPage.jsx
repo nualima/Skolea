@@ -20,7 +20,9 @@ const LoginPage = () => {
 
 
   const onButtonClick = async () => {
+
     // Set initial error values to empty
+    
     setEmailError("");
     setPasswordError("");
 
@@ -30,10 +32,11 @@ const LoginPage = () => {
       return;
     }
 
-    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-      setEmailError("Please enter a valid email");
-      return;
-    }
+    // if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+    //   setEmailError("Please enter a valid email");
+    //   return;
+    // }
+
 
     if ("" === password) {
       setPasswordError("Please enter a password");
@@ -51,11 +54,11 @@ const LoginPage = () => {
 
       if (success) {
         navigate("/home");
-        setUserData(userData); // Mettre à jour les informations de l'utilisateur
+
+        setUserData(data); // Mettre à jour les informations de l'utilisateur
 
 
         
-        window.reload();
 
         // Authentication successful, do something with the data (e.g., store token, navigate to another page)
 

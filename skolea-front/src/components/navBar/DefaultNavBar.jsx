@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { BiMenuAltRight } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
@@ -13,7 +14,10 @@ import { Link } from 'react-router-dom';
 
 
 const NavbarTest = () => {
-  const { userData } = useContext(UserContext);
+  const { userData, setUserData } = useContext(UserContext);
+  const navigate = useNavigate();
+
+
     const { t } = useTranslation();
 
     const [menuOpen, setMenuOpen] = useState(false);
@@ -69,32 +73,34 @@ const NavbarTest = () => {
     const handleLogout = () => {
         localStorage.removeItem('token');
         setIsAuthenticated(false);
+        navigate("/home");
       };
 
-    const renderLinks = () => {
+      const renderLinks = () => {
         let navLinks = [];
-    
-        switch (userData.statue) {
-          case "admin":
-            navLinks = ["home", "profil", "users"];
-            break;
-          case "teacher":
-            navLinks = ["home", "profile", "availability"];
-            break;
-          case "student":
-            navLinks = ["home", "profile", "reservation"];
-            break;
-          default:
-            navLinks = ["home", "contact"];
+      
+        if (userData && userData.statue) { // Ajouter une vérification de nullité
+          switch (userData.statue) {
+            case "admin":
+              navLinks = ["home", "profil", "users"];
+              break;
+            case "teacher":
+              navLinks = ["home", "profile", "availability"];
+              break;
+            case "student":
+              navLinks = ["home", "profile", "reservation"];
+              break;
+            default:
+              navLinks = ["home", "contact"];
+          }
         }
+        
         return navLinks.map((link) => (
-            <li key={link}>
-              <Link to={`/${link}`}>{t(`navbar.${link}`)}</Link>
-            </li>
-            
-          ));
-          
-        };
+          <li key={link}>
+            <Link to={`/${link}`}>{t(`navbar.${link}`)}</Link>
+          </li>
+        ));
+      };
 
         return (
             <header className={`header ${isScrolled ? "header--blue" : ""}`}>

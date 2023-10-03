@@ -39,6 +39,7 @@ const MainPage = () => {
   
   return (
     <div className="App">
+      
 
       <ExempleNavbar   />
       
@@ -49,19 +50,13 @@ const MainPage = () => {
           <Row>
             <Col>
               <Card>
+                salut {userStatue} 
                 <Proposals />
                 <Carrousel />
                 <Footer />
-
-
               </Card>
-
-
-
-
             </Col>
           </Row>
-
       </div>
     </div>
   );
