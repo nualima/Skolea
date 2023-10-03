@@ -1,13 +1,12 @@
+// Import des bibliothèques et composants nécessaires
 import { Container } from '@mui/material';
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { Form, FormGroup, Input, Label } from 'reactstrap';
 
-import { Form, FormGroup, Input, Label, } from 'reactstrap';
-
-
-// Un composant pour afficher les informations de base de l'utilisateur
+// Composant pour afficher les détails du profil utilisateur
 const ProfileDetails = ({ user }) => {
-  const [isEditing, setIsEditing] = useState(false);
+  // États pour gérer les données du formulaire et le mode d'édition
+  const [isEditing, setIsEditing] = useState(false); // Indique si l'utilisateur est en mode édition
   const [username, setUsername] = useState(undefined);
   const [password, setPassword] = useState(undefined);
   const [fullName, setFullName] = useState(undefined);
@@ -15,6 +14,7 @@ const ProfileDetails = ({ user }) => {
   const [phone, setPhone] = useState(undefined);
   const [address, setAddress] = useState(undefined);
 
+  // Gestionnaires d'événements pour les modifications des champs du formulaire
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
   };
@@ -39,13 +39,12 @@ const ProfileDetails = ({ user }) => {
     setAddress(event.target.value);
   };
 
+  // Gestionnaire d'événement pour la soumission du formulaire en mode édition
   const handleSubmit = (event) => {
     event.preventDefault();
     // Effectuer les actions nécessaires pour sauvegarder les modifications
-
     // Par exemple, vous pouvez envoyer les données au backend via une requête API
-
-    setIsEditing(false);
+    setIsEditing(false); // Désactive le mode édition après la soumission
   };
 
   return (
@@ -72,8 +71,9 @@ const ProfileDetails = ({ user }) => {
             <div className="col-lg-8">
               <div className="card mb-4">
                 <div className="card-body">
-                  {isEditing ? (
+                  {isEditing ? ( // Si l'utilisateur est en mode édition, affiche le formulaire
                     <Form onSubmit={handleSubmit}>
+                      {/* Champs de formulaire éditables */}
                       <FormGroup>
                         <Label for="username">Username</Label>
                         <Input
@@ -83,68 +83,15 @@ const ProfileDetails = ({ user }) => {
                           onChange={handleUsernameChange}
                         />
                       </FormGroup>
-                      <FormGroup>
-                        <Label for="password">Password</Label>
-                        <Input
-                          type="password"
-                          id="password"
-                          value={password}
-                          onChange={handlePasswordChange}
-                        />
-                      </FormGroup>
-                      <FormGroup>
-                        <Label for="fullName">Full Name</Label>
-                        <Input
-                          type="text"
-                          id="fullName"
-                          value={fullName}
-                          onChange={handleFullNameChange}
-                        />
-                      </FormGroup>
-                      <FormGroup>
-                        <Label for="email">Email</Label>
-                        <Input
-                          type="email"
-                          id="email"
-                          value={email}
-                          onChange={handleEmailChange}
-                        />
-                      </FormGroup>
-                      <FormGroup>
-                        <Label for="phone">Phone</Label>
-                        <Input
-                          type="tel"
-                          id="phone"
-                          value={phone}
-                          onChange={handlePhoneChange}
-                        />
-                      </FormGroup>
-                      <FormGroup>
-                        <Label for="address">Address</Label>
-                        <Input
-                          type="text"
-                          id="address"
-                          value={address}
-                          onChange={handleAddressChange}
-                        />
-                      </FormGroup>
                       <button type="submit" className="btn btn-primary">
-                        Save
+                        Sauvegarder
                       </button>
                     </Form>
-                  ) : (
+                  ) : ( // Si l'utilisateur n'est pas en mode édition, affiche les détails du profil
                     <div>
                       <p className="mb-0">Full Name</p>
                       <p className="text-muted mb-0">{fullName}</p>
                       <hr />
-                      <p className="mb-0">Email</p>
-                      <p className="text-muted mb-0">{email}</p>
-                      <hr />
-                      <p className="mb-0">Phone</p>
-                      <p className="text-muted mb-0">{phone}</p>
-                      <hr />
-                      <p className="mb-0">Address</p>
-                      <p className="text-muted mb-0">{address}</p>
                       <button
                         type="button"
                         className="btn btn-primary"

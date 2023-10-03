@@ -5,74 +5,65 @@ import { Card } from "@mui/material";
 import LoginServices from "../../services/loginServices";
 import { UserContext } from "../../context";
 
- 
-
 const LoginPage = () => {
+  // États pour gérer les champs du formulaire, les erreurs et le contexte utilisateur
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
+  // Utilisation de useNavigate pour la navigation
   const navigate = useNavigate();
+  
+  // Utilisation du contexte utilisateur pour stocker les informations utilisateur
   const { userData, setUserData } = useContext(UserContext);
-  
-  
 
-
+  // Gestionnaire de clic sur le bouton "Log in"
   const onButtonClick = async () => {
-
-    // Set initial error values to empty
-    
+    // Réinitialiser les messages d'erreur
     setEmailError("");
     setPasswordError("");
 
-    // Check if the user has entered both fields correctly
+    // Vérifier si l'utilisateur a correctement saisi les champs
     if ("" === email) {
-      setEmailError("Please enter your email");
+      setEmailError("Veuillez entrer votre adresse e-mail");
       return;
     }
 
-    // if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-    //   setEmailError("Please enter a valid email");
-    //   return;
-    // }
-
-
     if ("" === password) {
-      setPasswordError("Please enter a password");
+      setPasswordError("Veuillez entrer un mot de passe");
       return;
     }
 
     if (password.length < 8) {
-      setPasswordError("The password must be 8 characters or longer");
+      setPasswordError("Le mot de passe doit comporter au moins 8 caractères");
       return;
     }
 
     try {
+      // Appeler le service de connexion (LoginServices) pour vérifier les informations d'authentification
       const { success, data, errors, error } = await LoginServices.login(email, password);
-      
 
       if (success) {
+        // Rediriger l'utilisateur vers la page d'accueil s'il est authentifié avec succès
         navigate("/home");
 
-        setUserData(data); // Mettre à jour les informations de l'utilisateur
+        // Mettre à jour les informations de l'utilisateur dans le contexte
+        setUserData(data);
 
-
-        
-
-        // Authentication successful, do something with the data (e.g., store token, navigate to another page)
+        // Gérer les actions à effectuer en cas d'authentification réussie (par exemple, stocker le jeton, etc.)
 
       } else if (errors) {
-        // Handle validation errors
+        // Gérer les erreurs de validation (par exemple, email ou mot de passe incorrect)
         setEmailError(errors.emailError);
         setPasswordError(errors.passwordError);
       } else {
-        // Handle general login error
-        console.error("Error during login:", error);
+        // Gérer les erreurs de connexion générales
+        console.error("Erreur lors de la connexion :", error);
       }
     } catch (error) {
-      // Handle network or other errors
-      console.error("Error during login:", error);
+      // Gérer les erreurs réseau ou autres
+      console.error("Erreur lors de la connexion :", error);
     }
   };
 
@@ -84,9 +75,10 @@ const LoginPage = () => {
         </div>
         <br />
         <div className="inputContainer">
+          {/* Champ de saisie pour l'adresse e-mail */}
           <input
             value={email}
-            placeholder="Enter your email here"
+            placeholder="Entrez votre adresse e-mail ici"
             onChange={(ev) => setEmail(ev.target.value)}
             className="inputBox"
           />
@@ -94,9 +86,10 @@ const LoginPage = () => {
         </div>
         <br />
         <div className="inputContainer">
+          {/* Champ de saisie pour le mot de passe */}
           <input
             value={password}
-            placeholder="Enter your password here"
+            placeholder="Entrez votre mot de passe ici"
             onChange={(ev) => setPassword(ev.target.value)}
             className="inputBox"
           />
@@ -104,7 +97,8 @@ const LoginPage = () => {
         </div>
         <br />
         <div className="inputContainer">
-          <input className="inputButton" type="button" onClick={onButtonClick} value="Log in" />
+          {/* Bouton de connexion */}
+          <input className="inputButton" type="button" onClick={onButtonClick} value="Se connecter" />
         </div>
       </Card>
     </div>

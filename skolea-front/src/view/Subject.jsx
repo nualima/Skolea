@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Card, Container } from "@mui/material";
 import ExempleNavbar from '../components/ExempleNavbar';
 
+// Liste des matières avec leurs identifiants, noms et couleurs
 const subjects = [
     { id: 1, name: 'Mathématiques', color: '#FF5722' },
     { id: 2, name: 'Sciences', color: '#2196F3' },
@@ -19,22 +20,22 @@ const subjects = [
 const Subject = () => {
     return (
         <div>
+            {/* Affichage de la barre de navigation */}
             <ExempleNavbar />
             <Container>
                 <Card style={{ padding: "25px" }}>
                     <h1>Liste des matières</h1>
+                    {/* Affichage des boutons pour chaque matière */}
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                         {subjects.map((subject) => (
-                            <Link to="/reservation">
-
+                            <Link to="/reservation" key={subject.id}>
                                 <Button
-
-                                    key={subject.id}
                                     variant="contained"
                                     style={{ backgroundColor: subject.color, color: '#fff' }}
                                 >
                                     {subject.name}
-                                </Button></Link>
+                                </Button>
+                            </Link>
                         ))}
                     </div>
                 </Card>
