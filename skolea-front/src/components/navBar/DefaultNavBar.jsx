@@ -7,11 +7,7 @@ import './navbar.scss';
 import { useTranslation } from 'react-i18next';
 import { useContext } from 'react';
 import { UserContext } from "../../context";
-
-
-
 import { Link } from 'react-router-dom';
-
 
 const NavbarTest = () => {
   const { userData, setUserData } = useContext(UserContext);

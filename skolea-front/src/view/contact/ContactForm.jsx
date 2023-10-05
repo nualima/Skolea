@@ -1,7 +1,6 @@
 import React from 'react'
 import { Card } from 'reactstrap'
 import { Container } from '@mui/material'
-import ExempleNavbar from '../../components/ExempleNavbar'
 const ContactForm = () => {
   const [formStatus, setFormStatus] = React.useState('Send')
   const onSubmit = (e) => {
@@ -16,7 +15,9 @@ const ContactForm = () => {
   }
   return (
     <>
-    <ExempleNavbar />
+    <div style={{
+        marginTop:"750px"
+      }}></div>
     
     <Container >
       <Card style={{ padding:"50px" }}>

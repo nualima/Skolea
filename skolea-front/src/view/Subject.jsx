@@ -2,7 +2,6 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import { Card, Container } from "@mui/material";
-import ExempleNavbar from '../components/ExempleNavbar';
 
 // Liste des matières avec leurs identifiants, noms et couleurs
 const subjects = [
@@ -21,7 +20,10 @@ const Subject = () => {
     return (
         <div>
             {/* Affichage de la barre de navigation */}
-            <ExempleNavbar />
+            <div style={{
+        marginTop:"750px"
+      }}></div>
+            
             <Container>
                 <Card style={{ padding: "25px" }}>
                     <h1>Liste des matières</h1>

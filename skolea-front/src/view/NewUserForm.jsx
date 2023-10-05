@@ -11,7 +11,6 @@ import {
   Container,
   Card,
 } from "reactstrap";
-import ExempleNavbar from '../components/ExempleNavbar';
 
 // Définition du composant NewUserForm
 const NewUserForm = () => {

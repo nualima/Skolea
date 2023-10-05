@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from "react";
 import banniere1 from "../../assets/img/skolae-bg.png";
-import NavBar from "../NavBar";
 
 const ThemeApp = () => {
   const banniere1Ref = useRef(null);

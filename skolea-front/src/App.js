@@ -16,7 +16,6 @@ import Availability from './view/availability/Availability';
 import ListUsers from './view/listUsers/ListUsers';
 import NotFound from './view/notFound/NotFound';
 import ThemeApp from './components/theme/ThemeApp';
-import LoginServices from './services/loginServices';
 
 function App() {
   // Récupérer les données utilisateur depuis le contexte

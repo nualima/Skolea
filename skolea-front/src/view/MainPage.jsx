@@ -1,24 +1,17 @@
 import React from 'react';
-import { Link, Route } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../context';
 
 
 
 
-import NavBar from '../components/NavBar';
-import ExempleNavbar from '../components/ExempleNavbar';
-// import Slides from '../components/banner/Slides';
 import Proposals from '../components/proposals/Proposals';
-import ThemeApp from '../components/theme/ThemeApp';
-import IndexHeader from '../components/header/IndexHeader';
+
 
 import {
-  Container,
   Row,
   Col,
   Card,
-  CardBody,
   // Button,
 
 } from "reactstrap";
@@ -40,11 +33,8 @@ const MainPage = () => {
   return (
     <div className="App">
       
-
-      <ExempleNavbar   />
-      
       <div style={{
-        marginTop:"100px"
+        marginTop:"850px"
       }}>
 
           <Row>
