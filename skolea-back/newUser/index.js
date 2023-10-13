@@ -2,14 +2,11 @@
 const express = require('express');
 const api = require('../db');
 var jwt = require('jsonwebtoken');
-
 // Création du routeur Express pour le contrôleur
 const router = express.Router();
-
 // Route POST pour créer un nouvel utilisateur
 router.post('/signup', async(req, res) => {
     const { username, password, firstname, lastname, birthday, email, phonenumber, statue, educationLevel } = req.body;
-
     try {
         // Vérifier si l'utilisateur existe déjà dans la base de données
         const existingUser = await api.getUserByUsername(username);
@@ -29,7 +26,4 @@ router.post('/signup', async(req, res) => {
         return res.status(500).send({ success: false, message: 'Une erreur est survenue lors de la création de l\'utilisateur', error: error.message });
     }
 });
-
-
-
 module.exports = router;

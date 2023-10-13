@@ -18,11 +18,13 @@ import NotFound from './view/notFound/NotFound';
 import ThemeApp from './components/theme/ThemeApp';
 
 function App() {
+
   // Récupérer les données utilisateur depuis le contexte
   const { userData } = useContext(UserContext); 
 
   // Extraire le statut de l'utilisateur (student, teacher, admin)
   const userStatue = userData && userData.statue ? userData.statue : null;
+  console.log(userStatue)
 
   return (
     <Router>
