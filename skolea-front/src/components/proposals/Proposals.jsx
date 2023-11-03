@@ -49,7 +49,7 @@ function Proposals() {
               </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
               .proposal-icons {
                 display: flex;
                 justify-content: space-between;
