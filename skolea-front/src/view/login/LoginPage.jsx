@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./loginPage.css";
 import { Card } from "@mui/material";
@@ -47,6 +47,7 @@ const LoginPage = () => {
       if (success) {
         // Rediriger l'utilisateur vers la page d'accueil s'il est authentifié avec succès
         navigate("/home");
+        
 
         // Mettre à jour les informations de l'utilisateur dans le contexte
         setUserData(data);
@@ -64,7 +65,7 @@ const LoginPage = () => {
     } catch (error) {
       // Gérer les erreurs réseau ou autres
       console.error("Erreur lors de la connexion :", error);
-    }
+    }   
   };
 
   return (
