@@ -18,17 +18,17 @@ const items = [
   },
   {
     src: img2,
-    altText: "",
-    name: "questions",
-    caption: "",
-    header: "",
+    altText: "" ,
+    name: "questions" ,
+    caption: "" ,
+    header: "" ,
   },
 ];
 
 const Carousels = () => {
   return (
     <>
-      <UncontrolledCarousel items={items} renderIndicators={false} />
+      <UncontrolledCarousel items={items} renderindicators="false" />
     </>
   );
 };
