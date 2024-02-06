@@ -44,9 +44,9 @@ function App() {
             <Route path="/" element={<MainPage />} />{" "}
             <Route path="/profile" element={<ProfileComponent />} />{" "}
             {/* Route pour la réservation, disponible uniquement pour les étudiants */}{" "}
-            {userStatue === "student" && (
+            {/* {userStatue === "student" && (
               <Route path="/reservation" element={<Reservation />} />
-            )}{" "}
+            =)}{" "} */}
             {/* Route pour la disponibilité, disponible uniquement pour les enseignants */}{" "}
             {userStatue === "teacher" && (
               <Route path="/availability" element={<Availability />} />
@@ -59,6 +59,8 @@ function App() {
             <Route path="/signUp" element={<NewUserForm />} />{" "}
             <Route path="/login" element={<LoginPage />} />{" "}
             <Route path="/subject" element={<Subject />} />{" "}
+            <Route path="/reservation" element={<Reservation />} />
+
             <Route path="*" element={<NotFound />} />{" "}
           </Routes>{" "}
         </div>{" "}
