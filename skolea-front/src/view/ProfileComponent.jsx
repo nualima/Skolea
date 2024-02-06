@@ -6,25 +6,30 @@ import { UserContext } from "../context";
 
 // Composant pour afficher les détails du profil utilisateur
 const ProfileDetails = ({ user }) => {
+  const { userData } = useContext(UserContext);
+
   // États pour gérer les données du formulaire et le mode d'édition
-  const { userData, refreshUserData } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false); // Indique si l'utilisateur est en mode édition
-  const [username, setUsername] = useState({ username });
-  const [password, setPassword] = useState(undefined);
-  const [fullName, setFullName] = useState(undefined);
-  const [statue, setStatue] = useState(undefined);
-  const [email, setEmail] = useState(undefined);
-  const [phone, setPhone] = useState(undefined);
-  const [address, setAddress] = useState(undefined);
-  const [lastname, setlastname] = useState(undefined);
+
+  const [username, setUsername] = useState(userData.username || "");
+  const [fullName, setFullName] = useState(
+    `${userData.firstname || ""} ${userData.lastname || ""}`
+  );
+
+  const [email, setEmail] = useState(userData.email || "");
+  const [phone, setPhone] = useState(userData.phonenumber || "");
+  const [address, setAddress] = useState(userData.address || "");
+  const [statue, setStatue] = useState(userData.statue || "");
+  const [phonenumber, setphonenumber] = useState(userData.phonenumber || "");
+
+  const [educationLevel, setEducationLevel] = useState(
+    userData.educationLevel || ""
+  );
+  const [birthday, setBirthday] = useState(userData.birthday || "");
 
   // Gestionnaires d'événements pour les modifications des champs du formulaire
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
   };
 
   const handleFullNameChange = (event) => {
@@ -68,7 +73,7 @@ const ProfileDetails = ({ user }) => {
                       style={{ width: "150px" }}
                     />
                     <h5 className="my-3">John Smith</h5>
-                    <p className="text-muted mb-1">teacher</p>
+                    <p className="text-muted mb-1">{statue}</p>
                     <p className="text-muted mb-4">Antibes - France</p>
                   </div>
                 </div>
@@ -96,20 +101,25 @@ const ProfileDetails = ({ user }) => {
                       // Si l'utilisateur n'est pas en mode édition, affiche les détails du profil
                       <div>
                         <p className="mb-0">Full Name</p>
-                        <p className="text-muted mb-0">{username}</p>
-                        <hr />
-                        <p className="mb-0">Full Name</p>
-                        <p className="text-muted mb-0">{lastname}</p>
-                        <hr />
-                        <p className="mb-0">Full Name</p>
                         <p className="text-muted mb-0">{fullName}</p>
                         <hr />
-                        <p className="mb-0">Full Name</p>
-                        <p className="text-muted mb-0">{fullName}</p>
+                        <p className="mb-0">Email</p>
+                        <p className="text-muted mb-0">{email}</p>
                         <hr />
-                        <p className="mb-0">Full Name</p>
-                        <p className="text-muted mb-0">{fullName}</p>
+                        <p className="mb-0">Birthday</p>
+                        <p className="text-muted mb-0">{birthday}</p>
                         <hr />
+                        <p className="mb-0">Phone number</p>
+                        <p className="text-muted mb-0">{phonenumber}</p>
+                        <hr />
+                        <p className="mb-0">
+                          {" "}
+                          {userData.statue === "teacher"
+                            ? "Subjects: " // A faire : ajouter 'subjects' à la bdd
+                            : "Education Level: " + educationLevel}
+                        </p>
+                        <hr />
+
                         <button
                           type="button"
                           className="btn btn-primary"
