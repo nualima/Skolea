@@ -1,0 +1,19 @@
+.autocomplete-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.clear-btn {
+    position: absolute;
+    left: 5px;
+    /* Ajuste selon le besoin pour aligner avec le texte à l'intérieur de l'Input */
+    color: red;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.input-with-clear-btn {
+    padding-left: 30px;
+    /* Donne de l'espace pour la croix à gauche */
+}
