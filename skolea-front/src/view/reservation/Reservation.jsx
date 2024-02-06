@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card } from "@mui/material";
-import Subject from "../Subject";
+import Subject from "./Subject";
 import {
   Container,
   Row,

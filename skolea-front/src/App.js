@@ -16,7 +16,7 @@ import ProfileComponent from "./view/ProfileComponent";
 import Reservation from "./view/reservation/Reservation";
 import LoginPage from "./view/login/LoginPage";
 import ContactForm from "./view/contact/ContactForm";
-import Subject from "./view/Subject";
+import Subject from "./view/reservation/Subject";
 import Availability from "./view/availability/Availability";
 import ListUsers from "./view/listUsers/ListUsers";
 import NotFound from "./view/notFound/NotFound";
