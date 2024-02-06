@@ -1,10 +1,12 @@
 // Importer les modules et dépendances nécessaires
-import { useEffect, useState } from "react";
-import { createContext } from 'react';
+import React, { createContext, useState, useEffect } from "react";
 import LoginServices from "../services/loginServices";
 
 // Créer un contexte (UserContext) pour gérer les données utilisateur
-export const UserContext = createContext();
+export const UserContext = createContext({
+  userData: null,
+  setUserData: () => {}, // Ajoutez cette ligne pour fournir une implémentation par défaut
+});
 
 // Créer un composant UserProvider pour gérer les données utilisateur et l'état d'authentification
 export const UserProvider = ({ children }) => {
@@ -14,7 +16,7 @@ export const UserProvider = ({ children }) => {
   // Fonction pour vérifier si l'utilisateur est authentifié
   const checkAuthentication = async () => {
     // Récupérer le jeton d'authentification depuis le stockage local (localStorage)
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     // Si un jeton est trouvé, tenter de le vérifier en effectuant une requête au serveur
     if (token) {
@@ -23,15 +25,42 @@ export const UserProvider = ({ children }) => {
         const response = await LoginServices.whoAmI(token);
 
         // Extraire les données utilisateur de la réponse et mettre à jour l'état
-        const userData = response.userData;
-        setUserData(userData);
+        if (response && response.userData) {
+          setUserData(response.userData);
+        }
       } catch (error) {
         // Gérer les erreurs qui surviennent lors de la vérification de l'authentification
-        console.error('Erreur lors de la vérification de l\'authentification :', error);
+        console.error(
+          "Erreur lors de la vérification de l'authentification :",
+          error
+        );
+        // Si une erreur survient, considérez à réinitialiser les données de l'utilisateur
+        setUserData(null);
       }
     } else {
       // Si aucun jeton n'est trouvé, définir les données utilisateur sur null (l'utilisateur n'est pas authentifié)
       setUserData(null);
+    }
+  };
+
+  const refreshUserData = async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const response = await LoginServices.whoAmI(token);
+        if (response && response.userData) {
+          setUserData(response.userData); // Assure-toi de passer juste les données utilisateur
+        } else {
+          console.error(
+            "Les données utilisateur ne sont pas dans la réponse attendue"
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des données utilisateur:",
+          error
+        );
+      }
     }
   };
 
@@ -40,9 +69,9 @@ export const UserProvider = ({ children }) => {
     checkAuthentication();
   }, []);
 
-  // Fournir les données utilisateur aux composants enfants via UserContext.Provider
+  // Fournir les données utilisateur et la fonction setUserData aux composants enfants via UserContext.Provider
   return (
-    <UserContext.Provider value={{ userData }}>
+    <UserContext.Provider value={{ userData, setUserData, refreshUserData }}>
       {children}
     </UserContext.Provider>
   );

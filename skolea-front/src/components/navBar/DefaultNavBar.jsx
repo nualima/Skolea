@@ -3,16 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { BiMenuAltRight } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
-import './navbar.scss';
-import { useTranslation } from 'react-i18next';
-import { useContext } from 'react';
+import "./navbar.scss";
+import { useTranslation } from "react-i18next";
+import { useContext } from "react";
 import { UserContext } from "../../context";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const NavbarTest = () => {
   const { userData, setUserData } = useContext(UserContext);
   const navigate = useNavigate();
-
 
   const { t } = useTranslation();
 
@@ -56,26 +55,23 @@ const NavbarTest = () => {
     setMenuOpen((p) => !p);
   };
 
-
   useEffect(() => {
     // Check client authentication status here
     const clientIsAuthenticated = Boolean(userData); // Met à jour isAuthenticated en fonction de la disponibilité de userData
     setIsAuthenticated(clientIsAuthenticated);
   }, [userData]);
 
-
-
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     setIsAuthenticated(false);
     navigate("/home");
+    window.location.reload(false);
   };
 
   const renderLinks = () => {
     let navLinks = [];
 
     navLinks.push("home");
-
 
     switch (userData?.statue) {
       case "admin":
@@ -94,13 +90,9 @@ const NavbarTest = () => {
 
     // Reste du code pour le rendu des liens
     return navLinks.map((link) => (
-
       <li key={link}>
-
         <Link to={`/${link}`}>
-          <button className="btn">
-            {t(`navbar.${link}`)}
-          </button>
+          <button className="btn">{t(`navbar.${link}`)}</button>
         </Link>
       </li>
     ));
@@ -113,7 +105,7 @@ const NavbarTest = () => {
         <nav className="header__content__nav">
           <ul>
             <Link to="/home">
-              <button className="btn btn__login" >home</button>
+              <button className="btn btn__login">home</button>
             </Link>
             {renderLinks()}
           </ul>
@@ -127,7 +119,7 @@ const NavbarTest = () => {
                 <button className="btn">Inscription</button>
               </Link>
               <Link to="/login">
-                <button className="btn btn__login" >Connexion</button>
+                <button className="btn btn__login">Connexion</button>
               </Link>
             </>
           )}
@@ -139,12 +131,9 @@ const NavbarTest = () => {
             <AiOutlineClose onClick={menuToggleHandler} />
           )}
         </div>
-
-
       </div>
     </header>
   );
-
 };
 
 export default NavbarTest;

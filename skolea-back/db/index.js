@@ -1,8 +1,8 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 const connectionConfig = {
     host: '127.0.0.1',
-    port: 3360,
+    port: 3306,
     user: 'root',
     password: 'root',
     database: 'skolea'

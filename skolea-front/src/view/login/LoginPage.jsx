@@ -14,23 +14,21 @@ const LoginPage = () => {
 
   // Utilisation de useNavigate pour la navigation
   const navigate = useNavigate();
-  
+
   // Utilisation du contexte utilisateur pour stocker les informations utilisateur
   const { userData, setUserData } = useContext(UserContext);
 
   // Gestionnaire de clic sur le bouton "Log in"
   const onButtonClick = async () => {
-    // Réinitialiser les messages d'erreur
     setEmailError("");
     setPasswordError("");
 
-    // Vérifier si l'utilisateur a correctement saisi les champs
-    if ("" === email) {
+    if (email === "") {
       setEmailError("Veuillez entrer votre adresse e-mail");
       return;
     }
 
-    if ("" === password) {
+    if (password === "") {
       setPasswordError("Veuillez entrer un mot de passe");
       return;
     }
@@ -41,31 +39,28 @@ const LoginPage = () => {
     }
 
     try {
-      // Appeler le service de connexion (LoginServices) pour vérifier les informations d'authentification
-      const { success, data, errors, error } = await LoginServices.login(email, password);
+      const { success, data, errors, error } = await LoginServices.login(
+        email,
+        password
+      );
 
       if (success) {
-        // Rediriger l'utilisateur vers la page d'accueil s'il est authentifié avec succès
-        navigate("/home");
-        
-
-        // Mettre à jour les informations de l'utilisateur dans le contexte
+        // Si 'data' est l'objet utilisateur, tu peux le passer directement.
         setUserData(data);
 
-        // Gérer les actions à effectuer en cas d'authentification réussie (par exemple, stocker le jeton, etc.)
-
+        // Attendre un peu avant de naviguer pour s'assurer que l'état a été mis à jour
+        setTimeout(() => {
+          navigate("/home");
+        }, 500); // Réduit le temps d'attente si nécessaire
       } else if (errors) {
-        // Gérer les erreurs de validation (par exemple, email ou mot de passe incorrect)
         setEmailError(errors.emailError);
         setPasswordError(errors.passwordError);
       } else {
-        // Gérer les erreurs de connexion générales
         console.error("Erreur lors de la connexion :", error);
       }
     } catch (error) {
-      // Gérer les erreurs réseau ou autres
       console.error("Erreur lors de la connexion :", error);
-    }   
+    }
   };
 
   return (
@@ -99,7 +94,12 @@ const LoginPage = () => {
         <br />
         <div className="inputContainer">
           {/* Bouton de connexion */}
-          <input className="inputButton" type="button" onClick={onButtonClick} value="Se connecter" />
+          <input
+            className="inputButton"
+            type="button"
+            onClick={onButtonClick}
+            value="Se connecter"
+          />
         </div>
       </Card>
     </div>
