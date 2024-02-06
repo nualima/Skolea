@@ -22,10 +22,10 @@ const MainPage = () => {
     console.log("Les données utilisateur ont été mises à jour.", userData);
   }, [userData]);
 
-  useEffect(() => {
-    refreshUserData(); // Rafraîchir les données utilisateur au chargement du composant
-    console.log("refreshUserData", userData);
-  }, []);
+  // useEffect(() => {
+  //   refreshUserData(); // Rafraîchir les données utilisateur au chargement du composant
+  //   console.log("refreshUserData", userData);
+  // }, []);
 
   return (
     <div className="App">

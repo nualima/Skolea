@@ -51,6 +51,7 @@ const LoginPage = () => {
         // Attendre un peu avant de naviguer pour s'assurer que l'état a été mis à jour
         setTimeout(() => {
           navigate("/home");
+          window.location.reload(false);
         }, 500); // Réduit le temps d'attente si nécessaire
       } else if (errors) {
         setEmailError(errors.emailError);
