@@ -1,12 +1,12 @@
 export default {
     "navbar": {
-        "home": "home",
-        "profil": "profil",
-        "reservation": "reservation",
-        "availability": "availability",
-        "contact": "contact",
-        "login": "login",
-        "signUp": "sign up",
+        "home": "Home",
+        "profil": "Profil",
+        "reservation": "Reservation",
+        "availability": "Availability",
+        "contact": "Contact",
+        "login": "Login",
+        "signUp": "Sign up",
         "users": "Users"
     }
 }

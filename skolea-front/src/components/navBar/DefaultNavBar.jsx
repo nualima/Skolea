@@ -105,7 +105,7 @@ const NavbarTest = () => {
         <nav className="header__content__nav">
           <ul>
             <Link to="/home">
-              <button className="btn btn__login">home</button>
+              <button className="btn btn__login">Home</button>
             </Link>
             {renderLinks()}
           </ul>
