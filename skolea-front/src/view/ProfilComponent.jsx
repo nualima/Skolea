@@ -17,7 +17,7 @@ const ProfilDetails = ({ user }) => {
   const [email, setEmail] = useState(userData.email || "");
   const [phone, setPhone] = useState(userData.phonenumber || "");
   const [address, setAddress] = useState(userData.address || "");
-  const [status, setStatus] = useState(userData.status || "");
+  const [role, setrole] = useState(userData.role || "");
   const [phonenumber, setPhonenumber] = useState(userData.phonenumber || "");
   const [educationLevel, setEducationLevel] = useState(
     userData.educationLevel || ""
@@ -70,7 +70,7 @@ const ProfilDetails = ({ user }) => {
                       style={{ width: "150px" }}
                     />
                     <h5 className="my-3">John Smith</h5>
-                    <p className="text-muted mb-1">{status}</p>
+                    <p className="text-muted mb-1">{role}</p>
                     <p className="text-muted mb-4">Antibes - France</p>
                   </div>
                 </div>
@@ -111,7 +111,7 @@ const ProfilDetails = ({ user }) => {
                         <hr />
                         <p className="mb-0">
                           {" "}
-                          {userData.status === "teacher"
+                          {userData.role === "teacher"
                             ? "Subjects: " // A faire : ajouter 'subjects' à la bdd
                             : "Education Level: " + educationLevel}
                         </p>

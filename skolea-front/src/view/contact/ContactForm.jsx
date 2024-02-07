@@ -3,13 +3,13 @@ import { Card, Container } from '@mui/material';
 
 const ContactForm = () => {
   // Utilisation du hook useState pour gérer l'état du formulaire
-  const [formStatus, setFormStatus] = useState('Send');
+  const [formrole, setFormrole] = useState('Send');
 
   // Gestionnaire de soumission du formulaire
   const onSubmit = async (e) => {
     e.preventDefault();
     // Mettre à jour le statut du formulaire pendant la soumission
-    setFormStatus('Submitting...');
+    setFormrole('Submitting...');
 
     try {
       const { name, email, message } = e.target.elements;
@@ -23,11 +23,11 @@ const ContactForm = () => {
       // par exemple, une requête HTTP pour enregistrer les données
 
       // Une fois l'action effectuée avec succès, vous pouvez mettre à jour le statut du formulaire
-      setFormStatus('Submitted');
+      setFormrole('Submitted');
     } catch (error) {
       console.error('Erreur lors de la soumission du formulaire :', error);
       // Gérer les erreurs qui peuvent survenir lors de la soumission du formulaire
-      setFormStatus('Error');
+      setFormrole('Error');
     }
   };
 
@@ -60,7 +60,7 @@ const ContactForm = () => {
                 <textarea className="form-control" id="message" required />
               </div>
               <button className="btn btn-danger" type="submit">
-                {formStatus}
+                {formrole}
               </button>
             </form>
           </div>

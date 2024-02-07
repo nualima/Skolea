@@ -15,7 +15,7 @@ import Footer from "../components/footer/Footer";
 
 const MainPage = () => {
   const { userData, refreshUserData } = useContext(UserContext);
-  const userStatus = userData ? userData.status : null;
+  const userrole = userData ? userData.role : null;
 
   // Cet effet réagit aux changements de userData
   useEffect(() => {
@@ -37,7 +37,7 @@ const MainPage = () => {
         <Row>
           <Col>
             <Card>
-              salut {userStatus}
+              salut {userrole}
               <Proposals />
               <Carrousel />
               <Footer />

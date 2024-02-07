@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BiMenuAltRight } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
+import { MdMessage } from "react-icons/md";
 import "./navbar.scss";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../context";
@@ -40,7 +41,7 @@ const Navbar = () => {
 
     if (isAuthenticated) {
       // Utilisateur authentifié
-      if (userData?.status === "teacher") {
+      if (userData?.role === "teacher") {
         links.push(
           <li key="availability">
             <Link to="/availability">
@@ -48,7 +49,7 @@ const Navbar = () => {
             </Link>
           </li>
         );
-      } else if (userData?.status === "student") {
+      } else if (userData?.role === "student") {
         links.push(
           <li key="reservation">
             <Link to="/reservation">
@@ -87,9 +88,16 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <Link to="/home" style={{ textDecoration: "none", color: "inherit" }}>
-        SKOLEA
-      </Link>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Link to="/home" style={{ textDecoration: "none", color: "inherit" }}>
+          SKOLEA
+        </Link>
+        <MdMessage
+          size="24"
+          style={{ cursor: "pointer", marginLeft: "50px" }}
+          onClick={() => navigate("/chatPage")}
+        />
+      </div>
       <ul className={`navbar__links ${menuOpen ? "is-active" : ""}`}>
         {renderLinks()}
       </ul>
