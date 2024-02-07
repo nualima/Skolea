@@ -12,7 +12,7 @@ import { UserContext, UserProvider } from "./context";
 import DefaultNavBar from "./components/navBar/DefaultNavBar";
 import MainPage from "./view/MainPage";
 import NewUserForm from "./view/NewUserForm";
-import ProfileComponent from "./view/ProfileComponent";
+import ProfilComponent from "./view/ProfilComponent";
 import Reservation from "./view/reservation/Reservation";
 import LoginPage from "./view/login/LoginPage";
 import ContactForm from "./view/contact/ContactForm";
@@ -26,8 +26,8 @@ function App() {
   const { userData } = useContext(UserContext);
 
   // Extraire le statut de l'utilisateur (student, teacher, admin)
-  const userStatue = userData && userData.statue ? userData.statue : null;
-  console.log(userStatue);
+  const userStatus = userData && userData.status ? userData.status : null;
+  console.log(userStatus);
 
   return (
     <Router>
@@ -41,17 +41,17 @@ function App() {
             {/* Routes pour différentes pages de l'application */}{" "}
             <Route path="/home" element={<MainPage />} />{" "}
             <Route path="/" element={<MainPage />} />{" "}
-            <Route path="/profile" element={<ProfileComponent />} />{" "}
+            <Route path="/profil" element={<ProfilComponent />} />{" "}
             {/* Route pour la réservation, disponible uniquement pour les étudiants */}{" "}
-            {/* {userStatue === "student" && (
+            {/* {userStatus === "student" && (
               <Route path="/reservation" element={<Reservation />} />
             =)}{" "} */}
             {/* Route pour la disponibilité, disponible uniquement pour les enseignants */}{" "}
-            {/* {userStatue === "teacher" && (
+            {/* {userStatus === "teacher" && (
               <Route path="/availability" element={<Availability />} />
             )}{" "} */}
             {/* Route pour la gestion des utilisateurs, disponible uniquement pour les administrateurs */}{" "}
-            {userStatue === "admin" && (
+            {userStatus === "admin" && (
               <Route path="/users" element={<ListUsers />} />
             )}{" "}
             <Route path="/contact" element={<ContactForm />} />{" "}
@@ -61,7 +61,7 @@ function App() {
             <Route path="/reservation" element={<Reservation />} />
             <Route path="*" element={<NotFound />} />{" "}
           </Routes>{" "}
-        </div>{" "} 
+        </div>{" "}
       </UserProvider>{" "}
     </Router>
   );

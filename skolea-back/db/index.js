@@ -30,10 +30,10 @@ const getUserByUsernameAndPassword = (username, password) => {
     });
 };
 
-const createUser = (username, password, firstname, lastname, birthday, email, phonenumber, statue, educationLevel) => {
+const createUser = (username, password, firstname, lastname, birthday, email, phonenumber, status, educationLevel) => {
     return new Promise((resolve, reject) => {
-        const query = `INSERT INTO users (username, password, firstname, lastname, birthday, email, phonenumber, statue) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-        const params = [username, password, firstname, lastname, birthday, email, phonenumber, statue, educationLevel];
+        const query = `INSERT INTO users (username, password, firstname, lastname, birthday, email, phonenumber, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        const params = [username, password, firstname, lastname, birthday, email, phonenumber, status, educationLevel];
 
         pool.query(query, params, (error, results) => {
             if (error) {

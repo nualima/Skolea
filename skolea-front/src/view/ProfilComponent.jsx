@@ -5,23 +5,20 @@ import { Form, FormGroup, Input, Label } from "reactstrap";
 import { UserContext } from "../context";
 
 // Composant pour afficher les détails du profil utilisateur
-const ProfileDetails = ({ user }) => {
+const ProfilDetails = ({ user }) => {
   const { userData } = useContext(UserContext);
 
   // États pour gérer les données du formulaire et le mode d'édition
-  const [isEditing, setIsEditing] = useState(false); // Indique si l'utilisateur est en mode édition
-
+  const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState(userData.username || "");
   const [fullName, setFullName] = useState(
     `${userData.firstname || ""} ${userData.lastname || ""}`
   );
-
   const [email, setEmail] = useState(userData.email || "");
   const [phone, setPhone] = useState(userData.phonenumber || "");
   const [address, setAddress] = useState(userData.address || "");
-  const [statue, setStatue] = useState(userData.statue || "");
-  const [phonenumber, setphonenumber] = useState(userData.phonenumber || "");
-
+  const [status, setStatus] = useState(userData.status || "");
+  const [phonenumber, setPhonenumber] = useState(userData.phonenumber || "");
   const [educationLevel, setEducationLevel] = useState(
     userData.educationLevel || ""
   );
@@ -73,7 +70,7 @@ const ProfileDetails = ({ user }) => {
                       style={{ width: "150px" }}
                     />
                     <h5 className="my-3">John Smith</h5>
-                    <p className="text-muted mb-1">{statue}</p>
+                    <p className="text-muted mb-1">{status}</p>
                     <p className="text-muted mb-4">Antibes - France</p>
                   </div>
                 </div>
@@ -114,7 +111,7 @@ const ProfileDetails = ({ user }) => {
                         <hr />
                         <p className="mb-0">
                           {" "}
-                          {userData.statue === "teacher"
+                          {userData.status === "teacher"
                             ? "Subjects: " // A faire : ajouter 'subjects' à la bdd
                             : "Education Level: " + educationLevel}
                         </p>
@@ -140,4 +137,4 @@ const ProfileDetails = ({ user }) => {
   );
 };
 
-export default ProfileDetails;
+export default ProfilDetails;

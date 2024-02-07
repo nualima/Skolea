@@ -6,7 +6,8 @@ export default {
         "availability": "Availability",
         "contact": "Contact",
         "login": "Login",
+        "logout": "Logout",
         "signUp": "Sign up",
-        "users": "Users"
+        "users": "Users",
     }
 }

@@ -22,7 +22,7 @@ const NewUserForm = () => {
   const [birthday, setBirthday] = useState('');
   const [email, setEmail] = useState('');
   const [phonenumber, setPhonenumber] = useState('');
-  const [statue, setStatue] = useState(false); // Statut de l'utilisateur (enseignant ou étudiant)
+  const [status, setStatus] = useState(false); // Statut de l'utilisateur (enseignant ou étudiant)
   const [isStudent, setIsStudent] = useState(false); // Indique si l'utilisateur est un étudiant
   const [educationLevel, setEducationLevel] = useState(''); // Niveau d'éducation de l'étudiant
 
@@ -63,14 +63,14 @@ const NewUserForm = () => {
 
   // Gestionnaire d'événement pour la case à cocher "Je suis enseignant"
   const handleCheckboxChangeTeacher = (event) => {
-    setStatue(event.target.checked); // Définit le statut comme enseignant
+    setStatus(event.target.checked); // Définit le statut comme enseignant
     setIsStudent(false); // Réinitialise l'indicateur "étudiant"
   };
   
   // Gestionnaire d'événement pour la case à cocher "Je suis étudiant"
   const handleCheckboxChangeStudent = (event) => {
     setIsStudent(event.target.checked); // Définit l'indicateur "étudiant"
-    setStatue(false); // Réinitialise le statut
+    setStatus(false); // Réinitialise le statut
   };
 
   // Gestionnaire d'événement pour le changement du niveau d'éducation (uniquement si l'utilisateur est un étudiant)
@@ -92,8 +92,8 @@ const NewUserForm = () => {
         birthday,
         email,
         phonenumber,
-        statue: statue ? 'teacher' : 'student', // Détermine le statut en fonction de la case cochée
-        educationLevel: statue ? '' : educationLevel, // Détermine le niveau d'éducation (vide si enseignant)
+        status: status ? 'teacher' : 'student', // Détermine le statut en fonction de la case cochée
+        educationLevel: status ? '' : educationLevel, // Détermine le niveau d'éducation (vide si enseignant)
       };
 
       // Appelle la fonction createUser pour envoyer les données utilisateur au serveur
@@ -193,7 +193,7 @@ const NewUserForm = () => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={statue}
+                    checked={status}
                     onChange={handleCheckboxChangeTeacher}
                   />
                 }
