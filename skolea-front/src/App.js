@@ -16,7 +16,6 @@ import ProfileComponent from "./view/ProfileComponent";
 import Reservation from "./view/reservation/Reservation";
 import LoginPage from "./view/login/LoginPage";
 import ContactForm from "./view/contact/ContactForm";
-import Subject from "./view/reservation/Subject";
 import Availability from "./view/availability/Availability";
 import ListUsers from "./view/listUsers/ListUsers";
 import NotFound from "./view/notFound/NotFound";
@@ -48,9 +47,9 @@ function App() {
               <Route path="/reservation" element={<Reservation />} />
             =)}{" "} */}
             {/* Route pour la disponibilité, disponible uniquement pour les enseignants */}{" "}
-            {userStatue === "teacher" && (
+            {/* {userStatue === "teacher" && (
               <Route path="/availability" element={<Availability />} />
-            )}{" "}
+            )}{" "} */}
             {/* Route pour la gestion des utilisateurs, disponible uniquement pour les administrateurs */}{" "}
             {userStatue === "admin" && (
               <Route path="/users" element={<ListUsers />} />
@@ -58,12 +57,11 @@ function App() {
             <Route path="/contact" element={<ContactForm />} />{" "}
             <Route path="/signUp" element={<NewUserForm />} />{" "}
             <Route path="/login" element={<LoginPage />} />{" "}
-            <Route path="/subject" element={<Subject />} />{" "}
+            <Route path="/availability" element={<Availability />} />{" "}
             <Route path="/reservation" element={<Reservation />} />
-
             <Route path="*" element={<NotFound />} />{" "}
           </Routes>{" "}
-        </div>{" "}
+        </div>{" "} 
       </UserProvider>{" "}
     </Router>
   );
