@@ -14,18 +14,13 @@ import Carrousel from "../components/caroussel/Carrousel";
 import Footer from "../components/footer/Footer";
 
 const MainPage = () => {
-  const { userData, refreshUserData } = useContext(UserContext);
+  const { userData  } = useContext(UserContext);
   const userrole = userData ? userData.role : null;
 
   // Cet effet réagit aux changements de userData
   useEffect(() => {
     console.log("Les données utilisateur ont été mises à jour.", userData);
   }, [userData]);
-
-  // useEffect(() => {
-  //   refreshUserData(); // Rafraîchir les données utilisateur au chargement du composant
-  //   console.log("refreshUserData", userData);
-  // }, []);
 
   return (
     <div className="App">

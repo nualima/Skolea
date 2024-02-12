@@ -2,34 +2,22 @@
 
 module.exports = {
     up: async(queryInterface, Sequelize) => {
-        await queryInterface.createTable('Messages', {
-            messageId: {
+        await queryInterface.createTable('ContactSubmissions', {
+            id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            senderId: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                references: {
-                    model: 'Users', // Assurez-vous que 'Users' correspond au nom exact de votre table des utilisateurs
-                    key: 'userId', // et 'userId' est la clé primaire de cette table, ajustez si nécessaire
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
+            name: {
+                type: Sequelize.STRING,
+                allowNull: false
             },
-            receiverId: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                references: {
-                    model: 'Users',
-                    key: 'userId',
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
+            email: {
+                type: Sequelize.STRING,
+                allowNull: false
             },
-            content: {
+            message: {
                 type: Sequelize.TEXT,
                 allowNull: false
             },
@@ -51,6 +39,6 @@ module.exports = {
     },
 
     down: async(queryInterface, Sequelize) => {
-        await queryInterface.dropTable('Messages');
+        await queryInterface.dropTable('ContactSubmissions');
     }
 };

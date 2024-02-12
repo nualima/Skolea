@@ -1,6 +1,8 @@
 'use strict';
+
 const {
-    Model
+    Model,
+    Sequelize
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {
@@ -10,17 +12,22 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            User.hasMany(models.Message, { as: 'SentMessages', foreignKey: 'senderId' });
-            User.hasMany(models.Message, { as: 'ReceivedMessages', foreignKey: 'receiverId' });
+            // User.hasMany(models.Message, { as: 'SentMessages', foreignKey: 'senderId' });
+            // User.hasMany(models.Message, { as: 'ReceivedMessages', foreignKey: 'receiverId' });
         }
     }
     User.init({
-        userId: DataTypes.INTEGER,
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+            allowNull: false
+        },
         email: DataTypes.STRING,
         password: DataTypes.STRING,
         name: DataTypes.STRING,
         role: {
-            type: Sequelize.ENUM('professor', 'student'),
+            type: DataTypes.ENUM('professor', 'student'), // Utilisez DataTypes ici
             allowNull: false
         },
         profilePicture: DataTypes.STRING

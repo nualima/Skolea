@@ -3,7 +3,7 @@
 module.exports = {
     up: async(queryInterface, Sequelize) => {
         await queryInterface.createTable('Sessions', {
-            sessionId: {
+            id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
@@ -14,7 +14,7 @@ module.exports = {
                 allowNull: true, // permettre NULL puisque la session ne sera pas supprimée si le professeur est supprimé
                 references: {
                     model: 'Professors', // Assurez-vous que cela correspond au nom de votre table des professeurs
-                    key: 'professorId', // et cela est la clé primaire de la table des professeurs
+                    key: 'id', // et cela est la clé primaire de la table des professeurs
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
@@ -24,7 +24,7 @@ module.exports = {
                 allowNull: true, // permettre NULL puisque la session ne sera pas supprimée si l'étudiant est supprimé
                 references: {
                     model: 'Students', // Assurez-vous que cela correspond au nom de votre table des étudiants
-                    key: 'studentId', // et cela est la clé primaire de la table des étudiants
+                    key: 'id', // et cela est la clé primaire de la table des étudiants
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'SET NULL'

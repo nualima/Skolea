@@ -11,13 +11,18 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            Session.belongsTo(models.Professor, { foreignKey: 'professorId' });
-            Session.belongsTo(models.Student, { foreignKey: 'studentId' });
+            // Session.belongsTo(models.Professor, { foreignKey: 'professorId' });
+            // Session.belongsTo(models.Student, { foreignKey: 'studentId' });
 
         }
     }
     Session.init({
-        sessionId: DataTypes.INTEGER,
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+            allowNull: false
+        },
         professorId: DataTypes.INTEGER,
         studentId: DataTypes.INTEGER,
         date: DataTypes.DATE,

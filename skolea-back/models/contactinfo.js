@@ -10,18 +10,23 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            ContactInfo.belongsTo(models.User, { foreignKey: 'userId' });
+            // ContactInfo.belongsTo(models.User, { foreignKey: 'userId' });
             // define association here
         }
     }
     ContactInfo.init({
-        contactInfoId: DataTypes.INTEGER,
-        userId: DataTypes.INTEGER,
-        phone: DataTypes.STRING,
-        address: DataTypes.TEXT
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+            allowNull: false
+        },
+        // ... autres attributs du modèle ...
     }, {
         sequelize,
         modelName: 'ContactInfo',
+        // ... autres options du modèle ...
     });
+
     return ContactInfo;
 };

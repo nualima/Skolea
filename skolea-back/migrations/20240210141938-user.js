@@ -2,26 +2,31 @@
 
 module.exports = {
     up: async(queryInterface, Sequelize) => {
-        await queryInterface.createTable('Students', {
-            studentId: {
+        await queryInterface.createTable('Users', {
+            id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            userId: {
-                type: Sequelize.INTEGER,
+            email: {
+                type: Sequelize.STRING,
                 allowNull: false,
-                references: {
-                    model: 'Users', // Assurez-vous que cela correspond au nom exact de votre table des utilisateurs
-                    key: 'userId', // et cela est la clé primaire de cette table, ajustez si nécessaire
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE' // Ajustez selon la logique de gestion des données de votre application
+                unique: true
             },
-            educationLevel: {
+            password: {
                 type: Sequelize.STRING,
                 allowNull: false
+            },
+            name: {
+                type: Sequelize.STRING
+            },
+            role: {
+                type: Sequelize.ENUM('professor', 'student'),
+                allowNull: false
+            },
+            profilePicture: {
+                type: Sequelize.STRING
             },
             createdAt: {
                 allowNull: false,
@@ -37,6 +42,7 @@ module.exports = {
     },
 
     down: async(queryInterface, Sequelize) => {
-        await queryInterface.dropTable('Students');
-    }
+        await queryInterface.dropTable('Users');
+        await queryInterface.sequelize.query('DROP TYPE "enum_Users_role";');
+    },
 };

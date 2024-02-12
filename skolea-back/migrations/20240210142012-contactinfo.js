@@ -2,8 +2,8 @@
 
 module.exports = {
     up: async(queryInterface, Sequelize) => {
-        await queryInterface.createTable('Professors', {
-            professorId: {
+        await queryInterface.createTable('ContactInfos', {
+            id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
@@ -13,23 +13,19 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'Users', // Assurez-vous que 'Users' correspond au nom exact de votre table des utilisateurs
-                    key: 'userId', // et 'userId' est la clé primaire de cette table, ajustez si nécessaire
+                    model: 'Users', // Nom de la table référencée
+                    key: 'id', // Clé dans la table référencée, ajustez selon le nom réel de votre clé primaire pour User
                 },
                 onUpdate: 'CASCADE',
-                onDelete: 'CASCADE' // Ajustez selon la logique de gestion des données de votre application
+                onDelete: 'CASCADE' // ou 'SET NULL' selon votre logique de gestion des données
             },
-            price: {
-                type: Sequelize.DECIMAL(10, 2), // Ajustez la précision et l'échelle selon les besoins
-                allowNull: false
-            },
-            subjects: {
+            phone: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: true // ou false, selon si le téléphone est obligatoire
             },
-            bio: {
+            address: {
                 type: Sequelize.TEXT,
-                allowNull: true // ou false, selon si la biographie est obligatoire
+                allowNull: true // ou false, selon si l'adresse est obligatoire
             },
             createdAt: {
                 allowNull: false,
@@ -45,6 +41,6 @@ module.exports = {
     },
 
     down: async(queryInterface, Sequelize) => {
-        await queryInterface.dropTable('Professors');
+        await queryInterface.dropTable('ContactInfos');
     }
 };

@@ -23,10 +23,9 @@ export const UserProvider = ({ children }) => {
       try {
         // Appeler une fonction de service pour vérifier le jeton et récupérer les données utilisateur
         const response = await LoginServices.whoAmI(token);
-
         // Extraire les données utilisateur de la réponse et mettre à jour l'état
-        if (response && response.userData) {
-          setUserData(response.userData);
+        if (response && response.user) {
+          setUserData(response.user);
         }
       } catch (error) {
         // Gérer les erreurs qui surviennent lors de la vérification de l'authentification

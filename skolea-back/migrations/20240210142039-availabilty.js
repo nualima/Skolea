@@ -2,31 +2,34 @@
 
 module.exports = {
     up: async(queryInterface, Sequelize) => {
-        await queryInterface.createTable('Users', {
-            userId: {
+        await queryInterface.createTable('Availabilities', {
+            id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            email: {
-                type: Sequelize.STRING,
-                allowNull: false,
-                unique: true
+            professorId: {
+                type: Sequelize.INTEGER,
+                allowNull: true, // Changez ceci pour permettre NULL
+                references: {
+                    model: 'Professors',
+                    key: 'id',
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE', // ou 'RESTRICT', selon la logique désirée
             },
-            password: {
-                type: Sequelize.STRING,
+            startTime: {
+                type: Sequelize.DATE,
                 allowNull: false
             },
-            name: {
-                type: Sequelize.STRING
-            },
-            role: {
-                type: Sequelize.ENUM('professor', 'student'),
+            endTime: {
+                type: Sequelize.DATE,
                 allowNull: false
             },
-            profilePicture: {
-                type: Sequelize.STRING
+            status: {
+                type: Sequelize.STRING,
+                allowNull: false
             },
             createdAt: {
                 allowNull: false,
@@ -42,7 +45,6 @@ module.exports = {
     },
 
     down: async(queryInterface, Sequelize) => {
-        await queryInterface.dropTable('Users');
-        await queryInterface.sequelize.query('DROP TYPE "enum_Users_role";');
-    },
+        await queryInterface.dropTable('Availabilities');
+    }
 };

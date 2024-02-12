@@ -2,8 +2,8 @@
 
 module.exports = {
     up: async(queryInterface, Sequelize) => {
-        await queryInterface.createTable('ContactInfos', {
-            contactInfoId: {
+        await queryInterface.createTable('Students', {
+            id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
@@ -13,19 +13,15 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'Users', // Nom de la table référencée
-                    key: 'userId', // Clé dans la table référencée, ajustez selon le nom réel de votre clé primaire pour User
+                    model: 'Users', // Assurez-vous que cela correspond au nom exact de votre table des utilisateurs
+                    key: 'id', // et cela est la clé primaire de cette table, ajustez si nécessaire
                 },
                 onUpdate: 'CASCADE',
-                onDelete: 'CASCADE' // ou 'SET NULL' selon votre logique de gestion des données
+                onDelete: 'CASCADE' // Ajustez selon la logique de gestion des données de votre application
             },
-            phone: {
+            educationLevel: {
                 type: Sequelize.STRING,
-                allowNull: true // ou false, selon si le téléphone est obligatoire
-            },
-            address: {
-                type: Sequelize.TEXT,
-                allowNull: true // ou false, selon si l'adresse est obligatoire
+                allowNull: false
             },
             createdAt: {
                 allowNull: false,
@@ -41,6 +37,6 @@ module.exports = {
     },
 
     down: async(queryInterface, Sequelize) => {
-        await queryInterface.dropTable('ContactInfos');
+        await queryInterface.dropTable('Students');
     }
 };
