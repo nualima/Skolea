@@ -39,25 +39,18 @@ const LoginPage = () => {
     }
 
     try {
-      const { success, data, errors, error } = await LoginServices.login(
-        email,
-        password,
-      );
-
-      if (success) {
-        // Si 'data' est l'objet utilisateur, tu peux le passer directement.
-        setUserData(userData);
-
-        // Attendre un peu avant de naviguer pour s'assurer que l'état a été mis à jour
+      const response = await LoginServices.login(email, password);
+      if (response.success) {
+        setUserData(response.user);
         setTimeout(() => {
           navigate("/home");
-          // window.location.reload(false);
-        }, 500); // Réduit le temps d'attente si nécessaire
-      } else if (errors) {
-        setEmailError(errors.emailError);
-        setPasswordError(errors.passwordError);
+        }, 500);
       } else {
-        console.error("Erreur lors de la connexion :", error);
+        // Si votre backend renvoie des erreurs spécifiques, gérez-les ici
+        console.error(
+          "Erreur lors de la connexion : Aucun succès",
+          response.error
+        );
       }
     } catch (error) {
       console.error("Erreur lors de la connexion :", error);
