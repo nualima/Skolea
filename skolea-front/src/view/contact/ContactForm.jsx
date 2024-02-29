@@ -1,43 +1,52 @@
-import React, { useState } from 'react';
-import { Card, Container } from '@mui/material';
+import React, { useState } from "react";
+import { Card, Container } from "@mui/material";
 
 const ContactForm = () => {
-  // Utilisation du hook useState pour gérer l'état du formulaire
-  const [formrole, setFormrole] = useState('Send');
+  const [formrole, setFormrole] = useState("Send");
 
-  // Gestionnaire de soumission du formulaire
   const onSubmit = async (e) => {
     e.preventDefault();
-    // Mettre à jour le statut du formulaire pendant la soumission
-    setFormrole('Submitting...');
+    setFormrole("Submitting...");
+
+    const formData = {
+      name: e.target.elements.name.value,
+      email: e.target.elements.email.value,
+      message: e.target.elements.message.value,
+      timestamp: new Date(), // Ajoutez le timestamp ici si nécessaire
+    };
 
     try {
-      const { name, email, message } = e.target.elements;
-      // Création d'un objet avec les données du formulaire
-      const nameValue = name.value;
-      const emailValue = email.value;
-      const messageValue = message.value;
-  
+      // Remplacez 'http://localhost:3000/api/contact' par l'URL de votre API
+      const response = await fetch(
+        "http://localhost:3000/api/contactsubmissions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
-      // Ici, vous pouvez envoyer les données à votre backend ou effectuer une autre action requise
-      // par exemple, une requête HTTP pour enregistrer les données
-
-      // Une fois l'action effectuée avec succès, vous pouvez mettre à jour le statut du formulaire
-      setFormrole('Submitted');
+      if (response.ok) {
+        setFormrole("Submitted");
+        // Gérer la réponse ici, par exemple, afficher un message de succès
+      } else {
+        throw new Error("Network response was not ok.");
+      }
     } catch (error) {
-      console.error('Erreur lors de la soumission du formulaire :', error);
-      // Gérer les erreurs qui peuvent survenir lors de la soumission du formulaire
-      setFormrole('Error');
+      console.error("Erreur lors de la soumission du formulaire :", error);
+      setFormrole("Error");
     }
   };
 
   return (
     <>
       {/* Un espace vide pour déplacer le formulaire vers le haut */}
-      <div style={{ marginTop: '750px' }}></div>
+      <div style={{ marginTop: "750px" }}></div>
 
       <Container>
-        <Card style={{ padding: '50px' }}>
+        <Card style={{ padding: "50px" }}>
           <div className="container mt-5">
             <h2 className="mb-3">Contactez-nous</h2>
             <form onSubmit={onSubmit}>
@@ -45,13 +54,23 @@ const ContactForm = () => {
                 <label className="form-label" htmlFor="name">
                   Nom
                 </label>
-                <input className="form-control" type="text" id="name" required />
+                <input
+                  className="form-control"
+                  type="text"
+                  id="name"
+                  required
+                />
               </div>
               <div className="mb-3">
                 <label className="form-label" htmlFor="email">
                   Email
                 </label>
-                <input className="form-control" type="email" id="email" required />
+                <input
+                  className="form-control"
+                  type="email"
+                  id="email"
+                  required
+                />
               </div>
               <div className="mb-3">
                 <label className="form-label" htmlFor="message">

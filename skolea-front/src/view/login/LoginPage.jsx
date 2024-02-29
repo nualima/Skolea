@@ -41,17 +41,17 @@ const LoginPage = () => {
     try {
       const { success, data, errors, error } = await LoginServices.login(
         email,
-        password
+        password,
       );
 
       if (success) {
         // Si 'data' est l'objet utilisateur, tu peux le passer directement.
-        setUserData(data);
+        setUserData(userData);
 
         // Attendre un peu avant de naviguer pour s'assurer que l'état a été mis à jour
         setTimeout(() => {
           navigate("/home");
-          window.location.reload(false);
+          // window.location.reload(false);
         }, 500); // Réduit le temps d'attente si nécessaire
       } else if (errors) {
         setEmailError(errors.emailError);

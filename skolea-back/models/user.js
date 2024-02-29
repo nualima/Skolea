@@ -30,6 +30,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('professor', 'student'), // Utilisez DataTypes ici
             allowNull: false
         },
+        birthday: {
+            type: Sequelize.DATEONLY,
+            allowNull: true,
+        },
+        phoneNumber: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            unique: true,
+        },
+
         profilePicture: DataTypes.STRING
     }, {
         sequelize,

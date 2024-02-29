@@ -6,10 +6,10 @@ router.get('/', (req, res) => {
     res.send('GET request to the homepage');
 });
 
-router.get('/contactsubmissions', contactSubmissionController.getAllContactSubmissions);
-router.get('/contactsubmissions/:id', contactSubmissionController.getContactSubmissionById);
+// router.get('/contactsubmissions', contactSubmissionController.getAllContactSubmissions);
+// router.get('/contactsubmissions/:id', contactSubmissionController.getContactSubmissionById);
 router.post('/contactsubmissions', contactSubmissionController.createContactSubmission);
-router.put('/contactsubmissions/:id', contactSubmissionController.updateContactSubmission);
-router.delete('/contactsubmissions/:id', contactSubmissionController.deleteContactSubmission);
+// router.put('/contactsubmissions/:id', contactSubmissionController.updateContactSubmission);
+// router.delete('/contactsubmissions/:id', contactSubmissionController.deleteContactSubmission);
 
 module.exports = router;

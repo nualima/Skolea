@@ -4,11 +4,14 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 
+
 // Importez Sequelize et les modèles
 const { sequelize } = require('./models');
 
 // Importez les routeurs
 const userRouter = require('./routes/userRoutes');
+const contactRouter = require('./routes/contactSubmissionRoutes');
+
 // Autres routeurs...
 
 const app = express();
@@ -20,7 +23,8 @@ app.use(bodyParser.json());
 
 // Définissez les routes
 app.use('/api/users', userRouter);
-// Autres routes...
+app.use('/api', contactRouter);
+
 
 // Testez la connexion à la base de données puis démarrez le serveur
 sequelize.authenticate()

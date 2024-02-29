@@ -47,8 +47,8 @@ export const UserProvider = ({ children }) => {
     if (token) {
       try {
         const response = await LoginServices.whoAmI(token);
-        if (response && response.userData) {
-          setUserData(response.userData); // Assure-toi de passer juste les données utilisateur
+        if (response && response.user) {
+          setUserData(response.user); // Assure-toi de passer juste les données utilisateur
         } else {
           console.error(
             "Les données utilisateur ne sont pas dans la réponse attendue"
@@ -68,7 +68,7 @@ export const UserProvider = ({ children }) => {
     checkAuthentication();
   }, []);
 
-  // Fournir les données utilisateur et la fonction setUserData aux composants enfants via UserContext.Provider
+  // Fournir les données utilisateur et la fonction  aux composants enfants via UserContext.Provider
   return (
     <UserContext.Provider value={{ userData, setUserData, refreshUserData }}>
       {children}

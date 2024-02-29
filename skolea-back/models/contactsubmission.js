@@ -1,18 +1,17 @@
 'use strict';
-const {
-    Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
     class ContactSubmission extends Model {
         /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
+         * Méthodes d'assistance pour définir les associations.
+         * Cette méthode n'est pas une partie de Sequelize lifecycle.
+         * Le fichier `models/index.js` appellera cette méthode automatiquement.
          */
         static associate(models) {
-            // define association here
+            // Définir l'association ici
         }
-    }
+    };
     ContactSubmission.init({
         id: {
             type: DataTypes.INTEGER,
@@ -23,7 +22,9 @@ module.exports = (sequelize, DataTypes) => {
         name: DataTypes.STRING,
         email: DataTypes.STRING,
         message: DataTypes.TEXT,
-        timestamp: DataTypes.DATE
+        timestamp: DataTypes.DATE,
+        createdAt: DataTypes.DATE,
+        updatedAt: DataTypes.DATE
     }, {
         sequelize,
         modelName: 'ContactSubmission',

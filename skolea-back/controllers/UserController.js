@@ -52,7 +52,7 @@ const loginUser = async(req, res) => {
         }
 
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
-        return res.send({ success: true, token, userData: user });
+        return res.send({ success: true, token, user: user });
     } catch (error) {
         console.error('Erreur lors de la recherche de l\'utilisateur:', error);
         return res.status(500).send({ success: false, message: 'Une erreur est survenue lors de la recherche de l\'utilisateur' });
@@ -75,7 +75,7 @@ const verifyUser = async(req, res) => {
         }
 
         // Peut-être filtrer les informations sensibles avant de les envoyer
-        res.send({ success: true, user: { id: user.id, email: user.email, name: user.name, role: user.role } });
+        res.send({ success: true, user : user });
     } catch (error) {
         console.error('Erreur lors de la vérification du token:', error);
         return res.status(500).send({ success: false, message: 'Une erreur est survenue lors de la vérification du token' });

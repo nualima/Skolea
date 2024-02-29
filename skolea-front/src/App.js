@@ -27,8 +27,8 @@ function App() {
   const { userData } = useContext(UserContext);
 
   // Extraire le statut de l'utilisateur (student, teacher, admin)
-  const userrole = userData && userData.role ? userData.role : null;
-  console.log(userrole);
+  const userRole = userData && userData.role ? userData.role : null;
+  console.log(userData);
 
   return (
     <Router>
@@ -44,15 +44,15 @@ function App() {
             <Route path="/" element={<MainPage />} />{" "}
             <Route path="/profil" element={<ProfilComponent />} />{" "}
             {/* Route pour la réservation, disponible uniquement pour les étudiants */}{" "}
-            {/* {userrole === "student" && (
+            {/* {userRole === "student" && (
                           <Route path="/reservation" element={<Reservation />} />
                         =)}{" "} */}{" "}
             {/* Route pour la disponibilité, disponible uniquement pour les enseignants */}{" "}
-            {/* {userrole === "teacher" && (
+            {/* {userRole === "teacher" && (
                           <Route path="/availability" element={<Availability />} />
                         )}{" "} */}{" "}
             {/* Route pour la gestion des utilisateurs, disponible uniquement pour les administrateurs */}{" "}
-            {userrole === "admin" && (
+            {userRole === "admin" && (
               <Route path="/users" element={<ListUsers />} />
             )}{" "}
             <Route path="/contact" element={<ContactForm />} />{" "}

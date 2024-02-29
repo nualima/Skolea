@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8080'; // Remplacez par l'URL de votre backend
+const BASE_URL = 'http://localhost:8080';
 
-// Service LoginServices pour gérer les opérations de connexion
+
 const LoginServices = {
-  // Méthode pour effectuer la connexion
   login: async (email, password) => {
     try {
       // Envoyer une requête POST au backend pour authentifier l'utilisateur
@@ -15,7 +14,7 @@ const LoginServices = {
 
       // Extraire les données de la réponse
       const data = response.data;
-      console.log(data);
+      console.log(data + "/service/index.jsx l.17");
 
       // Stocker le jeton (token) dans le stockage local (localStorage)
       localStorage.setItem('token', data.token);
