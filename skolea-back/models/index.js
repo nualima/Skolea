@@ -37,13 +37,6 @@ Object.keys(db).forEach(modelName => {
     }
 });
 
-// Définir les associations supplémentaires entre les modèles si nécessaire
-Object.values(db).forEach(model => {
-    if (model.associate) {
-        model.associate(db);
-    }
-});
-
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

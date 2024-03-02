@@ -10,8 +10,10 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // Professor.belongsTo(models.User, { foreignKey: 'userId' });
-            // Professor.hasMany(models.Availability, { foreignKey: 'professorId' });
+            Professor.belongsTo(models.User, { foreignKey: 'userId' });
+            Professor.hasMany(models.Availability, { foreignKey: 'professorId' }); // Activation de l'association
+            Professor.belongsToMany(models.Subject, { through: 'ProfessorSubjects', foreignKey: 'professorId' })
+
         }
     }
     Professor.init({
@@ -23,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         userId: DataTypes.INTEGER,
         price: DataTypes.DECIMAL,
-        subjects: DataTypes.STRING,
         bio: DataTypes.TEXT
     }, {
         sequelize,
