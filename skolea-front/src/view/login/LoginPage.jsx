@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./loginPage.css";
 import { Card } from "@mui/material";
@@ -16,7 +16,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   // Utilisation du contexte utilisateur pour stocker les informations utilisateur
-  const { userData, setUserData } = useContext(UserContext);
+  const { setUserData } = useContext(UserContext);
 
   // Gestionnaire de clic sur le bouton "Log in"
   const onButtonClick = async () => {
@@ -41,7 +41,7 @@ const LoginPage = () => {
     try {
       const response = await LoginServices.login(email, password);
       if (response.success) {
-        setUserData(response.user);
+      setUserData(response.user);
         setTimeout(() => {
           navigate("/home");
         }, 500);

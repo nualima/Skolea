@@ -1,233 +1,163 @@
-// Import des bibliothèques et composants nécessaires
-import React, { useState } from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Button from '@mui/material/Button';
-import { createUser } from '../services/newUserServices';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import de useNavigate au lieu de useHistory
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Button from "@mui/material/Button";
+import { createUser } from "../services/newUserServices";
+import LoginServices from "../services/loginServices";
 
-import {
-  Container,
-  Card,
-} from "reactstrap";
+import { Container, Card } from "reactstrap";
 
 // Définition du composant NewUserForm
 const NewUserForm = () => {
   // Déclaration des états (states) pour stocker les données du formulaire
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstname, setFirstname] = useState('');
-  const [lastname, setLastname] = useState('');
-  const [birthday, setBirthday] = useState('');
-  const [email, setEmail] = useState('');
-  const [phonenumber, setPhonenumber] = useState('');
-  const [role, setrole] = useState(false); // Statut de l'utilisateur (enseignant ou étudiant)
-  const [isStudent, setIsStudent] = useState(false); // Indique si l'utilisateur est un étudiant
-  const [educationLevel, setEducationLevel] = useState(''); // Niveau d'éducation de l'étudiant
+  const [name, setName] = useState(""); // Renommé de username à name pour correspondre au modèle backend
+  const [password, setPassword] = useState("");
+  const [birthday, setBirthday] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(""); // Renommé pour correspondre au modèle backend
+  const [role, setRole] = useState(""); // Utilisé pour stocker directement 'professor' ou 'student'
 
-  // Gestionnaire d'événement pour le changement de nom d'utilisateur
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
+  const navigate = useNavigate(); // Utilisation de useNavigate pour la navigation
+
+  // Gestionnaires d'événement pour les champs du formulaire
+  const handleNameChange = (event) => {
+    setName(event.target.value);
   };
 
-  // Gestionnaire d'événement pour le changement de mot de passe
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
 
-  // Gestionnaire d'événement pour le changement de prénom
-  const handlefirstnameChange = (event) => {
-    setFirstname(event.target.value);
-  };
-
-  // Gestionnaire d'événement pour le changement de nom de famille
-  const handlelastnameChange = (event) => {
-    setLastname(event.target.value);
-  };
-
-  // Gestionnaire d'événement pour le changement de date de naissance
-  const handlebirthdayChange = (event) => {
+  const handleBirthdayChange = (event) => {
     setBirthday(event.target.value);
   };
 
-  // Gestionnaire d'événement pour le changement d'adresse e-mail
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
 
-  // Gestionnaire d'événement pour le changement de numéro de téléphone
-  const handlephonenumberChange = (event) => {
-    setPhonenumber(event.target.value);
+  const handlePhoneNumberChange = (event) => {
+    setPhoneNumber(event.target.value);
   };
 
-  // Gestionnaire d'événement pour la case à cocher "Je suis enseignant"
-  const handleCheckboxChangeTeacher = (event) => {
-    setrole(event.target.checked); // Définit le statut comme enseignant
-    setIsStudent(false); // Réinitialise l'indicateur "étudiant"
-  };
-  
-  // Gestionnaire d'événement pour la case à cocher "Je suis étudiant"
-  const handleCheckboxChangeStudent = (event) => {
-    setIsStudent(event.target.checked); // Définit l'indicateur "étudiant"
-    setrole(false); // Réinitialise le statut
-  };
-
-  // Gestionnaire d'événement pour le changement du niveau d'éducation (uniquement si l'utilisateur est un étudiant)
-  const handleEducationLevelChange = (event) => {
-    setEducationLevel(event.target.value);
+  // Gestionnaire d'événement pour les rôles d'utilisateur
+  const handleRoleChange = (event, roleType) => {
+    setRole(roleType);
   };
 
   // Gestionnaire d'événement pour la soumission du formulaire
   const handleSubmit = async (event) => {
     event.preventDefault(); // Empêche le rechargement de la page lors de la soumission du formulaire
-    
+
+    // Crée un objet userData avec les données du formulaire
+    const userData = {
+      name,
+      password,
+      birthday,
+      email,
+      phoneNumber,
+      role, // Directement 'professor' ou 'student' en fonction de la case cochée
+    };
+
     try {
-      // Crée un objet userData avec les données du formulaire
-      const userData ={
-        username,
-        password,
-        firstname,
-        lastname,
-        birthday,
-        email,
-        phonenumber,
-        role: role ? 'teacher' : 'student', // Détermine le statut en fonction de la case cochée
-        educationLevel: role ? '' : educationLevel, // Détermine le niveau d'éducation (vide si enseignant)
-      };
+      // Création de l'utilisateur
+      await createUser(userData);
 
-      // Appelle la fonction createUser pour envoyer les données utilisateur au serveur
-      const response = await createUser(userData);
+      // Connexion automatique après l'inscription
+      await LoginServices.login(email, password);
 
-      const { success, token } = response;
-
-      if (success) {
-        // Gère la création réussie de l'utilisateur
-        
-        // (Optionnel) Faire quelque chose avec le jeton, par exemple, le stocker dans localStorage
-        
-      } else {
-        // Gère l'échec de la création de l'utilisateur
-        
-      }
+      //Redirection vers la page d'accueil ou le tableau de bord
+      navigate("/home"); // Utilisez navigate pour la redirection
     } catch (error) {
-      // Gère les erreurs
-      console.error('Erreur lors de la création de l\'utilisateur :', error);
+      console.error(
+        "Erreur lors de la création de l'utilisateur ou de la connexion :",
+        error
+      );
+      // Gérer l'erreur ici, par exemple en affichant un message à l'utilisateur
     }
   };
 
   // Rendu du composant
   return (
     <>
-    <Container>
-    <Card style={{ padding:"50px"}}>
       <Container>
-        <div className="form-container">
-          <h1>Formulaire</h1>
-          <form onSubmit={handleSubmit}>
-            <Box
-              component="div"
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1rem',
-              }}
-            >
-              {/* Champs de texte pour les informations de l'utilisateur */}
-              <TextField
-                required
-                id="username"
-                label="Nom d'utilisateur"
-                value={username}
-                onChange={handleUsernameChange}
-              />
-              <TextField
-                required
-                id="password"
-                label="Mot de passe"
-                type="password"
-                value={password}
-                onChange={handlePasswordChange}
-              />
-              <TextField
-                required
-                id="firstname"
-                label="Prénom"
-                value={firstname}
-                onChange={handlefirstnameChange}
-              />
-              <TextField
-                required
-                id="lastname"
-                label="Nom de famille"
-                value={lastname}
-                onChange={handlelastnameChange}
-              />
-              <TextField
-                required
-                id="birthday"
-                label="Date de naissance"
-                type="date"
-                value={birthday}
-                onChange={handlebirthdayChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <TextField
-                required
-                id="email"
-                label="Adresse e-mail"
-                type="email"
-                value={email}
-                onChange={handleEmailChange}
-              />
-              <TextField
-                required
-                id="phonenumber"
-                label="Numéro de téléphone"
-                value={phonenumber}
-                onChange={handlephonenumberChange}
-              />
-              {/* Cases à cocher pour définir le statut de l'utilisateur */}
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={role}
-                    onChange={handleCheckboxChangeTeacher}
+        <Card style={{ padding: "50px" }}>
+          <Container>
+            <div className="form-container">
+              <h1>Créer un nouveau compte</h1>
+              <form onSubmit={handleSubmit}>
+                <Box
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem",
+                  }}
+                >
+                  <TextField
+                    required
+                    label="Nom complet"
+                    value={name}
+                    onChange={handleNameChange}
                   />
-                }
-                label="Je suis enseignant"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={isStudent}
-                    onChange={handleCheckboxChangeStudent}
+                  <TextField
+                    required
+                    label="Mot de passe"
+                    type="password"
+                    value={password}
+                    onChange={handlePasswordChange}
                   />
-                }
-                label="Je suis étudiant"
-              />
-              {/* Champ de texte pour le niveau d'éducation (visible uniquement si l'utilisateur est un étudiant) */}
-              {isStudent && (
-                <TextField
-                  required
-                  id="educationLevel"
-                  label="Niveau d'éducation"
-                  value={educationLevel}
-                  onChange={handleEducationLevelChange}
-                />
-              )}
-              {/* Bouton de soumission du formulaire */}
-              <Button type="submit" variant="contained" color="primary">
-                Envoyer
-              </Button>
-            </Box>
-          </form>
-        </div>
+                  <TextField
+                    required
+                    label="Date de naissance"
+                    type="date"
+                    value={birthday}
+                    onChange={handleBirthdayChange}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                  <TextField
+                    required
+                    label="Adresse e-mail"
+                    type="email"
+                    value={email}
+                    onChange={handleEmailChange}
+                  />
+                  <TextField
+                    required
+                    label="Numéro de téléphone"
+                    value={phoneNumber}
+                    onChange={handlePhoneNumberChange}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        onChange={(e) => handleRoleChange(e, "professor")}
+                      />
+                    }
+                    label="Je suis enseignant"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        onChange={(e) => handleRoleChange(e, "student")}
+                      />
+                    }
+                    label="Je suis étudiant"
+                  />
+                  <Button type="submit" variant="contained" color="primary">
+                    Envoyer
+                  </Button>
+                </Box>
+              </form>
+            </div>
+          </Container>
+        </Card>
       </Container>
-    </Card>
-    </Container>
     </>
   );
 };

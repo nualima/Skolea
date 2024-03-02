@@ -6,7 +6,7 @@ const BASE_URL = 'http://localhost:8080'; // Remplacez par l'URL de votre backen
 const createUser = async (userData) => {
   try {
     // Envoyer une requête POST au backend pour créer un nouvel utilisateur
-    const response = await axios.post(`${BASE_URL}/api/signup`, userData);
+    const response = await axios.post(`${BASE_URL}/api/users/signup`, userData);
 
     // Retourner les données de la réponse (par exemple, un message de succès)
     return response.data;

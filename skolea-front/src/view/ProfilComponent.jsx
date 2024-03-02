@@ -14,7 +14,7 @@ const ProfilDetails = () => {
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [role, setRole] = useState("");
   const [educationLevel, setEducationLevel] = useState("");
@@ -25,10 +25,10 @@ const ProfilDetails = () => {
     setUsername(userData?.username || "");
     setFullName(`${userData?.firstname || ""} ${userData?.lastname || ""}`);
     setEmail(userData?.email || "");
-    setPhone(userData?.phone || "");
+    setPhoneNumber(userData?.phoneNumber || "");
     setAddress(userData?.address || "");
     setRole(userData?.role || "");
-    setPhone(userData?.phone || "");
+    setPhoneNumber(userData?.phoneNumber || "");
     setEducationLevel(userData?.educationLevel || "");
     setBirthday(userData?.birthday || "");
     setFullName(userData?.name || "");
@@ -104,13 +104,13 @@ const ProfilDetails = () => {
                         <p className="mb-0">Birthday</p>
                         <p className="text-muted mb-0">{birthday}</p>
                         <hr />
-                        <p className="mb-0">Phone number</p>
-                        <p className="text-muted mb-0">{phone}</p>
+                        <p className="mb-0">phoneNumber </p>
+                        <p className="text-muted mb-0">{phoneNumber}</p>
                         <hr />
                         <p className="mb-0">
                           {" "}
                           {userRole === "teacher"
-                            ? "Subjects: " // A faire : ajouter 'subjects' à la bdd
+                            ? "Subjects: " + userData?.subjects.join(", ")
                             : "Education Level: " + educationLevel}
                         </p>
                         <hr />
