@@ -13,6 +13,7 @@ const { sequelize } = require('./models');
 // Importez les routeurs
 const userRouter = require('./routes/userRoutes');
 const contactRouter = require('./routes/contactSubmissionRoutes');
+const messageRouter = require('./routes/messageRoutes');
 
 // Autres routeurs...
 
@@ -26,6 +27,7 @@ app.use(bodyParser.json());
 // Définissez les routes
 app.use('/api/users', userRouter);
 app.use('/api/contact', contactRouter);
+app.use('/api/messages', messageRouter)
 
 // Utilisez Swagger middleware pour servir votre documentation OpenAPI
 app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

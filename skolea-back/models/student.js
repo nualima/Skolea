@@ -1,20 +1,13 @@
+// models/student.js
 'use strict';
-const {
-    Model
-} = require('sequelize');
+
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
     class Student extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
         static associate(models) {
             Student.belongsTo(models.User, { foreignKey: 'userId' });
-            Student.belongsToMany(models.Professor, { through: 'ProfessorStudents', foreignKey: 'studentId' });
-
-
-            // define association here
+            Student.belongsTo(models.EducationLevel, { foreignKey: 'educationLevelId' });
         }
     }
     Student.init({
@@ -25,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         userId: DataTypes.INTEGER,
-        educationLevel: DataTypes.STRING
+        educationLevelId: DataTypes.INTEGER
     }, {
         sequelize,
         modelName: 'Student',

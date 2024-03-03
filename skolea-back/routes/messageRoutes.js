@@ -1,15 +1,86 @@
 const express = require('express');
 const router = express.Router();
-const messageController = require('../controllers/MessageController');
+const messageController = require('../controllers/MessageController')
 
-router.get('/', (req, res) => {
-    res.send('GET request to the homepage');
-});
+/**
+ * @openapi
+ * /messages:
+ *   get:
+ *     summary: Récupère tous les messages
+ *     description: Récupère une liste de tous les messages dans la base de données. Utilisé pour des fins d'analyse et de test.
+ *     responses:
+ *       200:
+ *         description: Une liste de messages.
+ *       500:
+ *         description: Une erreur est survenue lors de la récupération des messages.
+ */
+router.get('/', messageController.getAllMessages);
 
-router.get('/messages', messageController.getAllMessages);
-router.get('/messages/:id', messageController.getMessageById);
-router.post('/messages', messageController.createMessage);
-router.put('/messages/:id', messageController.updateMessage);
-router.delete('/messages/:id', messageController.deleteMessage);
+/**
+ * @openapi
+ * /messages:
+ *   post:
+ *     summary: Crée un nouveau message
+ *     description: Enregistre un nouveau message dans la base de données.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - senderId
+ *               - receiverId
+ *               - content
+ *             properties:
+ *               senderId:
+ *                 type: integer
+ *                 description: L'ID de l'utilisateur envoyant le message.
+ *               receiverId:
+ *                 type: integer
+ *                 description: L'ID de l'utilisateur recevant le message.
+ *               content:
+ *                 type: string
+ *                 description: Le contenu du message.
+ *               timestamp:
+ *                 type: string
+ *                 format: date-time
+ *                 description: La date et l'heure d'envoi du message.
+ *     responses:
+ *       201:
+ *         description: Message créé avec succès.
+ *       400:
+ *         description: Informations manquantes pour la création du message.
+ *       500:
+ *         description: Une erreur est survenue lors de la création du message.
+ */
+router.post('/', messageController.createMessage);
+
+/**
+ * @openapi
+ * /messages/conversation/{userOneId}/{userTwoId}:
+ *   get:
+ *     summary: Récupère la conversation entre deux utilisateurs
+ *     description: Récupère tous les messages échangés entre deux utilisateurs spécifiques.
+ *     parameters:
+ *       - in: path
+ *         name: userOneId
+ *         required: true
+ *         description: L'ID du premier utilisateur.
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: userTwoId
+ *         required: true
+ *         description: L'ID du deuxième utilisateur.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Une liste de messages entre les deux utilisateurs.
+ *       500:
+ *         description: Une erreur est survenue lors de la récupération des messages.
+ */
+router.get('/conversation/:userOneId/:userTwoId', messageController.getConversationBetweenTwoUsers);
 
 module.exports = router;
