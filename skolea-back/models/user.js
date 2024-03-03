@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             User.hasMany(models.Message, { as: 'SentMessages', foreignKey: 'senderId' });
             User.hasMany(models.Message, { as: 'ReceivedMessages', foreignKey: 'receiverId' });
             User.hasMany(models.Professor, { foreignKey: 'userId' });
+            User.hasMany(models.Student, { foreignKey: 'userId' });
             User.hasOne(models.ContactInfo, { foreignKey: 'userId' });
 
         }
