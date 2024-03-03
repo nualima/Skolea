@@ -2,6 +2,8 @@ require('dotenv').config(); // Charge les variables d'environnement depuis .env
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger');
 
 
 
@@ -23,7 +25,11 @@ app.use(bodyParser.json());
 
 // Définissez les routes
 app.use('/api/users', userRouter);
-app.use('/api', contactRouter);
+app.use('/api/contact', contactRouter);
+
+// Utilisez Swagger middleware pour servir votre documentation OpenAPI
+app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
 
 // Testez la connexion à la base de données puis démarrez le serveur

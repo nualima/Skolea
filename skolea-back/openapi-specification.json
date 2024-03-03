@@ -1,0 +1,116 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "My API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Page d'accueil",
+        "description": "Requête GET vers la page d'accueil.",
+        "responses": {
+          "200": {
+            "description": "Accueil atteint avec succès."
+          }
+        }
+      }
+    },
+    "/signup": {
+      "post": {
+        "summary": "Inscription d'un nouvel utilisateur",
+        "description": "Crée un nouvel utilisateur dans le système.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Email de l'utilisateur pour l'inscription."
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "description": "Mot de passe pour l'inscription."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Utilisateur créé avec succès."
+          },
+          "400": {
+            "description": "Données d'inscription invalides."
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Connexion de l'utilisateur",
+        "description": "Authentifie l'utilisateur avec un email et un mot de passe.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Email pour la connexion de l'utilisateur."
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "description": "Mot de passe pour la connexion de l'utilisateur."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Connexion réussie de l'utilisateur."
+          },
+          "401": {
+            "description": "Authentification échouée."
+          }
+        }
+      }
+    },
+    "/whoAmI": {
+      "get": {
+        "summary": "Vérification de l'utilisateur",
+        "description": "Vérifie les informations de l'utilisateur connecté.",
+        "responses": {
+          "200": {
+            "description": "Utilisateur vérifié avec succès."
+          },
+          "401": {
+            "description": "Utilisateur non autorisé ou non connecté."
+          }
+        }
+      }
+    }
+  },
+  "components": {},
+  "tags": []
+}

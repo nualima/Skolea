@@ -10,7 +10,9 @@
         "mysql2": "^3.9.1",
         "nodemailer": "^6.9.9",
         "nodemon": "^2.0.22",
-        "sequelize": "^6.36.0"
+        "sequelize": "^6.36.0",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.0"
     },
     "devDependencies": {
         "sequelize-cli": "^6.6.2"
