@@ -21,7 +21,7 @@ exports.createSession = async(req, res) => {
     const { professorId, studentIds, date, duration, status, price } = req.body;
     let transaction;
     try {
-        const transaction = await sequelize.transaction();
+        transaction = await sequelize.transaction();
 
         const newSession = await Session.create({
             professorId,
@@ -31,14 +31,17 @@ exports.createSession = async(req, res) => {
             price
         }, { transaction });
 
-        if (studentIds && studentIds.length > 0) {
-            await newSession.setStudents(studentIds, { transaction });
+        if (studentIds) {
+            if (Array.isArray(studentIds)) {
+                await newSession.setStudents(studentIds, { transaction });
+            } else {
+                await newSession.addStudent(studentIds, { transaction });
+            }
         }
 
         await transaction.commit();
         res.status(201).json(newSession);
     } catch (error) {
-        // Vérifiez si transaction est définie avant d'appeler rollback.
         if (transaction) {
             try {
                 await transaction.rollback();
@@ -50,6 +53,7 @@ exports.createSession = async(req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 exports.getAllSessions = (req, res) => {
     handleResponse(res, Session.findAll());

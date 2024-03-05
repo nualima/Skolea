@@ -15,7 +15,6 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            // Cette référence doit être mise à jour pour pointer vers la table 'Students'
             studentId: {
                 type: Sequelize.INTEGER,
                 references: { model: 'Students', key: 'id' },
