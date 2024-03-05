@@ -1,52 +1,36 @@
-// controllers/userController.js
-const { sequelize, User, Professor, Student } = require("../models");
+const { sequelize, User, Student, Professor } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 
 require("dotenv").config();
 
+// Middleware pour valider la création de l'utilisateur
 const validateCreateUser = [
-  body("email").isEmail().withMessage("Doit être une adresse email valide"),
-  body("password")
-    .isLength({ min: 6 })
-    .withMessage("Le mot de passe doit contenir au moins 6 caractères"),
+  body("email").isEmail(),
+  body("password").isLength({ min: 6 }),
   body("role").custom((value, { req }) => {
-    if (
-      value === "professor" &&
-      (!req.body.subjectIds || req.body.subjectIds.length === 0)
-    ) {
-      throw new Error(
-        "Au moins un sujet doit être fourni pour les professeurs"
-      );
+    if (value === "professor" && (!req.body.subjectIds || req.body.subjectIds.length === 0)) {
+      throw new Error();
     }
     return true;
   }),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, errors: errors.array() });
+      return res.status(400).json(errors.array());
     }
     next();
   },
 ];
 
-const createStudent = async (userId, educationLevelId, transaction) => {
-  await Student.create({ userId, educationLevelId }, { transaction });
-};
-
-const createProfessorAndLinkSubjects = async (
-  userId,
-  subjectIds,
-  transaction
-) => {
-  const professor = await Professor.create(
-    { userId },
-    { transaction }
-  );
-
-  if (subjectIds && subjectIds.length > 0) {
-    await professor.addSubjects(subjectIds, { transaction });
+// Fonctions pour la création d'étudiants ou de professeurs
+const createStudentOrProfessor = async (role, userId, data, transaction) => {
+  if (role === "student") {
+    await Student.create({ userId, educationLevelId: data }, { transaction });
+  } else if (role === "professor" && data && data.length > 0) {
+    const professor = await Professor.create({ userId }, { transaction });
+    await professor.addSubjects(data, { transaction });
   }
 };
 
@@ -58,77 +42,47 @@ const createUser = [
       const { password, subjectIds, educationLevelId, ...userData } = req.body;
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const newUser = await User.create(
-        { ...userData, password: hashedPassword },
-        { transaction }
-      );
-
-      if (userData.role === "student") {
-        await createStudent(newUser.id, educationLevelId, transaction);
-      }
+      const newUser = await User.create({ ...userData, password: hashedPassword }, { transaction });
+      await createStudentOrProfessor(userData.role, newUser.id, userData.role === "student" ? educationLevelId : subjectIds, transaction);
 
       await transaction.commit();
-      return res.send({ success: true, user: newUser });
+      res.status(201).json({ id: newUser.id });
     } catch (error) {
       await transaction.rollback();
-      return res.status(500).send({
-        success: false,
-        message: "Une erreur est survenue lors de la création de l'utilisateur",
-        error: error.message,
-      });
+      res.status(500).json({ error: error.message });
     }
   },
 ];
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.findOne({ where: { email } });
-    if (!user) {
-      return res.status(404).send({ success: false, message: "Cet utilisateur n'existe pas" });
-    }
-
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
-      return res.status(401).send({ success: false, message: "Mot de passe incorrect" });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).end();
     }
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
-    return res.send({ success: true, token, user: user });
+    res.json({ token, id: user.id });
   } catch (error) {
-    return res.status(500).send({
-      success: false,
-      message: "Une erreur est survenue lors de la recherche de l'utilisateur",
-    });
+    res.status(500).json({ error: error.message });
   }
 };
 
 const verifyUser = async (req, res) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(401).send({ success: false, message: "Aucun token fourni" });
-    }
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByPk(decoded.id);
 
     if (!user) {
-      return res.status(404).send({ success: false, message: "Utilisateur non trouvé" });
+      return res.status(404).end();
     }
 
-    res.send({ success: true, user: user });
+    res.json({ id: user.id });
   } catch (error) {
-    return res.status(500).send({
-      success: false,
-      message: "Une erreur est survenue lors de la vérification du token",
-    });
+    res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = {
-  createUser,
-  loginUser,
-  verifyUser,
-};
+module.exports = { createUser, loginUser, verifyUser };

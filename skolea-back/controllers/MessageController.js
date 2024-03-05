@@ -1,38 +1,39 @@
-const { Message, Sequelize } = require('../models');
+const { User, Message, Sequelize } = require('../models');
+require('dotenv').config();
 
-// Méthode pour récupérer tous les messages pour des fins d'analyse et de test par exemple
-exports.getAllMessages = async(req, res) => {
-    try {
-        const messages = await Message.findAll();
-        res.json(messages);
-    } catch (error) {
-        console.error('Erreur lors de la récupération des messages :', error);
-        res.status(500).json({ message: 'Une erreur est survenue lors de la récupération des messages' });
-    }
+// Fonction d'aide pour simplifier la gestion des réponses
+function handleResponse(promise, res) {
+    promise
+        .then(data => {
+            // Si data est un objet vide, renvoie 204 No Content
+            if (data === null || (Array.isArray(data) && data.length === 0)) {
+                return res.status(204).end();
+            }
+            res.status(200).json(data);
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+            res.status(500).json({ error: error.message });
+        });
+}
+
+exports.getAllMessages = (req, res) => {
+    handleResponse(Message.findAll(), res);
 };
 
-// Méthode pour créer un nouveau message
-exports.createMessage = async(req, res) => {
+exports.createMessage = (req, res) => {
     const { senderId, receiverId, content, timestamp } = req.body;
+    // La validation est simplifiée pour se concentrer uniquement sur les statuts d'erreur
     if (!senderId || !receiverId || !content) {
-        return res.status(400).json({ message: 'Des informations sont manquantes pour la création du message' });
+        return res.status(400).end();
     }
-
-    try {
-        const message = await Message.create({ senderId, receiverId, content, timestamp });
-        res.status(201).json(message);
-    } catch (error) {
-        console.error('Erreur lors de la création du message :', error);
-        res.status(500).json({ message: 'Une erreur est survenue lors de la création du message' });
-    }
+    handleResponse(Message.create({ senderId, receiverId, content, timestamp }), res);
 };
 
-// Méthode pour récupérer tous les messages entre deux utilisateurs spécifiques
-exports.getConversationBetweenTwoUsers = async(req, res) => {
+exports.getConversationBetweenTwoUsers = (req, res) => {
     const { userOneId, userTwoId } = req.params;
-
-    try {
-        const messages = await Message.findAll({
+    handleResponse(
+        Message.findAll({
             where: {
                 [Sequelize.Op.or]: [
                     { senderId: userOneId, receiverId: userTwoId },
@@ -42,10 +43,38 @@ exports.getConversationBetweenTwoUsers = async(req, res) => {
             order: [
                 ['timestamp', 'ASC']
             ]
-        });
-        res.json(messages);
-    } catch (error) {
-        console.error('Erreur lors de la récupération des messages :', error);
-        res.status(500).json({ message: 'Une erreur est survenue lors de la récupération des messages' });
+        }),
+        res
+    );
+};
+
+exports.createMessageWithEmails = (req, res) => {
+    const { content } = req.body;
+    const senderEmail = process.env.EMAIL_FROM;
+    const receiverEmail = process.env.EMAIL_TO;
+
+    if (!content) {
+        return res.status(400).end();
     }
+
+    const senderPromise = User.findOne({ where: { email: senderEmail } });
+    const receiverPromise = User.findOne({ where: { email: receiverEmail } });
+
+    Promise.all([senderPromise, receiverPromise])
+        .then(([sender, receiver]) => {
+            if (!sender || !receiver) {
+                return res.status(404).end();
+            }
+            return Message.create({
+                senderId: sender.id,
+                receiverId: receiver.id,
+                content,
+                timestamp: new Date()
+            });
+        })
+        .then(message => res.status(201).json(message))
+        .catch(error => {
+            console.error('Erreur lors de la recherche des utilisateurs :', error);
+            res.status(500).json({ error: error.message });
+        });
 };

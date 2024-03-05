@@ -1,27 +1,76 @@
 // controllers/sessionController.js
-const db = require('../models'); // Assurez-vous que le chemin d'accès est correct
+const { sequelize, Session, SessionStudent } = require("../models");
 
-// Fonction pour créer une nouvelle session
-exports.createSession = async (req, res) => {
+
+// Fonction d'aide pour gérer les réponses et les erreurs
+const handleResponse = (res, promise) => {
+    promise
+        .then(data => {
+            if (data || data === 0) { // Inclut le cas où 'deleted' est 0
+                res.status(200).json(data);
+            } else {
+                res.status(404).end();
+            }
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+            res.status(500).json({ error: error.message });
+        });
+};
+exports.createSession = async(req, res) => {
+    const { professorId, studentIds, date, duration, status, price } = req.body;
+    let transaction;
     try {
-        const { professorId, studentId, date, duration, status, price } = req.body;
-        const session = await db.Session.create({ professorId, studentId, date, duration, status, price });
-        res.status(201).json({ success: true, data: session });
+        const transaction = await sequelize.transaction();
+
+        const newSession = await Session.create({
+            professorId,
+            date,
+            duration,
+            status,
+            price
+        }, { transaction });
+
+        if (studentIds && studentIds.length > 0) {
+            await newSession.setStudents(studentIds, { transaction });
+        }
+
+        await transaction.commit();
+        res.status(201).json(newSession);
     } catch (error) {
-        console.error('Erreur lors de la création de la session :', error);
-        res.status(500).json({ success: false, message: 'Une erreur est survenue lors de la création de la session', error: error.message });
+        // Vérifiez si transaction est définie avant d'appeler rollback.
+        if (transaction) {
+            try {
+                await transaction.rollback();
+            } catch (rollbackError) {
+                console.error('Erreur lors du rollback de la transaction:', rollbackError);
+            }
+        }
+        console.error('Erreur lors de la création de la session:', error);
+        res.status(500).json({ error: error.message });
     }
 };
 
-// Fonction pour récupérer toutes les sessions
-exports.getAllSessions = async (req, res) => {
-    try {
-        const sessions = await db.Session.findAll();
-        res.status(200).json({ success: true, data: sessions });
-    } catch (error) {
-        console.error('Erreur lors de la récupération des sessions :', error);
-        res.status(500).json({ success: false, message: 'Une erreur est survenue lors de la récupération des sessions', error: error.message });
-    }
+exports.getAllSessions = (req, res) => {
+    handleResponse(res, Session.findAll());
 };
 
-// Autres fonctions de contrôleur pour la mise à jour, la suppression, etc., si nécessaire
+exports.deleteSession = (req, res) => {
+    const id = req.params.id;
+    handleResponse(res, Session.destroy({ where: { id } }));
+};
+
+exports.getSessionById = (req, res) => {
+    const id = req.params.id;
+    handleResponse(res, Session.findByPk(id));
+};
+
+exports.updateSession = (req, res) => {
+    const id = req.params.id;
+    const updatePromise = Session.findByPk(id).then(session => {
+        if (!session) return null;
+        return session.update(req.body);
+    });
+
+    handleResponse(res, updatePromise);
+};

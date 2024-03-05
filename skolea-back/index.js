@@ -1,6 +1,5 @@
 require('dotenv').config(); // Charge les variables d'environnement depuis .env
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger');
@@ -14,6 +13,8 @@ const { sequelize } = require('./models');
 const userRouter = require('./routes/userRoutes');
 const contactRouter = require('./routes/contactSubmissionRoutes');
 const messageRouter = require('./routes/messageRoutes');
+const sessionRouter = require('./routes/sessionRoutes');
+const availabilityRoutes = require('./routes/availabilityRoutes');
 
 // Autres routeurs...
 
@@ -22,17 +23,24 @@ const PORT = process.env.PORT || 3000;
 
 // Configuration des middlewares
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Définissez les routes
 app.use('/api/users', userRouter);
 app.use('/api/contact', contactRouter);
-app.use('/api/messages', messageRouter)
+app.use('/api/messages', messageRouter);
+app.use('/api/sessions', sessionRouter);
+app.use('/api/availabilities', availabilityRoutes);
+
+
 
 // Utilisez Swagger middleware pour servir votre documentation OpenAPI
 app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
 // Testez la connexion à la base de données puis démarrez le serveur
 sequelize.authenticate()

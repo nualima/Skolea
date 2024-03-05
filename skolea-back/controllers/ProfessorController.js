@@ -2,7 +2,7 @@
 const db = require('../models'); // Assurez-vous que le chemin d'accès est correct
 
 // Fonction pour créer un nouveau professeur
-exports.createProfessor = async (req, res) => {
+exports.createProfessor = async(req, res) => {
     try {
         const { userId, price, subjects, bio } = req.body;
         const professor = await db.Professor.create({ userId, price, subjects, bio });
@@ -14,7 +14,7 @@ exports.createProfessor = async (req, res) => {
 };
 
 // Fonction pour récupérer tous les professeurs
-exports.getAllProfessors = async (req, res) => {
+exports.getAllProfessors = async(req, res) => {
     try {
         const professors = await db.Professor.findAll();
         res.status(200).json({ success: true, data: professors });

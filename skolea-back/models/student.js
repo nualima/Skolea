@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             Student.belongsTo(models.User, { foreignKey: 'userId' });
             Student.belongsTo(models.EducationLevel, { foreignKey: 'educationLevelId' });
+            Student.belongsToMany(models.Session, { through: 'SessionStudents', foreignKey: 'studentId', otherKey: 'sessionId' });
+
         }
     }
     Student.init({
@@ -22,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'Student',
+        tableName: 'students',
     });
     return Student;
 };

@@ -83,4 +83,35 @@ router.post('/', messageController.createMessage);
  */
 router.get('/conversation/:userOneId/:userTwoId', messageController.getConversationBetweenTwoUsers);
 
+/**
+ * @openapi
+ * /messages/email:
+ *   post:
+ *     summary: Crée un nouveau message utilisant les adresses e-mail
+ *     description: Enregistre un nouveau message dans la base de données en utilisant les adresses e-mail pour identifier l'expéditeur et le destinataire.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 description: Le contenu du message.
+ *     responses:
+ *       201:
+ *         description: Message créé avec succès.
+ *       400:
+ *         description: Informations manquantes pour la création du message.
+ *       404:
+ *         description: Utilisateur non trouvé.
+ *       500:
+ *         description: Une erreur est survenue lors de la création du message.
+ */
+router.post('/email', messageController.createMessageWithEmails);
+
+module.exports = router;
 module.exports = router;

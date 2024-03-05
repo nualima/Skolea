@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Session.belongsTo(models.User, { as: 'Professor', foreignKey: 'professorId' });
-            Session.belongsToMany(models.Subject, { through: 'SessionStudents', foreignKey: 'sessionId' })
+            Session.belongsToMany(models.Student, { through: 'SessionStudents', foreignKey: 'sessionId', otherKey: 'studentId' });
 
         }
     }
