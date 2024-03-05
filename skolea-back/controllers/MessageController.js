@@ -1,11 +1,10 @@
 const { User, Message, Sequelize } = require('../models');
 require('dotenv').config();
 
-// Fonction d'aide pour simplifier la gestion des réponses
+// Fonction d'aide pour gérer les réponses et les erreurs
 function handleResponse(promise, res) {
     promise
         .then(data => {
-            // Si data est un objet vide, renvoie 204 No Content
             if (data === null || (Array.isArray(data) && data.length === 0)) {
                 return res.status(204).end();
             }
@@ -17,19 +16,21 @@ function handleResponse(promise, res) {
         });
 }
 
+// Méthode pour récupérer tous les messages
 exports.getAllMessages = (req, res) => {
     handleResponse(Message.findAll(), res);
 };
 
+// Méthode pour créer un message
 exports.createMessage = (req, res) => {
     const { senderId, receiverId, content, timestamp } = req.body;
-    // La validation est simplifiée pour se concentrer uniquement sur les statuts d'erreur
     if (!senderId || !receiverId || !content) {
         return res.status(400).end();
     }
     handleResponse(Message.create({ senderId, receiverId, content, timestamp }), res);
 };
 
+// Méthode pour récupérer la conversation entre deux utilisateurs
 exports.getConversationBetweenTwoUsers = (req, res) => {
     const { userOneId, userTwoId } = req.params;
     handleResponse(
@@ -48,6 +49,7 @@ exports.getConversationBetweenTwoUsers = (req, res) => {
     );
 };
 
+// Méthode pour créer un message avec des adresses email
 exports.createMessageWithEmails = (req, res) => {
     const { content } = req.body;
     const senderEmail = process.env.EMAIL_FROM;

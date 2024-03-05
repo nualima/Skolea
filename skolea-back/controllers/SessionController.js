@@ -1,7 +1,6 @@
 // controllers/sessionController.js
 const { sequelize, Session, SessionStudent } = require("../models");
 
-
 // Fonction d'aide pour gérer les réponses et les erreurs
 const handleResponse = (res, promise) => {
     promise
@@ -17,6 +16,8 @@ const handleResponse = (res, promise) => {
             res.status(500).json({ error: error.message });
         });
 };
+
+// Méthode pour créer une nouvelle session
 exports.createSession = async(req, res) => {
     const { professorId, studentIds, date, duration, status, price } = req.body;
     let transaction;
@@ -54,21 +55,24 @@ exports.createSession = async(req, res) => {
     }
 };
 
-
+// Méthode pour récupérer toutes les sessions
 exports.getAllSessions = (req, res) => {
     handleResponse(res, Session.findAll());
 };
 
+// Méthode pour supprimer une session
 exports.deleteSession = (req, res) => {
     const id = req.params.id;
     handleResponse(res, Session.destroy({ where: { id } }));
 };
 
+// Méthode pour récupérer une session par son identifiant
 exports.getSessionById = (req, res) => {
     const id = req.params.id;
     handleResponse(res, Session.findByPk(id));
 };
 
+// Méthode pour mettre à jour une session
 exports.updateSession = (req, res) => {
     const id = req.params.id;
     const updatePromise = Session.findByPk(id).then(session => {

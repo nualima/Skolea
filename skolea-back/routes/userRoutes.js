@@ -94,4 +94,21 @@ router.post('/login', userController.loginUser);
  */
 router.get('/whoAmI', userController.verifyUser);
 
+/**
+ * @openapi
+ * /api/users/createAdminUsers:
+ *   post:
+ *     summary: Créer deux utilisateurs admin
+ *     description: Crée deux utilisateurs de type "admin" avec les informations fournies.
+ *     requestBody:
+ *       required: false
+ *     responses:
+ *       201:
+ *         description: Utilisateurs admin créés avec succès.
+ *       500:
+ *         description: Erreur lors de la création des utilisateurs admin.
+ */
+router.post('/createAdminUsers', userController.createAdminUsers);
+
+
 module.exports = router;

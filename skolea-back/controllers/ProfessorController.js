@@ -23,5 +23,3 @@ exports.getAllProfessors = async(req, res) => {
         res.status(500).json({ success: false, message: 'Une erreur est survenue lors de la récupération des professeurs', error: error.message });
     }
 };
-
-// Autres fonctions de contrôleur pour la mise à jour, la suppression, etc., si nécessaire

@@ -2,7 +2,6 @@ const { sequelize, User, Student, Professor } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
-
 require("dotenv").config();
 
 // Middleware pour valider la création de l'utilisateur
@@ -24,6 +23,22 @@ const validateCreateUser = [
   },
 ];
 
+// Fonction générique pour créer un utilisateur
+const createUser = async (userData, res) => {
+  const transaction = await sequelize.transaction();
+  try {
+    const { password, subjectIds, educationLevelId, ...userInfo } = userData;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await User.create({ ...userInfo, password: hashedPassword }, { transaction });
+    await createStudentOrProfessor(userInfo.role, newUser.id, userInfo.role === "student" ? educationLevelId : subjectIds, transaction);
+    await transaction.commit();
+    return { success: true, id: newUser.id };
+  } catch (error) {
+    await transaction.rollback();
+    return { success: false, error: error.message };
+  }
+};
+
 // Fonctions pour la création d'étudiants ou de professeurs
 const createStudentOrProfessor = async (role, userId, data, transaction) => {
   if (role === "student") {
@@ -34,26 +49,48 @@ const createStudentOrProfessor = async (role, userId, data, transaction) => {
   }
 };
 
-const createUser = [
-  validateCreateUser,
-  async (req, res) => {
-    const transaction = await sequelize.transaction();
-    try {
-      const { password, subjectIds, educationLevelId, ...userData } = req.body;
-      const hashedPassword = await bcrypt.hash(password, 10);
+// Middleware pour la création d'utilisateurs
+const handleCreateUser = async (req, res) => {
+  const result = await createUser(req.body, res);
+  if (result.success) {
+    res.status(201).json({ id: result.id });
+  } else {
+    res.status(500).json({ error: result.error });
+  }
+};
 
-      const newUser = await User.create({ ...userData, password: hashedPassword }, { transaction });
-      await createStudentOrProfessor(userData.role, newUser.id, userData.role === "student" ? educationLevelId : subjectIds, transaction);
+// Fonction pour créer des utilisateurs administrateurs
+const createAdminUsers = async (req, res) => {
+  try {
+    // Créer des utilisateurs administrateurs
+    await createUser({
+      email: 'contact@skolea.fr',
+      password: 'azerty123',
+      name: 'contact message',
+      role: 'admin',
+      birthday: '1998-03-18',
+      phoneNumber: '0168716774',
+      profilePicture: 'url_de_ta_photo_de_profil'
+    }, res);
 
-      await transaction.commit();
-      res.status(201).json({ id: newUser.id });
-    } catch (error) {
-      await transaction.rollback();
-      res.status(500).json({ error: error.message });
-    }
-  },
-];
+    await createUser({
+      email: 'redwan.gharbi@hotmail.com',
+      password: 'azerty123',
+      name: 'redwan gharbi',
+      role: 'admin',
+      birthday: '1998-03-18',
+      phoneNumber: '076871674',
+      profilePicture: 'url_de_ta_photo_de_profil'
+    }, res);
 
+    res.status(201).send('Utilisateurs admin créés avec succès');
+  } catch (error) {
+    console.error('Erreur lors de la création des utilisateurs admin :', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Middleware pour la connexion d'un utilisateur
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -61,7 +98,6 @@ const loginUser = async (req, res) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).end();
     }
-
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
     res.json({ token, id: user.id });
   } catch (error) {
@@ -69,20 +105,19 @@ const loginUser = async (req, res) => {
   }
 };
 
+// Middleware pour vérifier l'utilisateur à l'aide du token JWT
 const verifyUser = async (req, res) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByPk(decoded.id);
-
     if (!user) {
       return res.status(404).end();
     }
-
     res.json({ id: user.id });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { createUser, loginUser, verifyUser };
+module.exports = { handleCreateUser, createAdminUsers, loginUser, verifyUser };

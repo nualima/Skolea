@@ -36,6 +36,6 @@ exports.createContactSubmission = async(req, res) => {
         });
     } catch (error) {
         console.error('Erreur lors de la création de la soumission de contact :', error);
-        res.status(500).json({ message: 'Une erreur est survenue lors de la création de la soumission de contact' });
+        res.status(500).json({ error: error.message });
     }
 };

@@ -1,15 +1,25 @@
 // controllers/AvailabilityController.js
 const { Availability } = require('../models');
 
+// Fonction d'aide pour gérer les réponses et les erreurs
+const handleResponse = (res, promise) => {
+    promise
+        .then(data => {
+            if (data || data === 0) {
+                res.status(200).json(data);
+            } else {
+                res.status(404).end();
+            }
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+            res.status(500).json({ error: error.message });
+        });
+};
+
 // Méthode pour récupérer toutes les disponibilités
-exports.getAllAvailabilities = async(req, res) => {
-    try {
-        const availabilities = await Availability.findAll();
-        res.json(availabilities);
-    } catch (error) {
-        console.error('Erreur lors de la récupération des disponibilités :', error);
-        res.status(500).json({ message: 'Une erreur est survenue lors de la récupération des disponibilités' });
-    }
+exports.getAllAvailabilities = (req, res) => {
+    handleResponse(res, Availability.findAll());
 };
 
 // Méthode pour créer une nouvelle disponibilité
@@ -17,46 +27,40 @@ exports.createAvailability = async(req, res) => {
     const { professorId, startTime, endTime, status } = req.body;
     try {
         const availability = await Availability.create({ professorId, startTime, endTime, status });
-        res.status(201).json(availability);
+        res.status(201).json(availability); // On renvoie l'objet créé
     } catch (error) {
         console.error('Erreur lors de la création de la disponibilité :', error);
-        res.status(500).json({ message: 'Une erreur est survenue lors de la création de la disponibilité' });
+        res.status(500).json({ error: error.message });
     }
 };
 
 // Méthode pour mettre à jour une disponibilité existante
 exports.updateAvailability = async(req, res) => {
-    const { id } = req.params;
-    const { professorId, startTime, endTime, status } = req.body;
+    const id = req.params.id;
     try {
         const availability = await Availability.findByPk(id);
         if (!availability) {
-            return res.status(404).json({ message: 'Disponibilité non trouvée' });
+            return res.status(404).end();
         }
-        availability.professorId = professorId;
-        availability.startTime = startTime;
-        availability.endTime = endTime;
-        availability.status = status;
-        await availability.save();
-        res.json(availability);
+        await availability.update(req.body);
+        res.status(200).json(availability);
     } catch (error) {
         console.error('Erreur lors de la mise à jour de la disponibilité :', error);
-        res.status(500).json({ message: 'Une erreur est survenue lors de la mise à jour de la disponibilité' });
+        res.status(500).json({ error: error.message });
     }
 };
 
 // Méthode pour supprimer une disponibilité existante
 exports.deleteAvailability = async(req, res) => {
-    const { id } = req.params;
+    const id = req.params.id;
     try {
-        const availability = await Availability.findByPk(id);
-        if (!availability) {
-            return res.status(404).json({ message: 'Disponibilité non trouvée' });
+        const deletedCount = await Availability.destroy({ where: { id } });
+        if (deletedCount === 0) {
+            return res.status(404).end();
         }
-        await availability.destroy();
-        res.json({ message: 'Disponibilité supprimée avec succès' });
+        res.status(204).end();
     } catch (error) {
         console.error('Erreur lors de la suppression de la disponibilité :', error);
-        res.status(500).json({ message: 'Une erreur est survenue lors de la suppression de la disponibilité' });
+        res.status(500).json({ error: error.message });
     }
 };
