@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/UserController');
+const { handleCreateUser, createAdminUsers, loginUser, verifyUser } = require('../controllers/UserController');
 
 /**
  * @openapi
@@ -46,7 +46,7 @@ router.get('/', (req, res) => {
  *       400:
  *         description: Données d'inscription invalides.
  */
-router.post('/signup', userController.createUser);
+router.post('/signup', handleCreateUser);
 
 /**
  * @openapi
@@ -78,7 +78,7 @@ router.post('/signup', userController.createUser);
  *       401:
  *         description: Authentification échouée.
  */
-router.post('/login', userController.loginUser);
+router.post('/login', createAdminUsers);
 
 /**
  * @openapi
@@ -92,7 +92,7 @@ router.post('/login', userController.loginUser);
  *       401:
  *         description: Utilisateur non autorisé ou non connecté.
  */
-router.get('/whoAmI', userController.verifyUser);
+router.get('/whoAmI', loginUser);
 
 /**
  * @openapi
@@ -108,7 +108,7 @@ router.get('/whoAmI', userController.verifyUser);
  *       500:
  *         description: Erreur lors de la création des utilisateurs admin.
  */
-router.post('/createAdminUsers', userController.createAdminUsers);
+router.post('/createAdminUsers', verifyUser);
 
 
 module.exports = router;
