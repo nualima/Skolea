@@ -62,7 +62,7 @@ const handleCreateUser = async (req, res) => {
 // Fonction pour créer des utilisateurs administrateurs
 const createAdminUsers = async (req, res) => {
   try {
-    // Créer des utilisateurs administrateurs
+    // Existing admin users creation
     await createUser({
       email: 'contact@skolea.fr',
       password: 'azerty123',
@@ -83,12 +83,38 @@ const createAdminUsers = async (req, res) => {
       profilePicture: 'url_de_ta_photo_de_profil'
     }, res);
 
-    res.status(201).send('Utilisateurs admin créés avec succès');
+    // New student and professor users creation
+    await createUser({
+      email: "student@example.com",
+      password: "studentPassword123",
+      name: "Student Name",
+      role: "student",
+      educationLevel: "CP",
+      birthday: "2000-01-01",
+      phoneNumber: "0000000000",
+      profilePicture: "url_to_student_profile_picture"
+    }, res);
+
+    await createUser({
+      email: "professor@example.com",
+      password: "professorPassword123",
+      name: "Professor Name",
+      role: "professor",
+      price: "50.00",
+      subjects: "Sciences",
+      bio: "A brief bio of the professor",
+      birthday: "1980-01-01",
+      phoneNumber: "1111111111",
+      profilePicture: "url_to_professor_profile_picture"
+    }, res);
+
+    res.status(201).send('All users created successfully');
   } catch (error) {
-    console.error('Erreur lors de la création des utilisateurs admin :', error);
+    console.error('Error creating users:', error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Middleware pour la connexion d'un utilisateur
 const loginUser = async (req, res) => {

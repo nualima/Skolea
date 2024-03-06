@@ -114,4 +114,3 @@ router.get('/conversation/:userOneId/:userTwoId', messageController.getConversat
 router.post('/email', messageController.createMessageWithEmails);
 
 module.exports = router;
-module.exports = router;

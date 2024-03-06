@@ -53,7 +53,7 @@ exports.getConversationBetweenTwoUsers = (req, res) => {
 exports.createMessageWithEmails = (req, res) => {
     const { content } = req.body;
     const senderEmail = process.env.EMAIL_FROM;
-    const receiverEmail = process.env.EMAIL_TO;
+    const receiverEmail = process.env.EMAIL_USER;
 
     if (!content) {
         return res.status(400).end();

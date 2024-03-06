@@ -5,6 +5,363 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/availabilities": {
+      "get": {
+        "summary": "Récupère toutes les disponibilités",
+        "description": "Requête GET pour récupérer toutes les disponibilités des professeurs.",
+        "responses": {
+          "200": {
+            "description": "Liste des disponibilités récupérées avec succès."
+          },
+          "500": {
+            "description": "Une erreur est survenue lors de la récupération des disponibilités."
+          }
+        }
+      },
+      "post": {
+        "summary": "Crée une nouvelle disponibilité",
+        "description": "Requête POST pour créer une nouvelle disponibilité pour un professeur.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "professorId",
+                  "startTime",
+                  "endTime",
+                  "status"
+                ],
+                "properties": {
+                  "professorId": {
+                    "type": "integer",
+                    "description": "L'ID du professeur associé à la disponibilité."
+                  },
+                  "startTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Le début de la disponibilité."
+                  },
+                  "endTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "La fin de la disponibilité."
+                  },
+                  "status": {
+                    "type": "string",
+                    "description": "Le statut de la disponibilité."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Disponibilité créée avec succès."
+          },
+          "400": {
+            "description": "Informations invalides fournies."
+          },
+          "500": {
+            "description": "Une erreur est survenue lors de la création de la disponibilité."
+          }
+        }
+      }
+    },
+    "/availabilities/{id}": {
+      "delete": {
+        "summary": "Supprime une disponibilité existante",
+        "description": "Requête DELETE pour supprimer une disponibilité existante par son ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "L'ID de la disponibilité à supprimer.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Disponibilité supprimée avec succès."
+          },
+          "404": {
+            "description": "Disponibilité non trouvée."
+          },
+          "500": {
+            "description": "Une erreur est survenue lors de la suppression de la disponibilité."
+          }
+        }
+      }
+    },
+    "/messages": {
+      "get": {
+        "summary": "Récupère tous les messages",
+        "description": "Récupère une liste de tous les messages dans la base de données. Utilisé pour des fins d'analyse et de test.",
+        "responses": {
+          "200": {
+            "description": "Une liste de messages."
+          },
+          "500": {
+            "description": "Une erreur est survenue lors de la récupération des messages."
+          }
+        }
+      },
+      "post": {
+        "summary": "Crée un nouveau message",
+        "description": "Enregistre un nouveau message dans la base de données.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "senderId",
+                  "receiverId",
+                  "content"
+                ],
+                "properties": {
+                  "senderId": {
+                    "type": "integer",
+                    "description": "L'ID de l'utilisateur envoyant le message."
+                  },
+                  "receiverId": {
+                    "type": "integer",
+                    "description": "L'ID de l'utilisateur recevant le message."
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Le contenu du message."
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "La date et l'heure d'envoi du message."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Message créé avec succès."
+          },
+          "400": {
+            "description": "Informations manquantes pour la création du message."
+          },
+          "500": {
+            "description": "Une erreur est survenue lors de la création du message."
+          }
+        }
+      }
+    },
+    "/messages/conversation/{userOneId}/{userTwoId}": {
+      "get": {
+        "summary": "Récupère la conversation entre deux utilisateurs",
+        "description": "Récupère tous les messages échangés entre deux utilisateurs spécifiques.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userOneId",
+            "required": true,
+            "description": "L'ID du premier utilisateur.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "userTwoId",
+            "required": true,
+            "description": "L'ID du deuxième utilisateur.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Une liste de messages entre les deux utilisateurs."
+          },
+          "500": {
+            "description": "Une erreur est survenue lors de la récupération des messages."
+          }
+        }
+      }
+    },
+    "/messages/email": {
+      "post": {
+        "summary": "Crée un nouveau message utilisant les adresses e-mail",
+        "description": "Enregistre un nouveau message dans la base de données en utilisant les adresses e-mail pour identifier l'expéditeur et le destinataire.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "Le contenu du message."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Message créé avec succès."
+          },
+          "400": {
+            "description": "Informations manquantes pour la création du message."
+          },
+          "404": {
+            "description": "Utilisateur non trouvé."
+          },
+          "500": {
+            "description": "Une erreur est survenue lors de la création du message."
+          }
+        }
+      }
+    },
+    "/sessions": {
+      "get": {
+        "summary": "Récupère toutes les sessions",
+        "description": "Retourne une liste de toutes les sessions.",
+        "responses": {
+          "200": {
+            "description": "Une liste de sessions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Session"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Crée une nouvelle session",
+        "description": "Ajoute une nouvelle session à la liste.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Session"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Session créée avec succès."
+          }
+        }
+      }
+    },
+    "/sessions/{id}": {
+      "get": {
+        "summary": "Récupère une session par son ID",
+        "description": "Retourne une session unique par son ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID de la session à récupérer.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Une session trouvé par son ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Session non trouvée."
+          }
+        }
+      },
+      "put": {
+        "summary": "Met à jour une session",
+        "description": "Met à jour les informations d'une session existante par son ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID de la session à mettre à jour.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Session"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session mise à jour avec succès."
+          },
+          "404": {
+            "description": "Session non trouvée."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprime une session",
+        "description": "Supprime une session de la liste par son ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID de la session à supprimer.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session supprimée avec succès."
+          },
+          "404": {
+            "description": "Session non trouvée."
+          }
+        }
+      }
+    },
     "/": {
       "get": {
         "summary": "Page d'accueil",
@@ -109,8 +466,68 @@
           }
         }
       }
+    },
+    "/api/users/createAdminUsers": {
+      "post": {
+        "summary": "Créer deux utilisateurs admin",
+        "description": "Crée deux utilisateurs de type \"admin\" avec les informations fournies.",
+        "requestBody": {
+          "required": false
+        },
+        "responses": {
+          "201": {
+            "description": "Utilisateurs admin créés avec succès."
+          },
+          "500": {
+            "description": "Erreur lors de la création des utilisateurs admin."
+          }
+        }
+      }
     }
   },
-  "components": {},
+  "components": {
+    "schemas": {
+      "Session": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "L'ID unique de la session."
+          },
+          "professorId": {
+            "type": "integer",
+            "description": "L'ID du professeur associé à la session."
+          },
+          "studentId": {
+            "type": "integer",
+            "description": "L'ID de l'étudiant associé à la session."
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "La date et l'heure de la session."
+          },
+          "duration": {
+            "type": "integer",
+            "description": "La durée de la session en minutes."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "planned",
+              "completed",
+              "cancelled"
+            ],
+            "description": "Le statut de la session."
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "description": "Le prix de la session."
+          }
+        }
+      }
+    }
+  },
   "tags": []
 }

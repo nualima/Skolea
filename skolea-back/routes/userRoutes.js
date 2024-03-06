@@ -4,20 +4,6 @@ const { handleCreateUser, createAdminUsers, loginUser, verifyUser } = require('.
 
 /**
  * @openapi
- * /:
- *   get:
- *     summary: Page d'accueil
- *     description: Requête GET vers la page d'accueil.
- *     responses:
- *       200:
- *         description: Accueil atteint avec succès.
- */
-router.get('/', (req, res) => {
-    res.send('GET request to the homepage');
-});
-
-/**
- * @openapi
  * /signup:
  *   post:
  *     summary: Inscription d'un nouvel utilisateur
@@ -78,7 +64,7 @@ router.post('/signup', handleCreateUser);
  *       401:
  *         description: Authentification échouée.
  */
-router.post('/login', createAdminUsers);
+router.post('/login', loginUser);
 
 /**
  * @openapi
@@ -92,7 +78,7 @@ router.post('/login', createAdminUsers);
  *       401:
  *         description: Utilisateur non autorisé ou non connecté.
  */
-router.get('/whoAmI', loginUser);
+router.get('/whoAmI', verifyUser);
 
 /**
  * @openapi
@@ -108,7 +94,7 @@ router.get('/whoAmI', loginUser);
  *       500:
  *         description: Erreur lors de la création des utilisateurs admin.
  */
-router.post('/createAdminUsers', verifyUser);
+router.post('/createAdminUsers', createAdminUsers);
 
 
 module.exports = router;
