@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
             Professor.belongsTo(models.User, { foreignKey: 'userId' });
             Professor.hasMany(models.Availability, { foreignKey: 'professorId' });
             Professor.belongsToMany(models.Subject, { through: 'ProfessorSubjects', foreignKey: 'professorId' })
+            Professor.belongsTo(models.City, { foreignKey: 'cityId' });
+
 
         }
     }
@@ -33,7 +35,9 @@ module.exports = (sequelize, DataTypes) => {
         subjects: {
             type: DataTypes.STRING, // Adjust the data type as needed
             defaultValue: 'Default Subject' // Set a default value
-        }
+        },
+        cityId: DataTypes.INTEGER,
+
     }, {
         sequelize,
         modelName: 'Professor',

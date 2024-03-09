@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { handleCreateUser, createAdminUsers, loginUser, verifyUser } = require('../controllers/UserController');
+const { handleCreateUser, createAdminUsers, loginUser, whoAmI } = require('../controllers/UserController');
 
 /**
  * @openapi
@@ -78,7 +78,7 @@ router.post('/login', loginUser);
  *       401:
  *         description: Utilisateur non autorisé ou non connecté.
  */
-router.get('/whoAmI', verifyUser);
+router.get('/whoAmI', whoAmI);
 
 /**
  * @openapi

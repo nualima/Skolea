@@ -40,15 +40,14 @@ const LoginPage = () => {
 
     try {
       const response = await LoginServices.login(email, password);
-      if (response.success) {
+      if (response) {
       setUserData(response.user);
         setTimeout(() => {
           navigate("/home");
         }, 500);
       } else {
-        // Si votre backend renvoie des erreurs spécifiques, gérez-les ici
         console.error(
-          "Erreur lors de la connexion : Aucun succès",
+          "Erreur lors de la connexioazen : Aucun succès",
           response.error
         );
       }

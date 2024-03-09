@@ -125,14 +125,14 @@ const loginUser = async (req, res) => {
       return res.status(401).end();
     }
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
-    res.json({ token, id: user.id });
+    res.json({ token, user: user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
 // Middleware pour vérifier l'utilisateur à l'aide du token JWT
-const verifyUser = async (req, res) => {
+const whoAmI = async (req, res) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -140,10 +140,10 @@ const verifyUser = async (req, res) => {
     if (!user) {
       return res.status(404).end();
     }
-    res.json({ id: user.id });
+    res.json({ user: user});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { handleCreateUser, createAdminUsers, loginUser, verifyUser };
+module.exports = { handleCreateUser, createAdminUsers, loginUser, whoAmI };

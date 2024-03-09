@@ -14,8 +14,6 @@ const LoginServices = {
 
       // Extraire les données de la réponse
       const data = response.data;
-      console.log(data + "/service/index.jsx l.17");
-
       // Stocker le jeton (token) dans le stockage local (localStorage)
       localStorage.setItem('token', data.token);
 
