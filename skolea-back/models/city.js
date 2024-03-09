@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     City.init({
-        cityId: {
+        id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
@@ -24,6 +24,5 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'City',
     });
-
     return City;
 };

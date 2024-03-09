@@ -2,6 +2,7 @@ const { sequelize, User, Student, Professor } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
+const professorController = require("../controllers/ProfessorController");
 require("dotenv").config();
 
 // Middleware pour valider la création de l'utilisateur
@@ -9,7 +10,10 @@ const validateCreateUser = [
   body("email").isEmail(),
   body("password").isLength({ min: 6 }),
   body("role").custom((value, { req }) => {
-    if (value === "professor" && (!req.body.subjectIds || req.body.subjectIds.length === 0)) {
+    if (
+      value === "professor" &&
+      (!req.body.subjectIds || req.body.subjectIds.length === 0)
+    ) {
       throw new Error();
     }
     return true;
@@ -27,13 +31,32 @@ const validateCreateUser = [
 const createUser = async (userData, res) => {
   const transaction = await sequelize.transaction();
   try {
-    const { password, subjectIds, educationLevelId, ...userInfo } = userData;
+    const { password, subjectIds, educationLevelId, cityNames, ...userInfo } =
+      userData;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ ...userInfo, password: hashedPassword }, { transaction });
-    await createStudentOrProfessor(userInfo.role, newUser.id, userInfo.role === "student" ? educationLevelId : subjectIds, transaction);
+    const newUser = await User.create(
+      { ...userInfo, password: hashedPassword },
+      { transaction }
+    );
+
+    // Passer 'subjectIds', 'cityNames', etc., selon le rôle
+    await createStudentOrProfessor(
+      userInfo.role,
+      newUser.id,
+      {
+        subjectIds,
+        educationLevelId,
+        price: userData.price,
+        bio: userData.bio,
+        cityNames,
+      },
+      transaction
+    );
+
     await transaction.commit();
     return { success: true, id: newUser.id };
   } catch (error) {
+    console.error("Error during user creation:", error);
     await transaction.rollback();
     return { success: false, error: error.message };
   }
@@ -42,10 +65,18 @@ const createUser = async (userData, res) => {
 // Fonctions pour la création d'étudiants ou de professeurs
 const createStudentOrProfessor = async (role, userId, data, transaction) => {
   if (role === "student") {
-    await Student.create({ userId, educationLevelId: data }, { transaction });
-  } else if (role === "professor" && data && data.length > 0) {
-    const professor = await Professor.create({ userId }, { transaction });
-    await professor.addSubjects(data, { transaction });
+    await Student.create(
+      { userId, educationLevelId: data.educationLevelId },
+      { transaction }
+    );
+  } else if (role === "professor") {
+    await professorController.createProfessorWithCity(
+      {
+        userId,
+        ...data, // s'assure que cela inclut price, subjects, bio, et cityNames
+      },
+      transaction
+    );
   }
 };
 
@@ -63,58 +94,69 @@ const handleCreateUser = async (req, res) => {
 const createAdminUsers = async (req, res) => {
   try {
     // Existing admin users creation
-    await createUser({
-      email: 'contact@skolea.fr',
-      password: 'azerty123',
-      name: 'contact message',
-      role: 'admin',
-      birthday: '1998-03-18',
-      phoneNumber: '0168716774',
-      profilePicture: 'url_de_ta_photo_de_profil'
-    }, res);
+    await createUser(
+      {
+        email: "contact@skolea.fr",
+        password: "azerty123",
+        name: "contact message",
+        role: "admin",
+        birthday: "1998-03-18",
+        phoneNumber: "0168716774",
+        profilePicture: "url_de_ta_photo_de_profil",
+      },
+      res
+    );
 
-    await createUser({
-      email: 'redwan.gharbi@hotmail.com',
-      password: 'azerty123',
-      name: 'redwan gharbi',
-      role: 'admin',
-      birthday: '1998-03-18',
-      phoneNumber: '076871674',
-      profilePicture: 'url_de_ta_photo_de_profil'
-    }, res);
+    await createUser(
+      {
+        email: "redwan.gharbi@hotmail.com",
+        password: "azerty123",
+        name: "redwan gharbi",
+        role: "admin",
+        birthday: "1998-03-18",
+        phoneNumber: "076871674",
+        profilePicture: "url_de_ta_photo_de_profil",
+      },
+      res
+    );
 
     // New student and professor users creation
-    await createUser({
-      email: "student@example.com",
-      password: "studentPassword123",
-      name: "Student Name",
-      role: "student",
-      educationLevel: "CP",
-      birthday: "2000-01-01",
-      phoneNumber: "0000000000",
-      profilePicture: "url_to_student_profile_picture"
-    }, res);
+    await createUser(
+      {
+        email: "student@example.com",
+        password: "studentPassword123",
+        name: "Student Name",
+        role: "student",
+        educationLevel: "CP",
+        birthday: "2000-01-01",
+        phoneNumber: "0000000000",
+        profilePicture: "url_to_student_profile_picture",
+      },
+      res
+    );
 
-    await createUser({
-      email: "professor@example.com",
-      password: "professorPassword123",
-      name: "Professor Name",
-      role: "professor",
-      price: "50.00",
-      subjects: "Sciences",
-      bio: "A brief bio of the professor",
-      birthday: "1980-01-01",
-      phoneNumber: "1111111111",
-      profilePicture: "url_to_professor_profile_picture"
-    }, res);
+    await createUser(
+      {
+        email: "professor@example.com",
+        password: "professorPassword123",
+        name: "Professor Name",
+        role: "professor",
+        price: "50.00",
+        subjects: "Sciences",
+        bio: "A brief bio of the professor",
+        birthday: "1980-01-01",
+        phoneNumber: "1111111111",
+        profilePicture: "url_to_professor_profile_picture",
+      },
+      res
+    );
 
-    res.status(201).send('All users created successfully');
+    res.status(201).send("All users created successfully");
   } catch (error) {
-    console.error('Error creating users:', error);
+    console.error("Error creating users:", error);
     res.status(500).json({ error: error.message });
   }
 };
-
 
 // Middleware pour la connexion d'un utilisateur
 const loginUser = async (req, res) => {
@@ -140,10 +182,10 @@ const whoAmI = async (req, res) => {
     if (!user) {
       return res.status(404).end();
     }
-    res.json({ user: user});
+    res.json({ user: user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { handleCreateUser, createAdminUsers, loginUser, whoAmI };
+module.exports = { validateCreateUser, handleCreateUser, createAdminUsers, loginUser, whoAmI };

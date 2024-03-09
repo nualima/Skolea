@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { handleCreateUser, createAdminUsers, loginUser, whoAmI } = require('../controllers/UserController');
+const { validateCreateUser, handleCreateUser, createAdminUsers, loginUser, whoAmI } = require('../controllers/UserController');
 
 /**
  * @openapi
@@ -32,7 +32,7 @@ const { handleCreateUser, createAdminUsers, loginUser, whoAmI } = require('../co
  *       400:
  *         description: Données d'inscription invalides.
  */
-router.post('/signup', handleCreateUser);
+router.post('/signup', validateCreateUser, handleCreateUser);
 
 /**
  * @openapi
