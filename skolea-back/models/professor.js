@@ -12,10 +12,8 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             Professor.belongsTo(models.User, { foreignKey: 'userId' });
             Professor.hasMany(models.Availability, { foreignKey: 'professorId' });
-            Professor.belongsToMany(models.Subject, { through: 'ProfessorSubjects', foreignKey: 'professorId' })
-            Professor.belongsTo(models.City, { foreignKey: 'cityId' });
-
-
+            Professor.belongsToMany(models.Subject, { through: 'ProfessorSubjects', foreignKey: 'professorId' });
+            Professor.belongsToMany(models.City, { through: 'ProfessorCities', foreignKey: 'professorId' });
         }
     }
     Professor.init({
