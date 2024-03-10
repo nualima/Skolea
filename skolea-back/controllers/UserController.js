@@ -13,9 +13,9 @@ const validateCreateUser = [
   body("role").custom((value, { req }) => {
     if (
       value === "professor" &&
-      (!req.body.subjectIds || req.body.subjectIds.length === 0)
+      (!req.body.subjects || req.body.subjects.length === 0)
     ) {
-      throw new Error();
+      throw new Error("Subjects are required for professor role");
     }
     return true;
   }),
@@ -35,14 +35,10 @@ const createUser = async (userData, res) => {
     const { password, ...userInfo } = userData;
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create(
-      {
-        ...userInfo,
-        password: hashedPassword,
-      },
+      { ...userInfo, password: hashedPassword },
       { transaction }
     );
 
-    // Assurez-vous que les données transmises à la fonction incluent 'educationLevel'
     await createStudentOrProfessor(
       userInfo.role,
       newUser.id,
@@ -54,7 +50,7 @@ const createUser = async (userData, res) => {
     return { success: true, id: newUser.id };
   } catch (error) {
     await transaction.rollback();
-    throw error; // Relancer l'erreur pour un meilleur contrôle dans la gestion des erreurs
+    throw error;
   }
 };
 
@@ -77,10 +73,7 @@ const createStudentOrProfessor = async (role, userId, data, transaction) => {
     }
 
     await models.Student.create(
-      {
-        userId,
-        educationLevelId: educationLevel.id,
-      },
+      { userId, educationLevelId: educationLevel.id },
       { transaction }
     );
   } else if (role === "professor") {
@@ -89,10 +82,18 @@ const createStudentOrProfessor = async (role, userId, data, transaction) => {
       ...data,
     };
 
-    await professorController.createProfessorWithCity(
+    const professor = await professorController.createProfessorWithCity(
       professorData,
       transaction
     );
+
+    if (data.subjects && data.subjects.length > 0) {
+      await professorController.associateSubjectsToProfessor(
+        professor.id,
+        data.subjects,
+        transaction
+      );
+    }
   }
 };
 

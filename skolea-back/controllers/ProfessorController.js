@@ -1,14 +1,19 @@
 const db = require('../models');
 
-// Fonction pour créer un nouveau professeur
-exports.createProfessor = async(req, res) => {
+// Fonction pour associer les sujets à un professeur
+exports.associateSubjectsToProfessor = async(professorId, subjects, transaction) => {
     try {
-        const { userId, price, subjects, bio } = req.body;
-        const professor = await db.Professor.create({ userId, price, subjects, bio });
-        res.status(201).json({ success: true, data: professor });
+        const professor = await db.Professor.findByPk(professorId, { transaction });
+
+        for (const subjectName of subjects) {
+            let subject = await db.Subject.findOne({ where: { name: subjectName }, transaction });
+            if (!subject) {
+                subject = await db.Subject.create({ name: subjectName }, { transaction });
+            }
+            await professor.addSubject(subject, { transaction });
+        }
     } catch (error) {
-        console.error('Erreur lors de la création du professeur :', error);
-        res.status(500).json({ success: false, message: 'Une erreur est survenue lors de la création du professeur', error: error.message });
+        throw error; // Relancer l'erreur pour un meilleur contrôle dans la gestion des erreurs
     }
 };
 
@@ -23,36 +28,31 @@ exports.getAllProfessors = async(req, res) => {
     }
 };
 
-// Fonction pour créer un nouveau professeur et vérifier/gérer la ville
+// Fonction pour créer un professeur et gérer les villes associées
 exports.createProfessorWithCity = async(data, transaction) => {
-    const { userId, price, subjects, bio, cityNames } = data;
+    const { userId, price, bio, cityNames, subjects } = data;
 
     if (!Array.isArray(cityNames)) {
         throw new Error("cityNames must be an array");
     }
 
     try {
-        // Création du professeur une seule fois
-        const professor = await db.Professor.create({
-            userId,
-            price,
-            subjects,
-            bio
-        }, { transaction });
+        const professor = await db.Professor.create({ userId, price, bio }, { transaction });
 
-        // Pour chaque ville, trouver ou créer la ville, puis lier au professeur
         for (const cityName of cityNames) {
-            let city = await db.City.findOne({ where: { cityName } }, { transaction });
-
+            let city = await db.City.findOne({ where: { cityName }, transaction });
             if (!city) {
                 city = await db.City.create({ cityName }, { transaction });
             }
-
-            // Utiliser la méthode générée par Sequelize pour la relation ManyToMany
             await professor.addCity(city, { transaction });
         }
 
-        return professor; // Retourner le professeur avec ses villes associées
+        // Si des sujets sont fournis, les associer au professeur
+        if (subjects && subjects.length > 0) {
+            await exports.associateSubjectsToProfessor(professor.id, subjects, transaction);
+        }
+
+        return professor;
     } catch (error) {
         console.error('Erreur lors de la création du professeur avec la ville:', error);
         throw error;
