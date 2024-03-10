@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const professorController = require("../controllers/ProfessorController");
 require("dotenv").config();
+const models = require("../models"); // Ajustez le chemin selon la structure de votre projet
 
 // Middleware pour valider la création de l'utilisateur
 const validateCreateUser = [
@@ -162,12 +163,45 @@ const createAdminUsers = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ where: { email } });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).end();
+    // Récupérer l'utilisateur sans exclure le mot de passe pour la comparaison
+    let user = await models.User.findOne({
+      where: { email },
+    });
+
+    // Vérifier que l'utilisateur existe et que le mot de passe est fourni
+    if (!user || !password) {
+      return res.status(401).json({ error: "Email or password is incorrect" });
     }
+
+    // Comparer le mot de passe fourni avec celui stocké dans la base de données
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    // Préparer les données utilisateur à renvoyer
+    // Supprimer le mot de passe de l'objet avant de renvoyer la réponse
+    const userData = { ...user.toJSON() };
+    delete userData.password;
+
+    // Si l'utilisateur est un professeur, ajoutez des informations spécifiques
+    if (user.role === "professor") {
+      const professorData = await models.Professor.findOne({
+        where: { userId: user.id },
+        include: [models.Subject],
+      });
+
+      if (professorData) {
+        userData.professor = {
+          price: professorData.price,
+          bio: professorData.bio,
+          subjects: professorData.Subjects.map((subject) => subject.name),
+        };
+      }
+    }
+
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
-    res.json({ token, user: user });
+    res.json({ token, user: userData });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -178,14 +212,43 @@ const whoAmI = async (req, res) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findByPk(decoded.id);
+
+    // Récupérez l'utilisateur sans inclure les matières directement
+    let user = await models.User.findByPk(decoded.id, {
+      attributes: { exclude: ["password"] }, // Exclure le mot de passe dès la requête
+    });
+
     if (!user) {
       return res.status(404).end();
     }
-    res.json({ user: user });
+
+    // Si l'utilisateur est un professeur, ajoutez les informations spécifiques au professeur
+    if (user.role === "professor") {
+      const professorData = await models.Professor.findOne({
+        where: { userId: user.id },
+        include: [models.Subject],
+      });
+
+      if (professorData) {
+        // Ajoutez directement les informations spécifiques au professeur dans l'objet `user`
+        user.setDataValue("professor", {
+          price: professorData.price,
+          bio: professorData.bio,
+          subjects: professorData.Subjects.map((subject) => subject.name),
+        });
+      }
+    }
+
+    res.json({ user }); // Envoyer directement l'objet `user` modifié
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { validateCreateUser, handleCreateUser, createAdminUsers, loginUser, whoAmI };
+module.exports = {
+  validateCreateUser,
+  handleCreateUser,
+  createAdminUsers,
+  loginUser,
+  whoAmI,
+};
