@@ -163,28 +163,23 @@ const createAdminUsers = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
-    // Récupérer l'utilisateur sans exclure le mot de passe pour la comparaison
     let user = await models.User.findOne({
       where: { email },
     });
 
-    // Vérifier que l'utilisateur existe et que le mot de passe est fourni
     if (!user || !password) {
       return res.status(401).json({ error: "Email or password is incorrect" });
     }
 
-    // Comparer le mot de passe fourni avec celui stocké dans la base de données
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    // Préparer les données utilisateur à renvoyer
     // Supprimer le mot de passe de l'objet avant de renvoyer la réponse
     const userData = { ...user.toJSON() };
     delete userData.password;
 
-    // Si l'utilisateur est un professeur, ajoutez des informations spécifiques
     if (user.role === "professor") {
       const professorData = await models.Professor.findOne({
         where: { userId: user.id },
@@ -196,6 +191,17 @@ const loginUser = async (req, res) => {
           price: professorData.price,
           bio: professorData.bio,
           subjects: professorData.Subjects.map((subject) => subject.name),
+        };
+      }
+    } else if (user.role === "student") {
+      const studentData = await models.Student.findOne({
+        where: { userId: user.id },
+        include: [models.EducationLevel],
+      });
+
+      if (studentData && studentData.EducationLevel) {
+        userData.student = {
+          educationLevel: studentData.EducationLevel.name,
         };
       }
     }
@@ -213,16 +219,16 @@ const whoAmI = async (req, res) => {
     const token = req.headers.authorization?.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Récupérez l'utilisateur sans inclure les matières directement
     let user = await models.User.findByPk(decoded.id, {
-      attributes: { exclude: ["password"] }, // Exclure le mot de passe dès la requête
+      attributes: { exclude: ["password"] },
     });
 
     if (!user) {
-      return res.status(404).end();
+      return res.status(404).json({ error: "User not found" });
     }
 
-    // Si l'utilisateur est un professeur, ajoutez les informations spécifiques au professeur
+    const userData = { ...user.toJSON() };
+
     if (user.role === "professor") {
       const professorData = await models.Professor.findOne({
         where: { userId: user.id },
@@ -230,16 +236,26 @@ const whoAmI = async (req, res) => {
       });
 
       if (professorData) {
-        // Ajoutez directement les informations spécifiques au professeur dans l'objet `user`
-        user.setDataValue("professor", {
+        userData.professor = {
           price: professorData.price,
           bio: professorData.bio,
           subjects: professorData.Subjects.map((subject) => subject.name),
-        });
+        };
+      }
+    } else if (user.role === "student") {
+      const studentData = await models.Student.findOne({
+        where: { userId: user.id },
+        include: [models.EducationLevel],
+      });
+
+      if (studentData && studentData.EducationLevel) {
+        userData.student = {
+          educationLevel: studentData.EducationLevel.name,
+        };
       }
     }
 
-    res.json({ user }); // Envoyer directement l'objet `user` modifié
+    res.json({ user: userData });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
