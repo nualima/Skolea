@@ -32,50 +32,65 @@ const validateCreateUser = [
 const createUser = async (userData, res) => {
   const transaction = await sequelize.transaction();
   try {
-    const { password, subjectIds, educationLevelId, cityNames, ...userInfo } =
-      userData;
+    const { password, ...userInfo } = userData;
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create(
-      { ...userInfo, password: hashedPassword },
+      {
+        ...userInfo,
+        password: hashedPassword,
+      },
       { transaction }
     );
 
-    // Passer 'subjectIds', 'cityNames', etc., selon le rôle
+    // Assurez-vous que les données transmises à la fonction incluent 'educationLevel'
     await createStudentOrProfessor(
       userInfo.role,
       newUser.id,
-      {
-        subjectIds,
-        educationLevelId,
-        price: userData.price,
-        bio: userData.bio,
-        cityNames,
-      },
+      userData,
       transaction
     );
 
     await transaction.commit();
     return { success: true, id: newUser.id };
   } catch (error) {
-    console.error("Error during user creation:", error);
     await transaction.rollback();
-    return { success: false, error: error.message };
+    throw error; // Relancer l'erreur pour un meilleur contrôle dans la gestion des erreurs
   }
 };
 
 // Fonctions pour la création d'étudiants ou de professeurs
 const createStudentOrProfessor = async (role, userId, data, transaction) => {
   if (role === "student") {
-    await Student.create(
-      { userId, educationLevelId: data.educationLevelId },
+    const educationLevelName = data.educationLevel;
+
+    if (!educationLevelName) {
+      throw new Error("Education level name is required");
+    }
+
+    const educationLevel = await models.EducationLevel.findOne({
+      where: { name: educationLevelName },
+      transaction,
+    });
+
+    if (!educationLevel) {
+      throw new Error(`Education level '${educationLevelName}' not found`);
+    }
+
+    await models.Student.create(
+      {
+        userId,
+        educationLevelId: educationLevel.id,
+      },
       { transaction }
     );
   } else if (role === "professor") {
+    const professorData = {
+      userId,
+      ...data,
+    };
+
     await professorController.createProfessorWithCity(
-      {
-        userId,
-        ...data, // s'assure que cela inclut price, subjects, bio, et cityNames
-      },
+      professorData,
       transaction
     );
   }
