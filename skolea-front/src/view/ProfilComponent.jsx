@@ -13,6 +13,7 @@ const ProfilDetails = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [birthday, setBirthday] = useState("");
   const [subjects, setSubjects] = useState([]);
+  const [educationLevel, setEducationLevel] = useState("");
 
   // Mise à jour des états basés sur userData chaque fois que userData change
   useEffect(() => {
@@ -23,6 +24,8 @@ const ProfilDetails = () => {
     setBirthday(userData?.birthday || "");
     if (userData?.role === "professor") {
       setSubjects(userData?.professor?.subjects || []);
+    } else if (userData?.role === "student") {
+      setEducationLevel(userData?.student?.educationLevel || "");
     }
   }, [userData]);
 
@@ -88,7 +91,10 @@ const ProfilDetails = () => {
                           </p>
                         </>
                       ) : (
-                        <p className="mb-0">Role: {userData?.role}</p>
+                        <>
+                          <p className="mb-0">Education Level</p>
+                          <p className="text-muted mb-0">{educationLevel}</p>
+                        </>
                       )}
                       <hr />
 
