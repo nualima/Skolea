@@ -51,6 +51,18 @@ const ProfilDetails = () => {
                   />
                   <h5 className="my-3">{fullName}</h5>
                   <p className="text-muted mb-1">{userData?.role}</p>
+                  {userData?.role === "professor" && (
+                    <p className="text-muted mb-1">
+                      Subjects:{" "}
+                      {userData.professor?.subjects?.join(", ") || "None"}
+                    </p>
+                  )}
+                  {userData?.role === "student" && (
+                    <p className="text-muted mb-1">
+                      Education Level:{" "}
+                      {userData.student?.educationLevel || "Not specified"}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -95,29 +107,8 @@ const ProfilDetails = () => {
                           onChange={(e) => setBirthday(e.target.value)}
                         />
                       </FormGroup>
-                      {userData?.role === "professor" && (
-                        <FormGroup>
-                          <Label for="subjects">Subjects</Label>
-                          <Input
-                            type="text"
-                            id="subjects"
-                            value={subjects.join(", ")}
-                            onChange={(e) =>
-                              setSubjects(
-                                e.target.value
-                                  .split(",")
-                                  .map((subject) => subject.trim())
-                              )
-                            }
-                          />
-                        </FormGroup>
-                      )}
-                      <button
-                        type="submit"
-                        className="btn btn-primary"
-                        onClick={() => setIsEditing(true)}
-                      >
-                        Sauvegarder
+                      <button type="submit" className="btn btn-primary">
+                        Save Changes
                       </button>
                     </Form>
                   ) : (
@@ -134,29 +125,12 @@ const ProfilDetails = () => {
                       <p className="mb-0">Phone Number</p>
                       <p className="text-muted mb-0">{phoneNumber}</p>
                       <hr />
-                      {userData?.role === "professor" ? (
-                        <>
-                          <p className="mb-0">Subjects</p>
-                          <p className="text-muted mb-0">
-                            {subjects.length > 0
-                              ? subjects.join(", ")
-                              : "Aucune matière pour l'instant"}
-                          </p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="mb-0">Education Level</p>
-                          <p className="text-muted mb-0">{educationLevel}</p>
-                        </>
-                      )}
-                      <hr />
-
                       <button
                         type="button"
                         className="btn btn-primary"
                         onClick={() => setIsEditing(true)}
                       >
-                        Modifier
+                        Edit
                       </button>
                     </div>
                   )}
