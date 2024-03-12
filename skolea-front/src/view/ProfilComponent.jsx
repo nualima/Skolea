@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Container, Form, FormGroup, Input, Label } from "reactstrap";
+import { Container, Form, FormGroup, Input, Label, Button } from "reactstrap";
 import { UserContext } from "../context";
 
 const ProfilDetails = () => {
@@ -29,6 +29,12 @@ const ProfilDetails = () => {
     }
   }, [userData]);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Ici, intégrez la logique pour soumettre les modifications
+    setIsEditing(false);
+  };
+
   return (
     <Container style={{ marginTop: "150px" }}>
       <section style={{ backgroundColor: "#eee" }}>
@@ -52,18 +58,65 @@ const ProfilDetails = () => {
               <div className="card mb-4">
                 <div className="card-body">
                   {isEditing ? (
-                    <Form onSubmit={() => setIsEditing(false)}>
+                    <Form onSubmit={handleSubmit}>
                       <FormGroup>
-                        <Label for="username">Username</Label>
+                        <Label for="fullName">Full Name</Label>
                         <Input
                           type="text"
-                          id="username"
-                          value={username}
-                          onChange={(e) => setUsername(e.target.value)}
+                          id="fullName"
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
                         />
                       </FormGroup>
-                      {/* Ajoutez d'autres champs de formulaire ici */}
-                      <button type="submit" className="btn btn-primary">
+                      <FormGroup>
+                        <Label for="email">Email</Label>
+                        <Input
+                          type="email"
+                          id="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                      </FormGroup>
+                      <FormGroup>
+                        <Label for="phoneNumber">Phone Number</Label>
+                        <Input
+                          type="text"
+                          id="phoneNumber"
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                        />
+                      </FormGroup>
+                      <FormGroup>
+                        <Label for="birthday">Birthday</Label>
+                        <Input
+                          type="date"
+                          id="birthday"
+                          value={birthday}
+                          onChange={(e) => setBirthday(e.target.value)}
+                        />
+                      </FormGroup>
+                      {userData?.role === "professor" && (
+                        <FormGroup>
+                          <Label for="subjects">Subjects</Label>
+                          <Input
+                            type="text"
+                            id="subjects"
+                            value={subjects.join(", ")}
+                            onChange={(e) =>
+                              setSubjects(
+                                e.target.value
+                                  .split(",")
+                                  .map((subject) => subject.trim())
+                              )
+                            }
+                          />
+                        </FormGroup>
+                      )}
+                      <button
+                        type="submit"
+                        className="btn btn-primary"
+                        onClick={() => setIsEditing(true)}
+                      >
                         Sauvegarder
                       </button>
                     </Form>
