@@ -276,6 +276,38 @@ const whoAmI = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+// Fonction pour mettre à jour les détails de l'utilisateur
+const updateUserDetails = async (req, res) => {
+  const { userId } = req.params;
+  const { name, birthday, phoneNumber, email } = req.body;
+
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    await user.update({ name, birthday, phoneNumber, email });
+
+    // Récupérer l'utilisateur avec les informations complètes, y compris educationLevel pour les étudiants
+    const updatedUser = await User.findByPk(userId, {
+      include: [
+        {
+          model: Student,
+          include: [EducationLevel], // Assurez-vous que EducationLevel est correctement importé et utilisé
+        },
+        {
+          model: Professor,
+          include: [models.Subject], // Utilisez models.Subject si Subject est importé via models
+        },
+      ],
+    });
+
+    res.status(200).json(updatedUser || user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 module.exports = {
   validateCreateUser,
@@ -283,4 +315,5 @@ module.exports = {
   createAdminUsers,
   loginUser,
   whoAmI,
+  updateUserDetails,
 };

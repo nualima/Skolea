@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { validateCreateUser, handleCreateUser, createAdminUsers, loginUser, whoAmI } = require('../controllers/UserController');
+const { validateCreateUser, handleCreateUser, createAdminUsers, loginUser, whoAmI, updateUserDetails } = require('../controllers/UserController');
 
 /**
  * @openapi
@@ -95,6 +95,52 @@ router.get('/whoAmI', whoAmI);
  *         description: Erreur lors de la création des utilisateurs admin.
  */
 router.post('/createAdminUsers', createAdminUsers);
+
+/**
+ * @openapi
+ * /updateUser/{userId}:
+ *   put:
+ *     summary: Mettre à jour le profil de l'utilisateur
+ *     description: Met à jour les informations du profil de l'utilisateur.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: L'ID de l'utilisateur à mettre à jour.
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Nom complet de l'utilisateur.
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Email de l'utilisateur.
+ *               phoneNumber:
+ *                 type: string
+ *                 description: Numéro de téléphone de l'utilisateur.
+ *               birthday:
+ *                 type: string
+ *                 format: date
+ *                 description: Date de naissance de l'utilisateur.
+ *     responses:
+ *       200:
+ *         description: Profil de l'utilisateur mis à jour avec succès.
+ *       400:
+ *         description: Données de mise à jour invalides.
+ *       404:
+ *         description: Utilisateur non trouvé.
+ *       500:
+ *         description: Erreur du serveur.
+ */
+router.put('/updateUser/:userId', updateUserDetails);
 
 
 module.exports = router;
