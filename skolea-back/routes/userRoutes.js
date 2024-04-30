@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { validateCreateUser, handleCreateUser, createAdminUsers, loginUser, whoAmI, updateUserDetails } = require('../controllers/UserController');
+const { validateCreateUser, handleCreateUser, createAdminUsers, loginUser, whoAmI, updateUserDetails, getUserById } = require('../controllers/UserController');
 
 /**
  * @openapi
@@ -141,6 +141,55 @@ router.post('/createAdminUsers', createAdminUsers);
  *         description: Erreur du serveur.
  */
 router.put('/updateUser/:userId', updateUserDetails);
+
+/**
+ * @openapi
+ * /users/{userId}:
+ *   get:
+ *     summary: Récupérer les détails d'un utilisateur
+ *     description: Obtient les informations détaillées d'un utilisateur spécifique par son ID.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: L'ID de l'utilisateur à récupérer.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Détails de l'utilisateur récupérés avec succès.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: L'identifiant de l'utilisateur.
+ *                 name:
+ *                   type: string
+ *                   description: Le nom de l'utilisateur.
+ *                 email:
+ *                   type: string
+ *                   description: L'email de l'utilisateur.
+ *                 role:
+ *                   type: string
+ *                   description: Le rôle de l'utilisateur dans le système.
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   description: La date de création du compte utilisateur.
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *                   description: La date de la dernière mise à jour du compte utilisateur.
+ *       404:
+ *         description: Utilisateur non trouvé.
+ *       500:
+ *         description: Erreur du serveur.
+ */
+router.get('/:userId', getUserById);
+
 
 
 module.exports = router;

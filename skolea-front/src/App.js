@@ -14,6 +14,7 @@ import MainPage from "./view/MainPage";
 import NewUserForm from "./view/NewUserForm";
 import ProfilComponent from "./view/ProfilComponent";
 import Reservation from "./view/reservation/Reservation";
+import SearchResults from "./view/reservation/SearchResults";
 import LoginPage from "./view/login/LoginPage";
 import ContactForm from "./view/contact/ContactForm";
 import Availability from "./view/availability/Availability";
@@ -60,6 +61,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />{" "}
             <Route path="/availability" element={<Availability />} />{" "}
             <Route path="/reservation" element={<Reservation />} />{" "}
+            <Route path="/reservation/search" element={<SearchResults />} />{" "}
             <Route path="/chatPage" element={<ChatPage />} />{" "}
             <Route path="*" element={<NotFound />} />{" "}
           </Routes>{" "}

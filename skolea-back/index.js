@@ -15,6 +15,8 @@ const contactRouter = require('./routes/contactSubmissionRoutes');
 const messageRouter = require('./routes/messageRoutes');
 const sessionRouter = require('./routes/sessionRoutes');
 const availabilityRoutes = require('./routes/availabilityRoutes');
+const professorRoutes = require('./routes/professorRoutes');
+
 
 // Autres routeurs...
 
@@ -25,17 +27,16 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Définissez les routes
+// Define API routes
 app.use('/api/users', userRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/sessions', sessionRouter);
 app.use('/api/availabilities', availabilityRoutes);
+app.use('/api/professors', professorRoutes);
 
-
-
-// Utilisez Swagger middleware pour servir votre documentation OpenAPI
-app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// Serve Swagger UI on a specific route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
