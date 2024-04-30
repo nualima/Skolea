@@ -83,20 +83,18 @@ async function searchProfessors(req, res) {
                 required: true
             }]
         });
-        res.json({ success: true, data: professors });
+
+        if (professors && professors.length > 0) {
+            res.json({ success: true, data: professors });
+        } else {
+            res.json({ success: false, data: [] });
+        }
     } catch (error) {
         console.error('Error fetching professors:', error);
         res.status(500).json({ success: false });
     }
 }
-
-
-
-
-
-
-
-    
+ 
 module.exports = {
     associateSubjectsToProfessor,
     getAllProfessors,

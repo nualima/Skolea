@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Card, CardContent, Typography } from '@mui/material';
+import { useSearchParams, Link } from 'react-router-dom';
+import { Card, CardContent, Typography, Button } from '@mui/material';
 import searchService from '../../../services/reservationService';  // Update this path if it's incorrect
 
 function SearchResults() {
@@ -17,16 +17,15 @@ function SearchResults() {
             setError("");
             searchService.searchTeachers(subject, city)
                 .then(response => {
-                    if (response && Array.isArray(response.data)) {
+                    setLoading(false);
+                    if (response.success) {
                         setResults(response.data);
                         if (response.data.length === 0) {
-                            setError("Aucun professeur trouvé pour les critères spécifiés.");
+                            setError("Désolé, aucun professeur n'est disponible pour cette ville et/ou cette matière.");
                         }
                     } else {
-                        // Gérer le cas où la structure de réponse n'est pas celle attendue
-                        setError("Format de réponse inattendu.");
+                        setError("Désolé, aucun professeur n'est disponible pour cette ville et/ou cette matière.");
                     }
-                    setLoading(false);
                 })
                 .catch(error => {
                     console.error("Error fetching data: ", error);
@@ -37,13 +36,29 @@ function SearchResults() {
     }, [subject, city]);
 
     if (loading) return <Typography>Loading...</Typography>;
-    if (error) return <Typography>{error}</Typography>;
+    if (error) {
+        return (
+            <div className="mainContainer">
+                <Card style={{ padding: "25px", width: '100%' }}>
+                    <div className="titleContainer">
+                        <Typography>{error}</Typography>
+                    </div>
+                    <br />
+                    <div className="inputContainer">
+                        <Button variant="contained" color="primary" component={Link} to="/">
+                            Retour à l'accueil
+                        </Button>
+                    </div>
+                </Card>
+            </div>
+        );
+    }
 
     return (
-        <div>
+        <div className="mainContainer">
             <h2>Résultats de Recherche</h2>
             {results.map((teacher) => (
-                <Card key={teacher.id} style={{ margin: "10px" }}>
+                <Card key={teacher.id} style={{ margin: "10px", width: '75%' }}>
                     <CardContent>
                         <Typography variant="h5">{teacher.name}</Typography>
                         <Typography variant="body1">{teacher.subject}</Typography>
