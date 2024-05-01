@@ -1,25 +1,20 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Ajout de Link ici
 import "./loginPage.css";
-import { Card } from "@mui/material";
+import { Card, Button } from "@mui/material";
 import LoginServices from "../../services/loginServices";
 import { UserContext } from "../../context";
 
 const LoginPage = () => {
-  // États pour gérer les champs du formulaire, les erreurs et le contexte utilisateur
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  // Utilisation de useNavigate pour la navigation
   const navigate = useNavigate();
-
-  // Utilisation du contexte utilisateur pour stocker les informations utilisateur
   const { setUserData } = useContext(UserContext);
 
-  // Gestionnaire de clic sur le bouton "Log in"
-  const onButtonClick = async () => {
+  const onLoginClick = async () => {
     setEmailError("");
     setPasswordError("");
 
@@ -41,13 +36,13 @@ const LoginPage = () => {
     try {
       const response = await LoginServices.login(email, password);
       if (response) {
-      setUserData(response.user);
+        setUserData(response.user);
         setTimeout(() => {
           navigate("/home");
         }, 500);
       } else {
         console.error(
-          "Erreur lors de la connexioazen : Aucun succès",
+          "Erreur lors de la connexion : Aucun succès",
           response.error
         );
       }
@@ -64,7 +59,6 @@ const LoginPage = () => {
         </div>
         <br />
         <div className="inputContainer">
-          {/* Champ de saisie pour l'adresse e-mail */}
           <input
             value={email}
             placeholder="Entrez votre adresse e-mail ici"
@@ -75,7 +69,6 @@ const LoginPage = () => {
         </div>
         <br />
         <div className="inputContainer">
-          {/* Champ de saisie pour le mot de passe */}
           <input
             value={password}
             placeholder="Entrez votre mot de passe ici"
@@ -86,13 +79,22 @@ const LoginPage = () => {
         </div>
         <br />
         <div className="inputContainer">
-          {/* Bouton de connexion */}
           <input
             className="inputButton"
             type="button"
-            onClick={onButtonClick}
+            onClick={onLoginClick}
             value="Se connecter"
           />
+          {/* Utilisation de Link avec Button pour une navigation SPA */}
+          <Link to="/signUp" style={{ textDecoration: "none" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ marginLeft: "10px" }}
+            >
+              Créer un compte
+            </Button>
+          </Link>
         </div>
       </Card>
     </div>
