@@ -95,7 +95,7 @@ const Navbar = () => {
         <MdMessage
           size="24"
           style={{ cursor: "pointer", marginLeft: "50px" }}
-          onClick={() => navigate("/chatPage")}
+          onClick={() => navigate("/ConversationPage")}
         />
       </div>
       <ul className={`navbar__links ${menuOpen ? "is-active" : ""}`}>

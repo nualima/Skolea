@@ -16,12 +16,13 @@ import ProfilComponent from "./view/ProfilComponent";
 import Reservation from "./view/reservation/Reservation";
 import SearchResults from "./view/reservation/SearchResults";
 import LoginPage from "./view/login/LoginPage";
-import ContactForm from "./view/contact/ContactForm";
 import Availability from "./view/availability/Availability";
 import ListUsers from "./view/listUsers/ListUsers";
 import NotFound from "./view/notFound/NotFound";
 import ThemeApp from "./components/theme/ThemeApp";
-import ChatPage from "./view/chat/ChatPage";
+import ChatPage from "./view/chat/chatPage/ChatPage";
+import ContactForm from "./view/contact/ContactForm";
+import ConversationsPage from "./view/chat/listConversationPage/ConversationsPage";
 
 function App() {
   // Récupérer les données utilisateur depuis le contexte
@@ -62,7 +63,11 @@ function App() {
             <Route path="/availability" element={<Availability />} />{" "}
             <Route path="/reservation" element={<Reservation />} />{" "}
             <Route path="/reservation/search" element={<SearchResults />} />{" "}
-            <Route path="/chatPage" element={<ChatPage />} />{" "}
+            <Route path="/conversationPage" element={<ConversationsPage />} />{" "}
+            <Route
+              path="/conversation/:userOneId/:otherUserId"
+              element={<ChatPage />}
+            />
             <Route path="*" element={<NotFound />} />{" "}
           </Routes>{" "}
         </div>{" "}

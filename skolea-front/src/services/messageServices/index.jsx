@@ -1,43 +1,45 @@
-import axios from 'axios';
+import axios from "axios";
 
-const BASE_URL = 'http://localhost:8080'; // Remplacez par l'URL de base de votre API
+const BASE_URL = "http://localhost:8080/api/messages"; // Assurez-vous que l'URL de base est correcte
 
 const MessageService = {
+  getConversationsByUserId: async (userId) => {
+    console.log("Fetching conversations for userID:", userId);
+    return axios
+      .get(`${BASE_URL}/user/${userId}`)
+      .then((response) => {
+        console.log("Data received:", response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error("Error fetching conversations:", error);
+        throw error;
+      });
+  },
   getAllMessages: async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/messages`);
-      return response.data;
-    } catch (error) {
-      console.error('Erreur lors de la récupération des messages :', error);
-      throw error;
-    }
+    return axios.get(`${BASE_URL}/`).then((response) => response.data);
   },
 
   createMessage: async (senderId, receiverId, content) => {
-    try {
-      const response = await axios.post(`${BASE_URL}/messages`, {
+    return axios
+      .post(`${BASE_URL}/`, {
         senderId,
         receiverId,
         content,
-        timestamp: new Date(), // Vous pouvez aussi gérer le timestamp côté serveur
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Erreur lors de la création du message :', error);
-      throw error;
-    }
+        timestamp: new Date(),
+      })
+      .then((response) => response.data);
   },
 
   getConversationBetweenTwoUsers: async (userOneId, userTwoId) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/messages/conversation/${userOneId}/${userTwoId}`);
-      return response.data;
-    } catch (error) {
-      console.error('Erreur lors de la récupération de la conversation :', error);
-      throw error;
-    }
+    return axios
+      .get(`${BASE_URL}/conversation/${userOneId}/${userTwoId}`)
+      .then((response) => response.data)
+      .catch((error) => {
+        console.error("Error fetching conversation:", error);
+        throw error;
+      });
   },
-
 };
 
 export default MessageService;

@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const messageController = require('../controllers/MessageController')
+const messageController = require("../controllers/MessageController");
 
 /**
  * @openapi
@@ -14,7 +14,7 @@ const messageController = require('../controllers/MessageController')
  *       500:
  *         description: Une erreur est survenue lors de la récupération des messages.
  */
-router.get('/', messageController.getAllMessages);
+router.get("/", messageController.getAllMessages);
 
 /**
  * @openapi
@@ -54,7 +54,7 @@ router.get('/', messageController.getAllMessages);
  *       500:
  *         description: Une erreur est survenue lors de la création du message.
  */
-router.post('/', messageController.createMessage);
+router.post("/", messageController.createMessage);
 
 /**
  * @openapi
@@ -81,7 +81,10 @@ router.post('/', messageController.createMessage);
  *       500:
  *         description: Une erreur est survenue lors de la récupération des messages.
  */
-router.get('/conversation/:userOneId/:userTwoId', messageController.getConversationBetweenTwoUsers);
+router.get(
+  "/conversation/:userOneId/:userTwoId",
+  messageController.getConversationBetweenTwoUsers
+);
 
 /**
  * @openapi
@@ -111,6 +114,44 @@ router.get('/conversation/:userOneId/:userTwoId', messageController.getConversat
  *       500:
  *         description: Une erreur est survenue lors de la création du message.
  */
-router.post('/email', messageController.createMessageWithEmails);
+router.post("/email", messageController.createMessageWithEmails);
+
+/**
+ * @openapi
+ * /messages/conversations:
+ *   get:
+ *     summary: Récupère les résumés des conversations
+ *     description: Récupère un résumé de toutes les conversations, y compris les derniers messages et les participants.
+ *     responses:
+ *       200:
+ *         description: Une liste des résumés de conversations, chaque résumé contenant les identifiants des participants et le dernier message.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     description: L'ID de la conversation.
+ *                   lastMessage:
+ *                     type: string
+ *                     description: Le dernier message de la conversation.
+ *                   participants:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: integer
+ *                           description: L'ID de l'utilisateur.
+ *                         name:
+ *                           type: string
+ *                           description: Le nom de l'utilisateur.
+ *       500:
+ *         description: Une erreur est survenue lors de la récupération des résumés des conversations.
+ */
+router.get("/user/:userId", messageController.getConversationsByUserId);
 
 module.exports = router;
