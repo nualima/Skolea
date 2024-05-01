@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Card, CardContent, Typography, Button } from '@mui/material';
-import searchService from '../../../services/reservationService';  // Update this path if it's incorrect
+import searchService from '../../../services/reservationService';
+import MessageModal from '../../../components/messageModal';
 
 function SearchResults() {
     const [searchParams] = useSearchParams();
@@ -10,6 +11,7 @@ function SearchResults() {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [selectedTeacher, setSelectedTeacher] = useState(null);
 
     useEffect(() => {
         if (subject && city) {
@@ -35,6 +37,14 @@ function SearchResults() {
         }
     }, [subject, city]);
 
+    const handleOpenModal = (teacher) => {
+        setSelectedTeacher(teacher);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedTeacher(null);
+    };
+
     if (loading) return <Typography>Loading...</Typography>;
     if (error) {
         return (
@@ -58,15 +68,22 @@ function SearchResults() {
         <div className="mainContainer">
             <h2>Résultats de Recherche</h2>
             {results.map((teacher) => (
-                <Card key={teacher.id} style={{ margin: "10px", width: '75%' }}>
-                    <CardContent>
-                        <Typography variant="h5">{teacher.name}</Typography>
-                        <Typography variant="body1">{teacher.subject}</Typography>
-                        <Typography variant="body2">{teacher.city}</Typography>
-                        <Typography variant="body2">{teacher.bio}</Typography>
-                    </CardContent>
-                </Card>
+                <Card key={teacher.id} style={{ margin: "10px", width: '100%' }} onClick={() => handleOpenModal(teacher)}>
+                <CardContent>
+                    <Typography variant="h5">{teacher.User.name}</Typography>
+                    <Typography variant="body1">Sujets: {teacher.Subjects.map(subject => subject.name).join(", ")}</Typography>
+                    <Typography variant="body2">Ville(s): {teacher.Cities.map(city => city.cityName).join(", ")}</Typography>
+                </CardContent>
+            </Card>
+            
             ))}
+            {selectedTeacher && (
+                <MessageModal
+                    open={!!selectedTeacher}
+                    handleClose={handleCloseModal}
+                    teacher={selectedTeacher}
+                />
+            )}
         </div>
     );
 }

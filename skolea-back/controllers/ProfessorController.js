@@ -64,7 +64,7 @@ async function searchProfessors(req, res) {
     let { subject, city } = req.query;
 
     if (!subject || !city) {
-        return res.status(400).json({ success: false });
+        return res.status(400).json({ success: false, message: "Both subject and city parameters are required." });
     }
 
     // Normalize the input to match database entries
@@ -81,6 +81,10 @@ async function searchProfessors(req, res) {
                 model: db.City,
                 where: { cityName: city },
                 required: true
+            }, {
+                model: db.User, // Assuming 'User' is the model name for user details
+                as: 'User', // This should match the alias used in your Sequelize model association
+                required: true
             }]
         });
 
@@ -91,9 +95,10 @@ async function searchProfessors(req, res) {
         }
     } catch (error) {
         console.error('Error fetching professors:', error);
-        res.status(500).json({ success: false });
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 }
+
  
 module.exports = {
     associateSubjectsToProfessor,
