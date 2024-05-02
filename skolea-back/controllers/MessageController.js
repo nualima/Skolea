@@ -23,14 +23,13 @@ exports.getAllMessages = (req, res) => {
 
 // Méthode pour créer un message
 exports.createMessage = (req, res) => {
-  const { senderId, receiverId, content, timestamp } = req.body;
+  const { senderId, receiverId, content } = req.body; // Removed timestamp from destructuring
   if (!senderId || !receiverId || !content) {
-    return res.status(400).end();
+    return res.status(400).send({ message: "Missing required fields" });
   }
-  handleResponse(
-    Message.create({ senderId, receiverId, content, timestamp }),
-    res
-  );
+  Message.create({ senderId, receiverId, content }) // Removed timestamp from this call
+    .then((message) => res.status(201).json(message))
+    .catch((error) => res.status(500).json({ error: error.message }));
 };
 
 // Méthode pour récupérer la conversation entre deux utilisateurs

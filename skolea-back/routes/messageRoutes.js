@@ -154,4 +154,59 @@ router.post("/email", messageController.createMessageWithEmails);
  */
 router.get("/user/:userId", messageController.getConversationsByUserId);
 
+/**
+ * @openapi
+ * /messages/conversation/{userOneId}/{userTwoId}:
+ *   get:
+ *     summary: Récupère la conversation entre deux utilisateurs
+ *     description: Récupère tous les messages échangés entre deux utilisateurs spécifiques, triés par date.
+ *     parameters:
+ *       - in: path
+ *         name: userOneId
+ *         required: true
+ *         description: L'ID du premier utilisateur.
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: userTwoId
+ *         required: true
+ *         description: L'ID du deuxième utilisateur.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Une liste de messages entre les deux utilisateurs, triés par date.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     description: L'ID du message.
+ *                   senderId:
+ *                     type: integer
+ *                     description: L'ID de l'expéditeur du message.
+ *                   receiverId:
+ *                     type: integer
+ *                     description: L'ID du destinataire du message.
+ *                   content:
+ *                     type: string
+ *                     description: Le contenu du message.
+ *                   timestamp:
+ *                     type: string
+ *                     format: date-time
+ *                     description: La date et l'heure de l'envoi du message.
+ *       400:
+ *         description: Paramètres invalides.
+ *       500:
+ *         description: Une erreur serveur s'est produite lors de la récupération des messages.
+ */
+router.get(
+  "/conversation/:userOneId/:userTwoId",
+  messageController.getConversationBetweenTwoUsers
+);
+
 module.exports = router;

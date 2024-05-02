@@ -1,28 +1,65 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import de useNavigate au lieu de useHistory
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
+import {
+  Container,
+  Card,
+  CardContent,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Button,
+  Select,
+  MenuItem,
+  FormControl, // Ajouté pour gérer le groupement du Select
+  InputLabel, // Ajouté pour étiqueter le Select
+  OutlinedInput, // Ajouté pour utiliser comme input du Select
+  Chip, // Ajouté pour l'affichage des valeurs sélectionnées
+} from "@mui/material";
 import { createUser } from "../services/newUserServices";
 import LoginServices from "../services/loginServices";
 
-import { Container, Card } from "reactstrap";
-
-// Définition du composant NewUserForm
 const NewUserForm = () => {
-  // Déclaration des états (states) pour stocker les données du formulaire
-  const [name, setName] = useState(""); // Renommé de username à name pour correspondre au modèle backend
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [birthday, setBirthday] = useState("");
   const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState(""); // Renommé pour correspondre au modèle backend
-  const [role, setRole] = useState(""); // Utilisé pour stocker directement 'professor' ou 'student'
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [role, setRole] = useState("");
+  const [isProfessor, setIsProfessor] = useState(false);
+  const [isStudent, setIsStudent] = useState(false);
+  const [selectedSubjects, setSelectedSubjects] = useState([]); // Initialement un tableau vide
+  const [department, setDepartment] = useState("");
+  const [level, setLevel] = useState("");
+  const [cityNames, setCityNames] = useState([]);
 
-  const navigate = useNavigate(); // Utilisation de useNavigate pour la navigation
+  const subjects = [
+    "Mathématiques",
+    "Sciences",
+    "Histoire",
+    "Géographie",
+    "Langues",
+    "Physique",
+    "Chimie",
+    "Biologie",
+    "Arts",
+  ];
+  const levels = [
+    "Terminal",
+    "1ère",
+    "2nd",
+    "3ème",
+    "4ème",
+    "5ème",
+    "6ème",
+    "CE2",
+    "CE1",
+    "CM2",
+    "CM1",
+    "CP",
+  ];
 
-  // Gestionnaires d'événement pour les champs du formulaire
+  const navigate = useNavigate();
+
   const handleNameChange = (event) => {
     setName(event.target.value);
   };
@@ -43,122 +80,210 @@ const NewUserForm = () => {
     setPhoneNumber(event.target.value);
   };
 
-  // Gestionnaire d'événement pour les rôles d'utilisateur
-  const handleRoleChange = (event, roleType) => {
-    setRole(roleType);
+  const handleCityNameChange = (event) => {
+    const value = event.target.value;
+    setCityNames(typeof value === "string" ? value.split(",") : value);
   };
 
-  // Gestionnaire d'événement pour la soumission du formulaire
-  const handleSubmit = async (event) => {
-    event.preventDefault(); // Empêche le rechargement de la page lors de la soumission du formulaire
+  const handleRoleChange = (event, roleType) => {
+    setRole(roleType);
+    if (roleType === "professor") {
+      setIsProfessor(true);
+      setIsStudent(false);
+    } else if (roleType === "student") {
+      setIsStudent(true);
+      setIsProfessor(false);
+    }
+  };
 
-    // Crée un objet userData avec les données du formulaire
+  const handleSubjectChange = (event) => {
+    const value = event.target.value;
+    setSelectedSubjects(typeof value === "string" ? value.split(",") : value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
     const userData = {
       name,
       password,
       birthday,
       email,
       phoneNumber,
-      role, // Directement 'professor' ou 'student' en fonction de la case cochée
+      role,
+      subjects: selectedSubjects,
+      department,
+      educationLevel: level, // Modification ici : 'level' devient 'educationLevel'
+      cityNames,
     };
 
     try {
-      // Création de l'utilisateur
       await createUser(userData);
-
-      // Connexion automatique après l'inscription
       await LoginServices.login(email, password);
-
-      //Redirection vers la page d'accueil ou le tableau de bord
-      navigate("/home"); // Utilisez navigate pour la redirection
+      navigate("/home");
     } catch (error) {
-      console.error(
-        "Erreur lors de la création de l'utilisateur ou de la connexion :",
-        error
-      );
-      // Gérer l'erreur ici, par exemple en affichant un message à l'utilisateur
+      console.error("Error creating user or logging in:", error);
     }
   };
 
-  // Rendu du composant
   return (
-    <>
-      <Container>
-        <Card style={{ padding: "50px" }}>
-          <Container>
-            <div className="form-container">
-              <h1>Créer un nouveau compte</h1>
-              <form onSubmit={handleSubmit}>
-                <Box
-                  component="div"
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1rem",
-                  }}
-                >
-                  <TextField
-                    required
-                    label="Nom complet"
-                    value={name}
-                    onChange={handleNameChange}
-                  />
-                  <TextField
-                    required
-                    label="Mot de passe"
-                    type="password"
-                    value={password}
-                    onChange={handlePasswordChange}
-                  />
-                  <TextField
-                    required
-                    label="Date de naissance"
-                    type="date"
-                    value={birthday}
-                    onChange={handleBirthdayChange}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                  <TextField
-                    required
-                    label="Adresse e-mail"
-                    type="email"
-                    value={email}
-                    onChange={handleEmailChange}
-                  />
-                  <TextField
-                    required
-                    label="Numéro de téléphone"
-                    value={phoneNumber}
-                    onChange={handlePhoneNumberChange}
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        onChange={(e) => handleRoleChange(e, "professor")}
+    <Container maxWidth="sm">
+      <Card>
+        <CardContent>
+          <h1>Créer un nouveau compte</h1>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              required
+              label="Nom complet"
+              value={name}
+              onChange={handleNameChange}
+              margin="normal"
+            />
+            <TextField
+              fullWidth
+              required
+              label="Mot de passe"
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+              margin="normal"
+            />
+            <TextField
+              fullWidth
+              required
+              label="Date de naissance"
+              type="date"
+              value={birthday}
+              onChange={handleBirthdayChange}
+              margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              fullWidth
+              required
+              label="Adresse e-mail"
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              margin="normal"
+            />
+            <TextField
+              fullWidth
+              required
+              label="Numéro de téléphone"
+              value={phoneNumber}
+              onChange={handlePhoneNumberChange}
+              margin="normal"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isProfessor}
+                  onChange={(e) => handleRoleChange(e, "professor")}
+                />
+              }
+              label="Je suis enseignant"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isStudent}
+                  onChange={(e) => handleRoleChange(e, "student")}
+                />
+              }
+              label="Je suis étudiant"
+            />
+
+            {isProfessor && (
+              <>
+                <FormControl fullWidth margin="normal">
+                  <InputLabel id="subjects-label">Matières</InputLabel>
+                  <Select
+                    labelId="subjects-label"
+                    multiple
+                    value={selectedSubjects}
+                    onChange={handleSubjectChange}
+                    input={
+                      <OutlinedInput
+                        id="select-multiple-chip"
+                        label="Matières"
                       />
                     }
-                    label="Je suis enseignant"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        onChange={(e) => handleRoleChange(e, "student")}
+                    renderValue={(selected) => (
+                      <div>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </div>
+                    )}
+                  >
+                    {subjects.map((subject) => (
+                      <MenuItem key={subject} value={subject}>
+                        {subject}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth margin="normal">
+                  <InputLabel id="cityNames-label">Noms des villes</InputLabel>
+                  <Select
+                    labelId="cityNames-label"
+                    multiple
+                    value={cityNames}
+                    onChange={handleCityNameChange}
+                    input={
+                      <OutlinedInput
+                        id="select-multiple-chip-city"
+                        label="Noms des villes"
                       />
                     }
-                    label="Je suis étudiant"
-                  />
-                  <Button type="submit" variant="contained" color="primary">
-                    Envoyer
-                  </Button>
-                </Box>
-              </form>
-            </div>
-          </Container>
-        </Card>
-      </Container>
-    </>
+                    renderValue={(selected) => (
+                      <div>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </div>
+                    )}
+                  >
+                    {["nice", "cannes", "antibes"].map((city) => (
+                      <MenuItem key={city} value={city}>
+                        {city}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </>
+            )}
+
+            {isStudent && (
+              <>
+                <FormControl fullWidth margin="normal">
+                  <InputLabel id="level-label">Niveau</InputLabel>
+                  <Select
+                    labelId="level-label"
+                    value={level}
+                    onChange={(e) => setLevel(e.target.value)}
+                    input={<OutlinedInput label="Niveau" />}
+                  >
+                    {levels.map((level) => (
+                      <MenuItem key={level} value={level}>
+                        {level}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </>
+            )}
+            <Button type="submit" variant="contained" color="primary">
+              Envoyer
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </Container>
   );
 };
 
