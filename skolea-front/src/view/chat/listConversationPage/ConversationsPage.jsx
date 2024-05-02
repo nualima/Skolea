@@ -4,34 +4,39 @@ import {
   List,
   ListItem,
   ListItemText,
+  ListItemAvatar,
+  Avatar,
   Divider,
   Card,
+  Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MessageService from "../../../services/messageServices";
 import { UserContext } from "../../../context";
+import dayjs from "dayjs"; // Utiliser dayjs pour le formatage de la date
+import relativeTime from "dayjs/plugin/relativeTime"; // Plugin pour les temps relatifs
+
+dayjs.extend(relativeTime);
 
 function ConversationsPage() {
-  const { userData } = useContext(UserContext); // Utilisez useContext pour accéder aux données de l'utilisateur
+  const { userData } = useContext(UserContext);
   const userId = userData?.id;
 
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Example of setting up conversations assuming you receive the correct data format
   useEffect(() => {
     if (!userId) return;
     setLoading(true);
     MessageService.getConversationsByUserId(userId)
       .then((data) => {
-        console.log("Fetched Conversations:", data); // Log to check structure
         const formattedConversations = data.map((convo) => ({
           id: convo.lastMessageId,
-          otherUserId: convo.otherUserId, // l'ID de l'autre utilisateur dans la conversation
+          otherUserId: convo.otherUserId,
+          otherUserName: convo.otherUserName,
           lastMessage: convo.lastMessageContent,
           lastMessageTimestamp: convo.lastMessageTimestamp,
-          userOneId: userId, // Assuring this is set as part of the conversation object
         }));
         setConversations(formattedConversations);
         setLoading(false);
@@ -43,40 +48,55 @@ function ConversationsPage() {
   }, [userId]);
 
   const handleSelectConversation = (conversation) => {
-    console.log("Selected Conversation:", conversation); // Verify the IDs here
-    navigate(
-      `/conversation/${conversation.userOneId}/${conversation.otherUserId}`
-    );
+    navigate(`/conversation/${userId}/${conversation.otherUserId}`);
   };
 
   if (loading) return <Typography>Loading...</Typography>;
 
   return (
-    <div>
-      <Card>
-        <Typography variant="h2">Conversations</Typography>
+    <Card elevation={4} sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
+      <Typography variant="h5" sx={{ my: 2, mx: 2 }}>
+        Conversations
+      </Typography>
+      <List>
         {conversations.length === 0 ? (
-          <Typography>Aucune conversation trouvée.</Typography>
+          <Typography sx={{ textAlign: "center", my: 2 }}>
+            Aucune conversation trouvée.
+          </Typography>
         ) : (
-          <List>
-            {conversations.map((conversation) => (
-              <div
-                key={conversation.id}
-                onClick={() => handleSelectConversation(conversation)}
-              >
-                <ListItem>
-                  <ListItemText
-                    primary={`Conversation with User ID: ${conversation.otherUserId}`}
-                    secondary={`Last message at ${conversation.lastMessageTimestamp}: ${conversation.lastMessage}`}
-                  />
-                </ListItem>
-                <Divider />
-              </div>
-            ))}
-          </List>
+          conversations.map((conversation) => (
+            <Box
+              key={conversation.id}
+              onClick={() => handleSelectConversation(conversation)}
+              sx={{ cursor: "pointer" }}
+            >
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar>{conversation.otherUserName[0]}</Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={conversation.otherUserName}
+                  secondary={
+                    <>
+                      <Typography
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        {conversation.lastMessage}
+                      </Typography>
+                      {" — "}
+                      {dayjs(conversation.lastMessageTimestamp).fromNow()}
+                    </>
+                  }
+                />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </Box>
+          ))
         )}
-      </Card>
-    </div>
+      </List>
+    </Card>
   );
 }
 

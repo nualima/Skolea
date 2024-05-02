@@ -89,48 +89,53 @@ exports.getConversationsByUserId = (req, res) => {
     attributes: [
       [
         Sequelize.literal(
-          `CASE WHEN senderId = :userId THEN receiverId ELSE senderId END`
+          `CASE WHEN senderId = ${userId} THEN receiverId ELSE senderId END`
         ),
         "otherUserId",
       ],
-      [Sequelize.fn("MAX", Sequelize.col("Message.id")), "lastMessageId"],
-      [
-        Sequelize.fn("MAX", Sequelize.col("Message.content")),
-        "lastMessageContent",
-      ],
-      [
-        Sequelize.fn("MAX", Sequelize.col("Message.timestamp")),
-        "lastMessageTimestamp",
-      ],
+      [Sequelize.fn("MAX", Sequelize.col("id")), "lastMessageId"],
+      [Sequelize.fn("MAX", Sequelize.col("content")), "lastMessageContent"],
+      [Sequelize.fn("MAX", Sequelize.col("timestamp")), "lastMessageTimestamp"],
     ],
     where: {
       [Sequelize.Op.or]: [{ senderId: userId }, { receiverId: userId }],
     },
     group: [
       Sequelize.literal(
-        "CASE WHEN senderId = :userId THEN receiverId ELSE senderId END, Sender.id"
+        `CASE WHEN senderId = ${userId} THEN receiverId ELSE senderId END`
       ),
     ],
     order: [[Sequelize.col("lastMessageTimestamp"), "DESC"]],
-    include: [
-      {
-        model: User,
-        as: "Sender",
-        attributes: ["id", "name"],
-      },
-    ],
-    replacements: { userId }, // Utiliser la valeur de userId comme paramètre de liaison
   })
     .then((conversations) => {
-      res.json(
-        conversations.map((convo) => ({
-          otherUserId: convo.get("otherUserId"),
-          otherUserName: convo.Sender.name,
-          lastMessageId: convo.get("lastMessageId"),
-          lastMessageContent: convo.get("lastMessageContent"),
-          lastMessageTimestamp: convo.get("lastMessageTimestamp"),
-        }))
-      );
+      // Here we are assuming the conversations array is small enough to handle in memory for a second query
+      // Fetch user details in a separate query
+      const userIds = conversations.map((convo) => convo.get("otherUserId"));
+      User.findAll({
+        where: {
+          id: userIds,
+        },
+      })
+        .then((users) => {
+          // Map user details back to conversations
+          const userMap = users.reduce((acc, user) => {
+            acc[user.id] = user;
+            return acc;
+          }, {});
+
+          const enrichedConversations = conversations.map((convo) => ({
+            ...convo.get(),
+            otherUserName: userMap[convo.get("otherUserId")]
+              ? userMap[convo.get("otherUserId")].name
+              : null,
+          }));
+
+          res.json(enrichedConversations);
+        })
+        .catch((err) => {
+          console.error("Error fetching user details:", err);
+          res.status(500).json({ error: err.message });
+        });
     })
     .catch((err) => {
       console.error("Error fetching conversations:", err);
