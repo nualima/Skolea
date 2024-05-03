@@ -237,38 +237,26 @@ const whoAmI = async (req, res) => {
 
     let user = await models.User.findByPk(decoded.id, {
       attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: models.Professor,
+          include: [models.Subject],
+        },
+      ],
     });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
+    // Preparer les données pour la réponse
     const userData = { ...user.toJSON() };
-
-    if (user.role === "professor") {
-      const professorData = await models.Professor.findOne({
-        where: { userId: user.id },
-        include: [models.Subject],
-      });
-
-      if (professorData) {
-        userData.professor = {
-          price: professorData.price,
-          bio: professorData.bio,
-          subjects: professorData.Subjects.map((subject) => subject.name),
-        };
-      }
-    } else if (user.role === "student") {
-      const studentData = await models.Student.findOne({
-        where: { userId: user.id },
-        include: [models.EducationLevel],
-      });
-
-      if (studentData && studentData.EducationLevel) {
-        userData.student = {
-          educationLevel: studentData.EducationLevel.name,
-        };
-      }
+    if (userData.Professor) {
+      userData.professor = {
+        price: userData.Professor.price,
+        subjects: userData.Professor.Subjects.map((s) => s.name),
+        bio: userData.Professor.bio,
+      };
     }
 
     res.json({ user: userData });
@@ -276,6 +264,7 @@ const whoAmI = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 // Fonction pour mettre à jour les détails de l'utilisateur
 const updateUserDetails = async (req, res) => {
   const { userId } = req.params;

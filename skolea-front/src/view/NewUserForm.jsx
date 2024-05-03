@@ -31,6 +31,7 @@ const NewUserForm = () => {
   const [department, setDepartment] = useState("");
   const [level, setLevel] = useState("");
   const [cityNames, setCityNames] = useState([]);
+  const [price, setPrice] = useState(""); // Ajout d'un état pour gérer le prix
 
   const subjects = [
     "Mathématiques",
@@ -85,6 +86,10 @@ const NewUserForm = () => {
     setCityNames(typeof value === "string" ? value.split(",") : value);
   };
 
+  const handlePriceChange = (event) => {
+    setPrice(event.target.value);
+  };
+
   const handleRoleChange = (event, roleType) => {
     setRole(roleType);
     if (roleType === "professor") {
@@ -115,6 +120,7 @@ const NewUserForm = () => {
       department,
       educationLevel: level,
       cityNames,
+      price: role === "professor" ? price : undefined, // N'envoyer le prix que pour les professeurs
     };
 
     try {
@@ -256,25 +262,35 @@ const NewUserForm = () => {
                     ))}
                   </Select>
                 </FormControl>
+                <TextField
+                  fullWidth
+                  required
+                  label="Tarif/Horaire (€/h)"
+                  value={price}
+                  onChange={handlePriceChange}
+                  margin="normal"
+                  type="number"
+                  InputProps={{ inputProps: { min: 0 } }} // Assurez que la valeur est non-négative
+                />
               </>
             )}
 
             {isStudent && (
-                <FormControl fullWidth margin="normal">
-                  <InputLabel id="level-label">Niveau</InputLabel>
-                  <Select
-                    labelId="level-label"
-                    value={level}
-                    onChange={(e) => setLevel(e.target.value)}
-                    input={<OutlinedInput label="Niveau" />}
-                  >
-                    {levels.map((level) => (
-                      <MenuItem key={level} value={level}>
-                        {level}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="level-label">Niveau</InputLabel>
+                <Select
+                  labelId="level-label"
+                  value={level}
+                  onChange={(e) => setLevel(e.target.value)}
+                  input={<OutlinedInput label="Niveau" />}
+                >
+                  {levels.map((level) => (
+                    <MenuItem key={level} value={level}>
+                      {level}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
             <Button type="submit" variant="contained" color="primary">
               Envoyer

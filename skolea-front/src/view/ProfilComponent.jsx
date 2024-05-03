@@ -2,13 +2,11 @@ import React, { useState, useContext, useEffect } from "react";
 import { Container, Form, FormGroup, Input, Label, Button } from "reactstrap";
 import { UserContext } from "../context";
 import updateUserServices from "../services/updateUserServices";
-import SubjectTag from "../components/subjectTag"; // Importez le composant SubjectTag
+import SubjectTag from "../components/subjectTag";
 
 const ProfilDetails = () => {
-  // États pour gérer les données du formulaire et le mode d'édition
   const { userData, setUserData } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -16,39 +14,38 @@ const ProfilDetails = () => {
   const [subjects, setSubjects] = useState([]);
   const [educationLevel, setEducationLevel] = useState("");
 
-  // Mise à jour des états basés sur userData chaque fois que userData change
   useEffect(() => {
     setFullName(userData?.name || "");
     setEmail(userData?.email || "");
     setPhoneNumber(userData?.phoneNumber || "");
     setBirthday(userData?.birthday || "");
+    if (userData?.role === "professor") {
+      // Assurez-vous que la structure des données correspond à votre réponse API
+      setSubjects(
+        userData.Professors[0]?.Subjects.map((sub) => sub.name) || []
+      );
+    }
   }, [userData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const userId = userData?.id;
-    let userDetails = {
-      name: fullName, // Assurez-vous que le backend attend `name` et non `fullName`
+    const userDetails = {
+      name: fullName,
       email,
       phoneNumber,
       birthday,
     };
-
     if (userData?.role === "student") {
       userDetails.educationLevel = educationLevel;
     }
-
     const token = localStorage.getItem("token");
-
     try {
       const response = await updateUserServices.updateUser(
-        userId,
+        userData?.id,
         userDetails,
         token
       );
-      const updatedUser = response.user || response;
-      setUserData(updatedUser);
+      setUserData(response.user || response);
       setIsEditing(false);
       alert("Profile updated successfully");
     } catch (error) {
@@ -56,13 +53,6 @@ const ProfilDetails = () => {
       alert("Failed to update profile. Please try again.");
     }
   };
-
-  useEffect(() => {
-    // Mettre à jour uniquement le educationLevel pour les étudiants
-    if (userData?.role === "student") {
-      setEducationLevel(userData.student?.educationLevel || "");
-    }
-  }, [userData]);
 
   return (
     <Container style={{ marginTop: "150px" }}>
@@ -81,7 +71,7 @@ const ProfilDetails = () => {
                   <h5 className="my-3">{fullName}</h5>
                   <p className="text-muted mb-1">{userData?.role}</p>
                   {userData?.role === "professor" && (
-                    <div className="text-muted mb-1">
+                    <div>
                       <p>Subjects:</p>
                       <div
                         style={{
@@ -91,12 +81,10 @@ const ProfilDetails = () => {
                           alignItems: "center",
                         }}
                       >
-                        {userData.professor?.subjects?.length > 0
-                          ? userData.professor.subjects.map(
-                              (subject, index) => (
-                                <SubjectTag key={index} subject={subject} />
-                              )
-                            )
+                        {subjects.length > 0
+                          ? subjects.map((subject, index) => (
+                              <SubjectTag key={index} subject={subject} />
+                            ))
                           : "None"}
                       </div>
                     </div>
