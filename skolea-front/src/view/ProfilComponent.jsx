@@ -28,7 +28,17 @@ const ProfilDetails = () => {
     e.preventDefault();
 
     const userId = userData?.id;
-    const userDetails = { fullName, email, phoneNumber, birthday };
+    let userDetails = {
+      name: fullName, // Assurez-vous que le backend attend `name` et non `fullName`
+      email,
+      phoneNumber,
+      birthday,
+    };
+
+    if (userData?.role === "student") {
+      userDetails.educationLevel = educationLevel;
+    }
+
     const token = localStorage.getItem("token");
 
     try {
@@ -37,12 +47,8 @@ const ProfilDetails = () => {
         userDetails,
         token
       );
-
-      // Ici, on suppose que `response` contient l'objet utilisateur mis à jour
-      // Y compris le `educationLevel` pour les étudiants
-      const updatedUser = response.user || response; // ajustez selon la structure de la réponse de votre API
-
-      setUserData(updatedUser); // Met à jour le contexte avec les données fraîchement mises à jour
+      const updatedUser = response.user || response;
+      setUserData(updatedUser);
       setIsEditing(false);
       alert("Profile updated successfully");
     } catch (error) {
@@ -50,6 +56,13 @@ const ProfilDetails = () => {
       alert("Failed to update profile. Please try again.");
     }
   };
+
+  useEffect(() => {
+    // Mettre à jour uniquement le educationLevel pour les étudiants
+    if (userData?.role === "student") {
+      setEducationLevel(userData.student?.educationLevel || "");
+    }
+  }, [userData]);
 
   return (
     <Container style={{ marginTop: "150px" }}>
@@ -74,8 +87,8 @@ const ProfilDetails = () => {
                         style={{
                           display: "flex",
                           flexWrap: "wrap",
-                          justifyContent: "center", 
-                          alignItems: "center", 
+                          justifyContent: "center",
+                          alignItems: "center",
                         }}
                       >
                         {userData.professor?.subjects?.length > 0
@@ -89,10 +102,15 @@ const ProfilDetails = () => {
                     </div>
                   )}
                   {userData?.role === "student" && (
-                    <p className="text-muted mb-1">
-                      Education Level:{" "}
-                      {userData.student?.educationLevel || "Not specified"}
-                    </p>
+                    <FormGroup>
+                      <Label for="educationLevel">Education Level</Label>
+                      <Input
+                        type="text"
+                        id="educationLevel"
+                        value={educationLevel}
+                        onChange={(e) => setEducationLevel(e.target.value)}
+                      />
+                    </FormGroup>
                   )}
                 </div>
               </div>

@@ -279,7 +279,7 @@ const whoAmI = async (req, res) => {
 // Fonction pour mettre à jour les détails de l'utilisateur
 const updateUserDetails = async (req, res) => {
   const { userId } = req.params;
-  const { name, birthday, phoneNumber, email } = req.body;
+  const { name, birthday, phoneNumber, email, educationLevel } = req.body;
 
   try {
     const user = await User.findByPk(userId);
@@ -287,18 +287,36 @@ const updateUserDetails = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    await user.update({ name, birthday, phoneNumber, email });
+    const updateData = { name, birthday, phoneNumber, email };
 
-    // Récupérer l'utilisateur avec les informations complètes, y compris educationLevel pour les étudiants
+    // Mettre à jour l'educationLevel uniquement si l'utilisateur est un étudiant
+    if (user.role === "student" && educationLevel !== undefined) {
+      const student = await models.Student.findOne({
+        where: { userId: userId },
+      });
+      if (!student) {
+        return res.status(404).json({ error: "Student profile not found" });
+      }
+      // Suppose that EducationLevel is a valid model and associated properly
+      const eduLevel = await models.EducationLevel.findOne({
+        where: { name: educationLevel },
+      });
+      if (eduLevel) {
+        await student.update({ educationLevelId: eduLevel.id });
+      }
+    }
+
+    await user.update(updateData);
+
     const updatedUser = await User.findByPk(userId, {
       include: [
         {
           model: Student,
-          include: [EducationLevel], // Assurez-vous que EducationLevel est correctement importé et utilisé
+          include: [models.EducationLevel],
         },
         {
           model: Professor,
-          include: [models.Subject], // Utilisez models.Subject si Subject est importé via models
+          include: [models.Subject],
         },
       ],
     });
@@ -312,15 +330,15 @@ const updateUserDetails = async (req, res) => {
 const getUserById = async (req, res) => {
   console.log("Attempting to fetch user with ID:", req.params.userId);
   try {
-      const user = await models.User.findByPk(req.params.userId);
-      if (!user) {
-          console.log("User not found for ID:", req.params.userId);
-          return res.status(404).json({ message: 'User not found' });
-      }
-      res.status(200).json(user);
+    const user = await models.User.findByPk(req.params.userId);
+    if (!user) {
+      console.log("User not found for ID:", req.params.userId);
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
   } catch (error) {
-      console.error('Error fetching user:', error);
-      res.status(500).json({ error: 'Server error' });
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Server error" });
   }
 };
 
