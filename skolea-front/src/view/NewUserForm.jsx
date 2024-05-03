@@ -44,18 +44,18 @@ const NewUserForm = () => {
     "Arts",
   ];
   const levels = [
-    "Terminal",
-    "1ère",
-    "2nd",
-    "3ème",
-    "4ème",
-    "5ème",
-    "6ème",
-    "CE2",
-    "CE1",
-    "CM2",
-    "CM1",
     "CP",
+    "CE1",
+    "CE2",
+    "CM1",
+    "CM2",
+    "6ème",
+    "5ème",
+    "4ème",
+    "3ème",
+    "2nd",
+    "1ère",
+    "Terminale",
   ];
 
   const navigate = useNavigate();
@@ -113,7 +113,7 @@ const NewUserForm = () => {
       role,
       subjects: selectedSubjects,
       department,
-      educationLevel: level, // Modification ici : 'level' devient 'educationLevel'
+      educationLevel: level,
       cityNames,
     };
 
@@ -187,6 +187,7 @@ const NewUserForm = () => {
               }
               label="Je suis enseignant"
             />
+
             <FormControlLabel
               control={
                 <Checkbox
@@ -259,7 +260,6 @@ const NewUserForm = () => {
             )}
 
             {isStudent && (
-              <>
                 <FormControl fullWidth margin="normal">
                   <InputLabel id="level-label">Niveau</InputLabel>
                   <Select
@@ -275,7 +275,6 @@ const NewUserForm = () => {
                     ))}
                   </Select>
                 </FormControl>
-              </>
             )}
             <Button type="submit" variant="contained" color="primary">
               Envoyer
