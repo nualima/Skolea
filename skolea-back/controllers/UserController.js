@@ -242,6 +242,14 @@ const whoAmI = async (req, res) => {
           model: models.Professor,
           include: [models.Subject],
         },
+        {
+          model: models.Student,
+          include: [
+            {
+              model: models.EducationLevel,
+            },
+          ],
+        },
       ],
     });
 
@@ -249,7 +257,7 @@ const whoAmI = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Preparer les données pour la réponse
+    // Préparer les données pour la réponse
     const userData = { ...user.toJSON() };
     if (userData.Professor) {
       userData.professor = {
@@ -258,7 +266,15 @@ const whoAmI = async (req, res) => {
         bio: userData.Professor.bio,
       };
     }
+    if (userData.Students && userData.Students.length > 0) {
+      // Assumer que chaque utilisateur a au maximum un profil étudiant
+      const studentProfile = userData.Students[0];
+      userData.student = {
+        educationLevel: studentProfile.EducationLevel.name,
+      };
+    }
 
+    delete userData.Students; // Nettoyer la structure pour ne pas inclure le tableau Students directement
     res.json({ user: userData });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -268,7 +284,8 @@ const whoAmI = async (req, res) => {
 // Fonction pour mettre à jour les détails de l'utilisateur
 const updateUserDetails = async (req, res) => {
   const { userId } = req.params;
-  const { name, birthday, phoneNumber, email, educationLevel } = req.body;
+  const { name, birthday, phoneNumber, email, educationLevel, price } =
+    req.body;
 
   try {
     const user = await User.findByPk(userId);
@@ -282,35 +299,62 @@ const updateUserDetails = async (req, res) => {
     if (user.role === "student" && educationLevel !== undefined) {
       const student = await models.Student.findOne({
         where: { userId: userId },
+        include: [models.EducationLevel],
       });
       if (!student) {
         return res.status(404).json({ error: "Student profile not found" });
       }
-      // Suppose that EducationLevel is a valid model and associated properly
       const eduLevel = await models.EducationLevel.findOne({
         where: { name: educationLevel },
       });
       if (eduLevel) {
         await student.update({ educationLevelId: eduLevel.id });
       }
+    } else if (user.role === "professor" && price !== undefined) {
+      const professor = await models.Professor.findOne({
+        where: { userId: userId },
+      });
+      if (!professor) {
+        return res.status(404).json({ error: "Professor profile not found" });
+      }
+      await professor.update({ price });
     }
 
     await user.update(updateData);
 
+    // Refetch user details with associated data to ensure the response includes updated relations
     const updatedUser = await User.findByPk(userId, {
+      attributes: { exclude: ["password"] },
       include: [
         {
-          model: Student,
-          include: [models.EducationLevel],
+          model: models.Professor,
+          include: [models.Subject],
         },
         {
-          model: Professor,
-          include: [models.Subject],
+          model: models.Student,
+          include: [models.EducationLevel],
         },
       ],
     });
 
-    res.status(200).json(updatedUser || user);
+    // Prepare the structured response similar to 'login' and 'whoAmI'
+    const responseUser = updatedUser.toJSON();
+    if (responseUser.Professor) {
+      responseUser.professor = {
+        price: responseUser.Professor.price,
+        bio: responseUser.Professor.bio,
+        subjects: responseUser.Professor.Subjects.map((s) => s.name),
+      };
+    }
+    if (responseUser.Student) {
+      responseUser.student = {
+        educationLevel: responseUser.Student.EducationLevel.name,
+      };
+    }
+    delete responseUser.Professors;
+    delete responseUser.Students;
+
+    res.status(200).json({ user: responseUser });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

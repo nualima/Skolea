@@ -13,17 +13,19 @@ const ProfilDetails = () => {
   const [birthday, setBirthday] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [educationLevel, setEducationLevel] = useState("");
+  const [price, setPrice] = useState(""); // Ajout de price
 
   useEffect(() => {
     setFullName(userData?.name || "");
     setEmail(userData?.email || "");
     setPhoneNumber(userData?.phoneNumber || "");
     setBirthday(userData?.birthday || "");
+    setEducationLevel(userData?.student?.educationLevel || ""); // Supposition que userData.student est bien structuré
     if (userData?.role === "professor") {
-      // Assurez-vous que la structure des données correspond à votre réponse API
       setSubjects(
         userData.Professors[0]?.Subjects.map((sub) => sub.name) || []
       );
+      setPrice(userData.Professors[0]?.price || ""); // Initialisation du prix
     }
   }, [userData]);
 
@@ -34,10 +36,9 @@ const ProfilDetails = () => {
       email,
       phoneNumber,
       birthday,
+      ...(userData?.role === "professor" && { price }), // Inclure le prix uniquement pour les professeurs
     };
-    if (userData?.role === "student") {
-      userDetails.educationLevel = educationLevel;
-    }
+
     const token = localStorage.getItem("token");
     try {
       const response = await updateUserServices.updateUser(
@@ -91,13 +92,8 @@ const ProfilDetails = () => {
                   )}
                   {userData?.role === "student" && (
                     <FormGroup>
-                      <Label for="educationLevel">Education Level</Label>
-                      <Input
-                        type="text"
-                        id="educationLevel"
-                        value={educationLevel}
-                        onChange={(e) => setEducationLevel(e.target.value)}
-                      />
+                      <p className="text-muted">{educationLevel}</p>{" "}
+                      {/* Afficher comme texte plutôt que comme champ modifiable */}
                     </FormGroup>
                   )}
                 </div>
@@ -144,6 +140,19 @@ const ProfilDetails = () => {
                           onChange={(e) => setBirthday(e.target.value)}
                         />
                       </FormGroup>
+                      {userData?.role === "professor" && (
+                        <FormGroup>
+                          <Label for="price">Hourly Rate (€/hr)</Label>
+                          <Input
+                            type="number"
+                            id="price"
+                            name="price"
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
+                            step="0.01"
+                          />
+                        </FormGroup>
+                      )}
                       <button type="submit" className="btn btn-primary">
                         Save Changes
                       </button>
@@ -162,6 +171,14 @@ const ProfilDetails = () => {
                       <p className="mb-0">Phone Number</p>
                       <p className="text-muted mb-0">{phoneNumber}</p>
                       <hr />
+                      {userData?.role === "professor" && (
+                        <>
+                          <p className="mb-0">Hourly Rate (€/hr)</p>
+                          <p className="text-muted mb-0">{price}</p>
+                          <hr />
+                        </>
+                      )}
+
                       <button
                         type="button"
                         className="btn btn-primary"
