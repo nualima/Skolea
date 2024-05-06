@@ -20,12 +20,15 @@ const ProfilDetails = () => {
     setEmail(userData?.email || "");
     setPhoneNumber(userData?.phoneNumber || "");
     setBirthday(userData?.birthday || "");
-    setEducationLevel(userData?.student?.educationLevel || ""); // Supposition que userData.student est bien structuré
-    if (userData?.role === "professor") {
-      setSubjects(
-        userData.Professors[0]?.Subjects.map((sub) => sub.name) || []
-      );
-      setPrice(userData.Professors[0]?.price || ""); // Initialisation du prix
+    setEducationLevel(userData?.student?.educationLevel || "");
+
+    if (
+      userData?.role === "professor" &&
+      userData.Professors?.length > 0 &&
+      userData.Professors[0].Subjects
+    ) {
+      setSubjects(userData.Professors[0].Subjects.map((sub) => sub.name) || []);
+      setPrice(userData.Professors[0].price || "");
     }
   }, [userData]);
 
