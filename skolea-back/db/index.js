@@ -40,7 +40,6 @@ const createUser = (username, password, firstname, lastname, birthday, email, ph
                 console.error('Erreur lors de la création de l\'utilisateur :', error);
                 reject(error);
             } else {
-                console.log('Utilisateur créé avec succès');
                 resolve();
             }
         });

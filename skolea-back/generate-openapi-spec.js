@@ -19,5 +19,3 @@ const openapiSpecification = swaggerJSDoc(options);
 
 // Écrire la spécification dans un fichier
 fs.writeFileSync('./openapi-specification.json', JSON.stringify(openapiSpecification, null, 2));
-
-console.log('La spécification OpenAPI a été générée avec succès !');

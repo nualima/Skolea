@@ -361,11 +361,9 @@ const updateUserDetails = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  console.log("Attempting to fetch user with ID:", req.params.userId);
   try {
     const user = await models.User.findByPk(req.params.userId);
     if (!user) {
-      console.log("User not found for ID:", req.params.userId);
       return res.status(404).json({ message: "User not found" });
     }
     res.status(200).json(user);

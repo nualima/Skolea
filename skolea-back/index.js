@@ -46,9 +46,7 @@ app.use((err, req, res, next) => {
 // Testez la connexion à la base de données puis démarrez le serveur
 sequelize.authenticate()
     .then(() => {
-        console.log('Connexion à la base de données réussie.');
         app.listen(PORT, () => {
-            console.log(`Serveur démarré sur le port ${PORT}.`);
         });
     })
     .catch(err => {

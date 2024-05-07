@@ -19,7 +19,6 @@ const MainPage = () => {
 
   // Cet effet réagit aux changements de userData
   useEffect(() => {
-    console.log("Les données utilisateur ont été mises à jour.", userData);
   }, [userData]);
 
   return (
@@ -32,7 +31,6 @@ const MainPage = () => {
         <Row>
           <Col>
             <Card>
-              salut {userrole}
               <Proposals />
               <Carrousel />
               <Footer />
