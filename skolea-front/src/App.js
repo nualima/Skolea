@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { UserContext, UserProvider } from "./context";
+import { UserProvider, UserContext } from "./context";
 
 import DefaultNavBar from "./components/navBar/DefaultNavBar";
 import MainPage from "./view/MainPage";
@@ -23,55 +23,58 @@ import ThemeApp from "./components/theme/ThemeApp";
 import ChatPage from "./view/chat/chatPage/ChatPage";
 import ContactForm from "./view/contact/ContactForm";
 import ConversationsPage from "./view/chat/listConversationPage/ConversationsPage";
+import PrivateRoute from "./PrivateRoute"; // Assure-toi que ce chemin est correct
 
 function App() {
-  // Récupérer les données utilisateur depuis le contexte
   const { userData } = useContext(UserContext);
-
-  // Extraire le statut de l'utilisateur (student, teacher, admin)
   const userRole = userData && userData.role ? userData.role : null;
 
   return (
-    <Router>
-      <UserProvider>
-        {" "}
-        {/* Barre de navigation */} <DefaultNavBar />{" "}
-        {/* Composant pour gérer le thème de l'application */} <ThemeApp />
+    <UserProvider>
+      <Router>
+        <DefaultNavBar />
+        <ThemeApp />
         <div>
           <Routes>
-            {" "}
-            {/* Routes pour différentes pages de l'application */}{" "}
-            <Route path="/home" element={<MainPage />} />{" "}
-            <Route path="/" element={<MainPage />} />{" "}
-            <Route path="/profil" element={<ProfilComponent />} />{" "}
-            {/* Route pour la réservation, disponible uniquement pour les étudiants */}{" "}
-            {/* {userRole === "student" && (
-                          <Route path="/reservation" element={<Reservation />} />
-                        =)}{" "} */}{" "}
-            {/* Route pour la disponibilité, disponible uniquement pour les enseignants */}{" "}
-            {/* {userRole === "teacher" && (
-                          <Route path="/availability" element={<Availability />} />
-                        )}{" "} */}{" "}
-            {/* Route pour la gestion des utilisateurs, disponible uniquement pour les administrateurs */}{" "}
-            {userRole === "admin" && (
-              <Route path="/users" element={<ListUsers />} />
-            )}{" "}
-            <Route path="/contact" element={<ContactForm />} />{" "}
-            <Route path="/signUp" element={<NewUserForm />} />{" "}
-            <Route path="/login" element={<LoginPage />} />{" "}
-            <Route path="/availability" element={<Availability />} />{" "}
-            <Route path="/reservation" element={<Reservation />} />{" "}
-            <Route path="/reservation/search" element={<SearchResults />} />{" "}
-            <Route path="/conversationPage" element={<ConversationsPage />} />{" "}
+            <Route path="/home" element={<MainPage />} />
+            <Route path="/" element={<MainPage />} />
+            <Route path="/profil" element={<ProfilComponent />} />
+            <Route path="/contact" element={<ContactForm />} />
+            <Route path="/signUp" element={<NewUserForm />} />
+            <Route path="/login" element={<LoginPage />} />
+
+            {/* Routes protégées */}
+            <Route
+              path="/availability"
+              element={<PrivateRoute element={<Availability />} roles={["teacher", "admin"]} />}
+            />
+            <Route
+              path="/reservation"
+              element={<PrivateRoute element={<Reservation />} roles={["student", "admin"]} />}
+            />
+            <Route
+              path="/reservation/search"
+              element={<PrivateRoute element={<SearchResults />} roles={["student", "admin"]} />}
+            />
+            <Route
+              path="/users"
+              element={<PrivateRoute element={<ListUsers />} roles={["admin"]} />}
+            />
+            <Route
+              path="/conversationPage"
+              element={<PrivateRoute element={<ConversationsPage />} roles={["admin", "teacher", "student"]} />}
+            />
             <Route
               path="/conversation/:userOneId/:otherUserId"
-              element={<ChatPage />}
+              element={<PrivateRoute element={<ChatPage />} roles={["admin", "teacher", "student"]} />}
             />
-            <Route path="*" element={<NotFound />} />{" "}
-          </Routes>{" "}
-        </div>{" "}
-      </UserProvider>{" "}
-    </Router>
+
+            {/* Route par défaut */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+      </Router>
+    </UserProvider>
   );
 }
 
