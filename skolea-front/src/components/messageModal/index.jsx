@@ -21,7 +21,6 @@ function MessageModal({ open, handleClose, teacher }) {
     try {
       // Assume userData.id is the senderId and teacher.userId is the receiverId
       await MessageService.sendMessage(userData.id, teacher.userId, message);
-      console.log("Message sent to:", teacher.User.name);
       handleClose(); // Close the modal after sending the message
     } catch (error) {
       console.error("Failed to send message:", error);

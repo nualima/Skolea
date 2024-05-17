@@ -5,7 +5,6 @@ const BASE_URL = "http://localhost:8080";
 const updateUserServices = {
   updateUser: async (userId, userDetails, token) => {
     try {
-      console.log("Updating user with data:", userDetails);
       const response = await axios.put(
         `${BASE_URL}/api/users/updateUser/${userId}`,
         userDetails,
@@ -15,7 +14,6 @@ const updateUserServices = {
           },
         }
       );
-      console.log("Update user response:", response);
       // Extraire les données de la réponse
       const data = response.data;
 

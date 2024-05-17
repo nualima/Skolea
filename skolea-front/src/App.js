@@ -30,7 +30,6 @@ function App() {
 
   // Extraire le statut de l'utilisateur (student, teacher, admin)
   const userRole = userData && userData.role ? userData.role : null;
-  console.log(userData);
 
   return (
     <Router>

@@ -4,11 +4,9 @@ const BASE_URL = "http://localhost:8080/api/messages"; // Ensure this is the cor
 
 const MessageService = {
   getConversationsByUserId: async (userId) => {
-    console.log("Fetching conversations for userID:", userId);
     return axios
       .get(`${BASE_URL}/user/${userId}`)
       .then((response) => {
-        console.log("Data received:", response.data);
         return response.data;
       })
       .catch((error) => {
