@@ -70,6 +70,7 @@ const LoginPage = () => {
         <br />
         <div className="inputContainer">
           <input
+            type="password" // Modifié pour cacher le mot de passe
             value={password}
             placeholder="Entrez votre mot de passe ici"
             onChange={(ev) => setPassword(ev.target.value)}
